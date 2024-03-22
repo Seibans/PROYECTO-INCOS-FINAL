@@ -2,6 +2,8 @@
 
 import * as z from "zod";
 import { useState, useTransition } from "react";
+
+//Estos se usan en formularios de react
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -19,8 +21,8 @@ import { Button } from "@/components/ui/button";
 
 //Mi components
 import { CardWrapper } from "@/components/auth/card-wrapper.component";
-// import { FormError } from "@/components/form-error";
-// import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/form-error.component";
+import { FormSuccess } from "@/components/form-success.component";
 
 // ServerComponent
 import { login } from "@/actions/login";
@@ -29,8 +31,8 @@ import { LoginSchema } from "@/schemas";
 
 export const LoginForm = () => {
 
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -44,16 +46,17 @@ export const LoginForm = () => {
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
-    
+    // console.log(values);
+    // Investigar este startTransition
     startTransition(() => {
       login(values)
-        .then((data: any)=> {
+        .then((data)=> {
           setError(data.error);
           setSuccess(data.success);
         });
     });
     // Si no quieres usar Server Actions puedes usar axios
-    // axios.post("your/api/route", values)..then((result: any) => {
+    // axios.post("your/api/route", values).then((result: any) => {
 
     // }).catch((err: any) => {
 
@@ -116,12 +119,12 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          {/* <FormError message={error}/>
-          <FormSuccess message={success}/> */}
+          <FormError message={error}/>
+          <FormSuccess message={success}/>  
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full">
+            className="w-full hover:bg-blue-700">
             Ingresar
           </Button>
         </form>

@@ -13,7 +13,7 @@ export const BackButton = ({ href, label }:BackButtonProps) => {
     // TODO: este boton tenia un atributo normal como asChild
     <Button
       variant={"link"}
-      className="font-normal w-full"
+      className="font-bold w-full"
       size={"sm"}
       asChild>
       <Link href={href}>{label}</Link>
