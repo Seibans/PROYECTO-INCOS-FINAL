@@ -42,3 +42,15 @@ model Account {
 
   @@unique([provider, providerAccountId])
 }
+
+
+
+  // model User {
+  //   id            Int       @id @default(autoincrement()) @db.Integer
+  //   name          String?   @db.VarChar(255)
+  //   email         String?   @unique
+  //   emailVerified DateTime?
+  //   image         String?
+  //   password      String?   @db.VarChar(100)
+  //   accounts      Account[]
+  // }

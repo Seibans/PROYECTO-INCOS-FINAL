@@ -20,7 +20,7 @@ export const Header = ({ label }: HeaderProps) => {
         cn("text-3xl font-semibold",
         // font.className
         )}>
-        <Image src="https://res.cloudinary.com/dy8crd62e/image/upload/v1692680027/h74ziuz3v30pdrelsk05.jpg" alt="Imagen WP2" width={150} height={150}/>
+        {/* <Image src="https://res.cloudinary.com/dy8crd62e/image/upload/v1692680027/h74ziuz3v30pdrelsk05.jpg" alt="Imagen WP2" width={150} height={150}/> */}
       </h1>
       <p className="text-muted-foreground text-sm">
         {label}
