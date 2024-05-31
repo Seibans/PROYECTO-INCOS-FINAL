@@ -15,8 +15,8 @@ datasource db {
 
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
+  id            Int       @id @default(autoincrement())
+  name          String?  @db.VarChar(255)
   email         String?   @unique
   emailVerified DateTime?
   image         String?
@@ -25,8 +25,8 @@ model User {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
+  id                 Int       @id @default(autoincrement())
+  userId             Int
   type               String
   provider           String
   providerAccountId  String

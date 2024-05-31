@@ -2,7 +2,7 @@
 //Esto es un server action
 import * as z from "zod";
 import { RegisterSchema } from "@/schemas"; 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import {db} from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
 
@@ -15,14 +15,13 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     }
 
     const { email, password, name } = validatedFields.data;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
         return {error: "El usuario ya existe!"};
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
     await db.user.create({
         data: {
             email,

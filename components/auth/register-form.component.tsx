@@ -4,6 +4,7 @@ import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Toaster, toast } from "sonner";
 
 // Components UI
 import {
@@ -19,8 +20,8 @@ import { Button } from "@/components/ui/button";
 
 //Mi components
 import { CardWrapper } from "@/components/auth/card-wrapper.component";
-import { FormError } from "@/components/form-error.component";
-import { FormSuccess } from "@/components/form-success.component";
+// import { FormError } from "@/components/form-error.component";
+// import { FormSuccess } from "@/components/form-success.component";
 
 // ServerComponent
 import { register } from "@/actions/register";
@@ -28,9 +29,8 @@ import { register } from "@/actions/register";
 import { RegisterSchema } from "@/schemas";
 
 export const RegisterForm = () => {
-
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  // const [error, setError] = useState<string | undefined>("");
+  // const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -43,23 +43,40 @@ export const RegisterForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    setError("");
-    setSuccess("");
-    
     startTransition(() => {
-      register(values)
-        .then((data: any)=> {
-          setError(data.error);
-          setSuccess(data.success);
-        });
+      toast.promise(register(values), {
+        loading: "Cargando...",
+        success: (data) => {
+          if (data.error) {
+            throw new Error(data.error);
+          } else {
+            return `${data.success}`;
+          }
+        },
+        error: (error) => error.message,
+      });
     });
-    // Si no quieres usar Server Actions puedes usar axios
-    // axios.post("your/api/route", values)..then((result: any) => {
-
-    // }).catch((err: any) => {
-
-    // });
   };
+
+  // const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  //   setError("");
+  //   setSuccess("");
+
+  //   startTransition(() => {
+  //     register(values)
+  //       .then((data: any)=> {
+  //         // setError(data.error);
+  //         // setSuccess(data.success);
+  //       });
+  //   });
+  //   // Si no quieres usar Server Actions puedes usar axios
+  //   // axios.post("your/api/route", values)..then((result: any) => {
+
+  //   // }).catch((err: any) => {
+
+  //   // });
+  // };
+
   return (
     <CardWrapper
       headerLabel="Crea una Cuenta"
@@ -69,12 +86,9 @@ export const RegisterForm = () => {
     >
       {/* obtiene todas las propiedades desestructurandolas excepto children */}
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
-          <FormField
+            <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
@@ -129,17 +143,15 @@ export const RegisterForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
+          {/* <FormError message={error} />
+          <FormSuccess message={success} /> */}
 
-          <Button
-            disabled={isPending}
-            type="submit"
-            className="w-full">
+          <Button disabled={isPending} type="submit" className="w-full">
             Crear Cuenta
           </Button>
         </form>
       </Form>
+      <Toaster richColors position="top-right" />
     </CardWrapper>
   );
 };

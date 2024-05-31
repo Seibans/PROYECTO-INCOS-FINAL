@@ -9,7 +9,7 @@ export const getUserByEmail = async (email: string) => {
 		});
 
 		if (!user) {
-			throw new Error('User not found');
+			throw new Error('Usuario no encontrado');
 		}
 
 		return user;
@@ -19,7 +19,7 @@ export const getUserByEmail = async (email: string) => {
 	}
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: number) => {
 	try {
 		const user = await db.user.findUnique({
 			where: {
@@ -52,7 +52,7 @@ export const createUser = async (user: any) => {
 	return createdUser;
 };
 
-export const updateUser = async (id: string, user: any) => {
+export const updateUser = async (id: number, user: any) => {
 	const updatedUser = await db.user.update({
 		where: {
 			id,
@@ -63,7 +63,7 @@ export const updateUser = async (id: string, user: any) => {
 	return updatedUser;
 };
 
-export const deleteUser = async (id: string) => {
+export const deleteUser = async (id: number) => {
 	const deletedUser = await db.user.delete({
 		where: {
 			id,
@@ -72,4 +72,3 @@ export const deleteUser = async (id: string) => {
 
 	return deletedUser;
 };
-
