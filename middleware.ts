@@ -1,17 +1,20 @@
-import NextAuth from "next-auth"
-import authConfig  from "@/auth.config"
+import authConfig  from "@/auth.config";
+import NextAuth from "next-auth";
 
 import {
   DEFAULT_LOGIN_REDIRECT,
   authRoutes,
   publicRoutes,
   apiAuthPrefix
-} from "@/routes"
+} from "@/routes";
+
+// import { NextResponse } from "next/server";
 
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  //Aca podemos acceder al token y comprobar si el usuario es Admin o no
   const {nextUrl} = req;
   const isLoggedIn = !!req.auth;
 
@@ -31,7 +34,17 @@ export default auth((req) => {
   }
 
   if(!isLoggedIn && !isPublicRoute){
-    return Response.redirect(new URL("/auth/login", nextUrl));
+    let callbackUrl = nextUrl.pathname;
+    if (nextUrl.search) {
+        callbackUrl += nextUrl.search;
+    }
+
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return Response.redirect(new URL(
+        `/auth/login?callbackUrl=${encodedCallbackUrl}`,
+        nextUrl
+    ));
   }
 
   return null;

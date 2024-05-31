@@ -6,6 +6,7 @@ CREATE TABLE `User` (
     `emailVerified` DATETIME(3) NULL,
     `image` VARCHAR(191) NULL,
     `password` VARCHAR(191) NULL,
+    `rol` ENUM('ADMINISTRADOR', 'USUARIO') NOT NULL DEFAULT 'USUARIO',
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)

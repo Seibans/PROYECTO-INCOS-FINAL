@@ -4,6 +4,12 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// REGENERAR LA BASE
+// npx prisma generate --talvez
+// npx prisma migrate reset
+// npx prisma migrate dev --name migracion_inicial
+// npx prisma migrate deploy
+//npx prisma db push
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,6 +20,13 @@ datasource db {
 }
 
 
+
+enum RolUsuario {
+  ADMINISTRADOR
+  USUARIO
+}
+
+
 model User {
   id            Int       @id @default(autoincrement())
   name          String?  @db.VarChar(255)
@@ -21,6 +34,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  rol           RolUsuario @default(USUARIO)
   accounts      Account[]
 }
 

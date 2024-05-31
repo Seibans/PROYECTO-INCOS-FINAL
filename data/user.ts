@@ -1,74 +1,27 @@
-import { db } from '@/lib/db';
+import { db } from "@/lib/db";
 
 export const getUserByEmail = async (email: string) => {
-	try {
-		const user = await db.user.findUnique({
-			where: {
-				email,
-			},
-		});
-
-		if (!user) {
-			throw new Error('Usuario no encontrado');
-		}
-
-		return user;
-	} catch (error) {
-		console.log(error);
-		return null;
-	}
+    try {
+        const user = await db.user.findUnique({
+            where: {
+                email,
+            }
+        });
+        return user;
+    } catch (error) {
+        return null;
+    }
 };
 
 export const getUserById = async (id: number) => {
-	try {
-		const user = await db.user.findUnique({
-			where: {
-				id,
-			},
-		});
-
-		if (!user) {
-			throw new Error('User not found');
-		}
-
-		return user;
-	} catch (error) {
-		console.log(error);
-		return null;
-	}
-};
-
-export const getUsers = async () => {
-	const users = await db.user.findMany();
-
-	return users;
-};
-
-export const createUser = async (user: any) => {
-	const createdUser = await db.user.create({
-		data: user,
-	});
-
-	return createdUser;
-};
-
-export const updateUser = async (id: number, user: any) => {
-	const updatedUser = await db.user.update({
-		where: {
-			id,
-		},
-		data: user,
-	});
-
-	return updatedUser;
-};
-
-export const deleteUser = async (id: number) => {
-	const deletedUser = await db.user.delete({
-		where: {
-			id,
-		},
-	});
-
-	return deletedUser;
+    try {
+        const user = await db.user.findUnique({
+            where: {
+                id,
+            }
+        });
+        return user;
+    } catch (error) {
+        return null;
+    }
 };

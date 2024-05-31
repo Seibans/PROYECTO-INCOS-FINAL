@@ -11,7 +11,6 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: string | null) => {
     const validatedFields = LoginSchema.safeParse(values);
-    console.log(values, "Login ts");
     if (!validatedFields.success) {
         return { error: "Campos Inválidos!" };
     }
@@ -28,8 +27,9 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
         await signIn("credentials", {
             email,
             password,
-            redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+            callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
         });
+        // return { success: "Login Correcto" };
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {

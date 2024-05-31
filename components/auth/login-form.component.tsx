@@ -24,8 +24,6 @@ import { Button } from "@/components/ui/button";
 
 //Mi components
 import { CardWrapper } from "@/components/auth/card-wrapper.component";
-// import { FormError } from "@/components/form-error.component";
-// import { FormSuccess } from "@/components/form-success.component";
 
 // ServerComponent
 import { login } from "@/actions/login";
@@ -61,37 +59,16 @@ export const LoginForm = () => {
       toast.promise(login(values, callbackUrl), {
         loading: "Cargando...",
         success: (data: any) => {
-          if (data?.error) {
+          if (data.error) {
             throw new Error(data.error);
           } else {
-            return `${data?.success}`;
+            return `${data.success}`;
           }
         },
         error: (error) => error.message,
       });
     });
   };
-
-
-  // const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-  //   setError("");
-  //   setSuccess("");
-  //   // console.log(values);
-  //   // Investigar este startTransition
-  //   startTransition(() => {
-  //     login(values)
-  //       .then((data)=> {
-  //         setError(data.error);
-  //         setSuccess(data.success);
-  //       });
-  //   });
-  //   // Si no quieres usar Server Actions puedes usar axios
-  //   // axios.post("your/api/route", values).then((result: any) => {
-
-  //   // }).catch((err: any) => {
-
-  //   // });
-  // };
 
   return (
     <CardWrapper
@@ -149,8 +126,6 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          {/* <FormError message={error}/>
-          <FormSuccess message={success}/>   */}
           <Button
             disabled={isPending}
             type="submit"
