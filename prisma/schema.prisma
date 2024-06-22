@@ -10,6 +10,10 @@
 // npx prisma migrate dev --name migracion_inicial
 // npx prisma migrate deploy
 //npx prisma db push
+
+// ESTE COMANDO CREA LOS ESUQEMAS DE MANERA REVERSA, SOLO DEBES VINCULAR LA BASE DE DATOS CON EL datasource db nada mas
+// npx prisma db pull con esto prisma lee la base de datos y crea los esquemas
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,8 +22,6 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
-
 
 enum RolUsuario {
   ADMINISTRADOR

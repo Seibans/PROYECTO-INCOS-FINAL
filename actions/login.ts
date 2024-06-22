@@ -35,6 +35,14 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
             switch (error.type) {
                 case "CredentialsSignin":
                     return { error: "Email o contraseña incorrectos" };
+                case "OAuthAccountNotLinked":
+                    return { error: "No se ha conectado el perfil de GitHub" };
+                // case "AccountNotFound":
+                //     return { error: "El correo no existe" };
+                // case "CredentialsExpired":
+                //     return { error: "La cuenta ha expirado" };
+                // case "CredentialsError":
+                //     return { error: "Error de autenticación" };
                 default:
                     return { error: "Error de autenticación" };
             }

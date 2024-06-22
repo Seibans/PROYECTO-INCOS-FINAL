@@ -14,10 +14,26 @@ export const {
   signOut,
   unstable_update
 } = NextAuth({
+  //En este codigo se define la ruta por defecto cuando ocurre un error de autenticación
+  //minuto 3:37
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
   },
+  events: {
+    async linkAccount({ user }) {
+      await db.user.update({
+         where: {
+            id: Number(user.id),
+         },
+         data: {
+            emailVerified: new Date(),
+         },
+      })
+    }
+  },
+  // Investigar acerca de los eventos de nextauth
+  //video 3:33
   callbacks: {
     async signIn({ user, account }) {
       // Allow OAuth without email verification
@@ -80,7 +96,7 @@ export const {
 
       const usuarioExistente = await getUserById(Number(token.sub));
 
-      if(!usuarioExistente) return token;
+      if(!usuarioExistente) return token; 
 
       token.rol = usuarioExistente.rol;
 

@@ -40,9 +40,10 @@ export const LoginForm = () => {
 
   const callbackUrl = searchParams.get("callbackUrl");
 
+  // TODO: Esto obtiene el error del mismo correo las cuentas de google, github y facebook
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email in use with other provider!"
+      ? "El correo  ya está en uso con otro proveedor!"
       : "";
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -53,6 +54,8 @@ export const LoginForm = () => {
     },
   });
 
+
+  // El error de la data se resuelve en el minuto 3:45
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     console.log(values);
     startTransition(() => {
@@ -60,9 +63,10 @@ export const LoginForm = () => {
         loading: "Cargando...",
         success: (data: any) => {
           if (data.error) {
-            throw new Error(data.error);
+            throw new Error(data.error || urlError);
           } else {
-            return `${data.success}`;
+            // TODO: Cambiar cuando agreguemos 2FA
+            return `${data.success || "Login correcto"}`;
           }
         },
         error: (error) => error.message,
