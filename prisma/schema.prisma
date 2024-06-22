@@ -5,7 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 // REGENERAR LA BASE
-// npx prisma generate --talvez
+// npx prisma generate
+//parece que cada vez que cambies algun modelo debes ejecutar el de arriba y luego seguir 
+
 // npx prisma migrate reset
 // npx prisma migrate dev --name migracion_inicial
 // npx prisma migrate deploy
@@ -59,14 +61,32 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+model TokenVerificacion {
+  id            Int    @id @default(autoincrement())
+  token         String    @unique
+  email         String
+  expires       DateTime
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
+  @@unique([email, token])
+}
 
-  // model User {
-  //   id            Int       @id @default(autoincrement()) @db.Integer
-  //   name          String?   @db.VarChar(255)
-  //   email         String?   @unique
-  //   emailVerified DateTime?
-  //   image         String?
-  //   password      String?   @db.VarChar(100)
-  //   accounts      Account[]
-  // }
+// model TokendeVerificacion {
+//   id            String       @id @default(cuid())
+//   token         String    @@unique
+//   email         String
+//   expires       DateTime
+//   createdAt     DateTime  @default(now())
+//   updatedAt     DateTime  @updatedAt
+//   @@unique([email, token])
+// }
+// model User {
+//   id            Int       @id @default(autoincrement()) @db.Integer
+//   name          String?   @db.VarChar(255)
+//   email         String?   @unique
+//   emailVerified DateTime?
+//   image         String?
+//   password      String?   @db.VarChar(100)
+//   accounts      Account[]
+// }
