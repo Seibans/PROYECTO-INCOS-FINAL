@@ -36,20 +36,24 @@ export const {
   //video 3:33
   callbacks: {
     async signIn({ user, account }) {
-      // Allow OAuth without email verification
+      // Permitir OAuth sin verificación de correo electrónico
+
+      if (account?.provider === 'credentials') {
+        console.log('Credenciales de inicio de sesión');
+      };
       if (account?.provider !== 'credentials') return true;
 
       const usuarioExistente = await getUserById(Number(user.id));
 
 
       // Previene que inicie session un usuario sin verificacion de email
-      // if (!usuarioExistente?.emailVerified) return false;
+      if (!usuarioExistente?.emailVerified) return false;
 
       // if (existingUser.isTwoFactorEnabled) {
       //     const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
       //     if (!twoFactorConfirmation) return false;
 
-      //     // Delete two factor confirmation for next sign in
+      //     // Eliminar la confirmación de dos factores para el próximo inicio de sesión
       //     await db.twoFactorConfirmation.delete({
       //         where: {
       //             id: twoFactorConfirmation.id,

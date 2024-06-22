@@ -66,7 +66,7 @@ export const LoginForm = () => {
             throw new Error(data.error || urlError);
           } else {
             // TODO: Cambiar cuando agreguemos 2FA
-            return `${data.success || "Login correcto"}`;
+            return `${data.success}`;
           }
         },
         error: (error) => error.message,
