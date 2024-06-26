@@ -37,10 +37,17 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       // Permitir OAuth sin verificación de correo electrónico
+      console.log(
+        user,
+        account
+      );
 
+      //Estas son las credenciales de google github y facebook
       if (account?.provider === 'credentials') {
         console.log('Credenciales de inicio de sesión');
       };
+
+      //aca sigue la autenticacion por correo normal
       if (account?.provider !== 'credentials') return true;
 
       const usuarioExistente = await getUserById(Number(user.id));

@@ -5,7 +5,7 @@ export const enviarCorreodeVerificacion = async (
 	email: string,
 	token: string
 ) => {
-	const linkConfirmacion = `http://localhost:3000/auth/new-verification?token=${token}`;
+	const linkConfirmacion = `http://localhost:3000/auth/nueva-verificacion?token=${token}`;
 
 	await resend.emails.send({
     	from: "onboarding@resend.dev",
