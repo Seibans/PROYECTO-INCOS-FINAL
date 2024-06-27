@@ -4,12 +4,14 @@ import * as z from "zod";
 
 import {ResetSchema} from "@/schemas";
 import { getUserByEmail } from "@/data/user";
+import { generatePasswordResetToken } from "@/lib/tokens";
+import { enviarCorreodeReestablecimientodePassword } from "@/lib/mail";
 
 export const reset = async (values: z.infer<typeof ResetSchema>) => {
 	const camposValidos = ResetSchema.safeParse(values);
 
 	if(!camposValidos.success){
-		return {error: "Correo Inválido!     "};
+		return {error: "Correo Inválido!"};
 	}
 
 	const {email} = camposValidos.data;
@@ -20,6 +22,13 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
 		return {error: "Email no encontrado!"}
 	}
 
-	//TODO:Generar token y enviar el email
+	const tokenResetPassword = await generatePasswordResetToken(email);
+
+	console.log(tokenResetPassword);
+	await enviarCorreodeReestablecimientodePassword(
+		tokenResetPassword.email,
+		tokenResetPassword.token,
+	)
+
 	return {success: "Correo de Reestablecimiento Enviado!"};
 }

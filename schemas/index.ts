@@ -11,6 +11,12 @@ export const LoginSchema = z.object({
     })
 });
 
+export const NuevoPasswordSchema = z.object({
+    password: z.string().min(6, {
+        message: "* La Contraseña debe ser de mínimo 6 caracteres"
+    })
+});
+
 export const ResetSchema = z.object({
     email: z.string({
         invalid_type_error: "Ingrese Caracteres válidos"
