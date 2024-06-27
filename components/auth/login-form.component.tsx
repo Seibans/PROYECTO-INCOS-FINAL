@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Toaster, toast } from 'sonner';
+import Link from "next/link";
 
 
 // Components UI
@@ -126,6 +127,16 @@ export const LoginForm = () => {
                       type="password"
                     />
                   </FormControl>
+                  <Button
+                      size="sm"
+                      variant="link"
+                      asChild
+                      className="px-0 font-normal"
+                      >
+                    <Link href="/auth/reset">
+                      Olvidaste tu Contraseña?
+                    </Link>
+                  </Button>
                 </FormItem>
               )}
             />

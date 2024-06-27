@@ -2,14 +2,16 @@ import { auth, signOut } from "@/auth";
 import Image from "next/image";
 import React from "react";
 import { CardContainer, CardItem, CardBody } from "@/components/ui/3d-card";
+import { BackButton } from "@/components/auth/back-button.component";
+
 
 const SettingsPage = async () => {
   const session = await auth();
   // session?.user.id; mejora el autocompletado
-
+  const userImage = session?.user?.image || "https://res.cloudinary.com/dy8crd62e/image/upload/v1717429749/gamaliel_gaoa0t.png"; 
   return (
     <div>
-      {JSON.stringify(session)}
+      {/* {JSON.stringify(session)} */}
       <form
         action={async () => {
           // esto es exclusivamente del lado del servidor
@@ -25,6 +27,8 @@ const SettingsPage = async () => {
 				</button> */}
 
         <button>Cerrar Sessión</button>
+				<BackButton label="Administracion" href="/bento" />
+
       </form>
 
       <div className="flex items-center justify-center">
@@ -34,7 +38,7 @@ const SettingsPage = async () => {
               translateZ="50"
               className="text-xl font-bold text-neutral-600 dark:text-white"
             >
-              Bienvenido Usuario
+              Bienvenido Usuario {session?.user.name}
             </CardItem>
             <CardItem
               as="p"
@@ -50,7 +54,7 @@ const SettingsPage = async () => {
               className="w-full mt-4"
             >
               <Image
-                src="https://res.cloudinary.com/dy8crd62e/image/upload/v1717429749/gamaliel_gaoa0t.png"
+                src={userImage}
                 height="1000"
                 width="1000"
                 className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"

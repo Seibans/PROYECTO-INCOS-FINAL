@@ -11,6 +11,14 @@ export const LoginSchema = z.object({
     })
 });
 
+export const ResetSchema = z.object({
+    email: z.string({
+        invalid_type_error: "Ingrese Caracteres válidos"
+    }).email({
+        message: "* El Email es requerido"
+    })
+});
+
 export const RegisterSchema = z.object({
     email: z.string({
         invalid_type_error: "Ingrese Caracteres válidos"

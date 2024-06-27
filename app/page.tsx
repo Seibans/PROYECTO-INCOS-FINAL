@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { LoginButton } from "@/components/auth/login-button.component";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { SparklesCore } from "@/components/ui/sparkles";
+import { BackButton } from "@/components/auth/back-button.component";
 
 
 // const font = Poppins({
@@ -64,8 +65,8 @@ export default function Home() {
     // </main>
 
     <main className="flex h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-blue-200 to-blue-500">
-     
-      
+
+
       <div className="space-y-6 text-center text-white z-10">
         <h1
           className={cn(
@@ -84,6 +85,9 @@ export default function Home() {
               Ingresar
             </Button>
           </LoginButton>
+          <BackButton label="Ir al Panel De Bento Grid" href="/bento" />
+          <BackButton label="Ir al Panel de Divz" href="/divz" />
+
         </div>
       </div>
 
