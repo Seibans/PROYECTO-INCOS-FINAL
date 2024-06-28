@@ -4,7 +4,7 @@ import million from "million/compiler";
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['res.cloudinary.com', 'unsplash.com'],
+    domains: ['res.cloudinary.com', 'unsplash.com', 'lh3.googleusercontent.com'],
   },
 };
  

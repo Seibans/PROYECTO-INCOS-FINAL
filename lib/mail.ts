@@ -1,6 +1,27 @@
 import {Resend} from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+export const enviarTokenDobleFactorEmail = async (
+	email: string,
+	token: string
+) => {
+	await resend.emails.send({
+		from: "onboarding@resend.dev",
+		to: email,
+		subject: "Código de Protección de Doble Factor",
+		html:`<p>Tu Código de Ingreso es: ${token}</p>`,
+		// text: `
+      	// 	Hola,
+      
+      	// 	Para verificar tu cuenta, por favor visita el siguiente enlace:
+      	// 	${process.env.VERIFICATION_URL}/${token}
+    
+      	// 	Graciass,
+      	// 	Correode 
+    	// 	`,
+  });
+};
+
 export const enviarCorreodeReestablecimientodePassword = async (
 	email: string,
 	token: string

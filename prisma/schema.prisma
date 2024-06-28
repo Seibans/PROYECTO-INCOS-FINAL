@@ -40,6 +40,8 @@ model User {
   password      String?
   rol           RolUsuario @default(USUARIO)
   accounts      Account[]
+  authDobleFactor Boolean @default(false)
+  dobleFactorConfirmacion ConfirmacionDobleFactor?
 }
 
 model Account {
@@ -66,9 +68,8 @@ model TokenVerificacion {
   token         String    @unique
   email         String
   expires       DateTime
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
+  // createdAt     DateTime  @default(now())
+  // updatedAt     DateTime  @updatedAt
   @@unique([email, token])
 }
 
@@ -77,10 +78,23 @@ model TokenReestablecimientoPassword {
   token         String    @unique
   email         String
   expires       DateTime
-
   @@unique([email, token])
 }
 
+model TokenDobleFactor {
+  id            Int    @id @default(autoincrement())
+  token         String    @unique
+  email         String
+  expires       DateTime
+  @@unique([email, token])
+}
+
+model ConfirmacionDobleFactor{
+  id            Int    @id @default(autoincrement())
+  usuarioId     Int
+  usuario User @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  @@unique([usuarioId])
+}
 
 // model TokendeVerificacion {
 //   id            String       @id @default(cuid())

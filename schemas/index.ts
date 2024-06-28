@@ -8,7 +8,8 @@ export const LoginSchema = z.object({
     }),
     password: z.string().min(1, {
         message: "* La Contraseña es requerida"
-    })
+    }),
+    codigo: z.optional(z.string()),
 });
 
 export const NuevoPasswordSchema = z.object({

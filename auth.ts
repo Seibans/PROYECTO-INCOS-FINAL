@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { db } from "@/lib/db"
 import authConfig from "@/auth.config"
 import { getUserById } from "@/data/user"
+import { getTwoFactorConfirmationByUserId } from "@/data/doble-factor-confirmacion";
 
 // CORRECION DE NUEVOS ATRIBUTOS EN EL TOKEN minuto 3:10
 
@@ -56,17 +57,19 @@ export const {
       // Previene que inicie session un usuario sin verificacion de email
       if (!usuarioExistente?.emailVerified) return false;
 
-      // if (existingUser.isTwoFactorEnabled) {
-      //     const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
-      //     if (!twoFactorConfirmation) return false;
 
-      //     // Eliminar la confirmación de dos factores para el próximo inicio de sesión
-      //     await db.twoFactorConfirmation.delete({
-      //         where: {
-      //             id: twoFactorConfirmation.id,
-      //         }
-      //     })
-      // }
+      //ESTA ES LA AUTENTICACION DE DOBLE FACTOR
+      if (usuarioExistente.authDobleFactor) {
+          const dobleFactorConfirmacion = await getTwoFactorConfirmationByUserId(usuarioExistente.id);
+          if (!dobleFactorConfirmacion) return false;
+
+          // Eliminar la confirmación de dos factores para el próximo inicio de sesión
+          await db.confirmacionDobleFactor.delete({
+              where: {
+                  id: dobleFactorConfirmacion.id,
+              }
+          })
+      }
       return true;
     },
     // ESTOS SON LOS DATOS DEL USUARIO GUARDADOS EN EL TOKEN
