@@ -18,6 +18,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -85,7 +86,7 @@ export const LoginForm = () => {
           if (data?.error) {
             form.reset();
             setError(data?.error);
-            throw new Error(data?.error || urlError);
+            // throw new Error(data?.error || urlError);
           }
 
           if (data?.success) {
@@ -146,35 +147,32 @@ export const LoginForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex space-x-2">
-                      <FormLabel>Código 2FA </FormLabel>
-                      <FormMessage></FormMessage>
+                      <FormLabel>Código de Protección</FormLabel>
                     </div>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder="123456"
-                      />
+                    <FormControl className="flex items-center gap-2">
+                      {/* <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="123456"
+                      /> */}
+                      <InputOTP maxLength={6} {...field}>
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
                     </FormControl>
+                    <FormDescription>
+                      Por Favor introduzca el código de verificación enviado a su correo
+                    </FormDescription>
+                    <FormMessage></FormMessage>
                   </FormItem>
                 )}
               />
-              // <InputOTP
-              //   maxLength={6}
-              //   control={form.control}
-              //   name="codigo">
-              //   <InputOTPGroup>
-              //     <InputOTPSlot index={0} />
-              //     <InputOTPSlot index={1} />
-              //     <InputOTPSlot index={2} />
-              //   </InputOTPGroup>
-              //   <InputOTPSeparator />
-              //   <InputOTPGroup>
-              //     <InputOTPSlot index={3} />
-              //     <InputOTPSlot index={4} />
-              //     <InputOTPSlot index={5} />
-              //   </InputOTPGroup>
-              // </InputOTP>
             )}
             {!dobleFactor && (
               <>
