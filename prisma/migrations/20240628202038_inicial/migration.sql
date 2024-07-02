@@ -25,6 +25,7 @@ CREATE TABLE `Account` (
     `expires_at` INTEGER NULL,
     `token_type` VARCHAR(191) NULL,
     `scope` VARCHAR(191) NULL,
+    -- Revisar este idToken
     `id_token` TEXT NULL,
     `session_state` VARCHAR(191) NULL,
 

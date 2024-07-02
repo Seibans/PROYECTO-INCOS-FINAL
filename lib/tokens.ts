@@ -9,7 +9,8 @@ import { getTwoFactorTokenByEmail } from "@/data/doble-factor-token";
 export const generateTwoFactorToken = async (email: string) => {
 	// TODO: investigar esto de crpto y esto del numero es un truco para verlo mejor, sigue siendo ese numero mismo
 	const token = crypto.randomInt(100_000, 1_000_000).toString(); 
-	const expires = new Date(new Date().getTime() + 3600 * 1000); //el token tendra un tiempo de vida de 1 hora
+	// const expires = new Date(new Date().getTime() + 3600 * 1000); //el token tendra un tiempo de vida de 1 hora
+	const expires = new Date(new Date().getTime() + 5 * 60 * 1000); //el token tendra un tiempo de vida de 5 minutos
 	const existingToken = await getTwoFactorTokenByEmail(email);
 	if (existingToken) {
 		await db.tokenDobleFactor.delete({
@@ -33,7 +34,7 @@ export const generatePasswordResetToken = async (email: string) => {
 	const token = uuidv4();
 	const expires = new Date(new Date().getTime() + 3600 * 1000); //el token tendra un tiempo de vida de 1 hora
 
-	const tokenExistente = await getVerificationTokenByEmail(email);
+	const tokenExistente = await getPasswordResetTokenByEmail(email);
 	
 	if (tokenExistente) {
 		await db.tokenReestablecimientoPassword.delete({

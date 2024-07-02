@@ -18,7 +18,6 @@ import {
 } from "@/lib/tokens";
 
 import { getTwoFactorTokenByEmail } from "@/data/doble-factor-token";
-import { error } from "console";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/doble-factor-confirmacion";
 

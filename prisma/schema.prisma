@@ -68,8 +68,6 @@ model TokenVerificacion {
   token         String    @unique
   email         String
   expires       DateTime
-  // createdAt     DateTime  @default(now())
-  // updatedAt     DateTime  @updatedAt
   @@unique([email, token])
 }
 
