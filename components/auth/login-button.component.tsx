@@ -2,7 +2,13 @@
 //Detalle por defecto lo importa de router pero tu usa el de navigation
 
 import { useRouter } from "next/navigation";
-
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+    DialogClose
+} from "@/components/ui/dialog";
+import { LoginForm } from "@/components/auth/login-form.component";
 // TODO: FORMA DE IMPLEMENTAR UN COMPONENTE MODAL
 interface LoginButtonProps {
 	children: React.ReactNode;
@@ -24,9 +30,14 @@ export function LoginButton({
 
     if (mode==="modal"){
         return (
-            <span>
-                TODO: Implementar modal
-            </span>
+            <Dialog>
+                <DialogTrigger asChild={asChild}>
+                    {children}
+                </DialogTrigger>
+                <DialogContent className="p- w-auto bg-transparent border-none">
+                    <LoginForm />
+                </DialogContent>
+            </Dialog>
         )
     }
 

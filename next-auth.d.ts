@@ -2,7 +2,9 @@ import NextAuth, { DefaultSession } from "next-auth"
 
 
 export type UsuarioExtendido = DefaultSession["user"] & {
-	rol: "ADMINISTRADOR" | "USUARIO"
+	rol: "ADMINISTRADOR" | "USUARIO";
+	authDobleFactor: boolean;
+	isOAuth: boolean;
 }
 
 declare module "next-auth" {

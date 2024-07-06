@@ -7,7 +7,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';  
 import Link from "next/link";
 
 // Components UI
@@ -30,7 +30,6 @@ import { FormSuccess } from "@/components/form-success.component";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 
@@ -81,7 +80,7 @@ export const LoginForm = () => {
       //   setError(error.message);
       // });
 
-      login(values)
+      login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();
@@ -239,7 +238,6 @@ export const LoginForm = () => {
           </Button>
         </form>
       </Form>
-      <Toaster richColors position="top-right" />
     </CardWrapper>
   );
 };

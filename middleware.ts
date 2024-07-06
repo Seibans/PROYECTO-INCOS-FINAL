@@ -81,6 +81,9 @@ export default auth((req) => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
+
+    // Es posible que esto sea lo que corrige lo del usuario al no poder loguearse
+    // 
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
@@ -89,6 +92,8 @@ export default auth((req) => {
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
     console.log("Redirecting to login with callback URL:", encodedCallbackUrl);
+    
+    // return Response.redirect(new URL("/auth/login", nextUrl)); //esto estaba en un principio antes de todo pero no me daba  
     return NextResponse.redirect(new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl));
   }
 

@@ -4,7 +4,7 @@ import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 
 // Components UI
 import {
@@ -151,7 +151,6 @@ export const RegisterForm = () => {
           </Button>
         </form>
       </Form>
-      <Toaster richColors position="top-right" />
     </CardWrapper>
   );
 };

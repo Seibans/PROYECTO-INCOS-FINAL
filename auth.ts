@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import authConfig from "@/auth.config"
 import { getUserById } from "@/data/user"
 import { getTwoFactorConfirmationByUserId } from "@/data/doble-factor-confirmacion";
+import { getCuentaById } from "@/data/cuenta"
 
 // CORRECION DE NUEVOS ATRIBUTOS EN EL TOKEN minuto 3:10
 
@@ -13,7 +14,10 @@ export const {
   auth,
   signIn,
   signOut,
-  unstable_update
+  //TODO: REVISAR SI ESTE UPDATE FUNCIONA EN LA ULTIMA VERSION O NO
+  //para actualizar el usuario en el servidor
+  // update,
+  unstable_update,
 } = NextAuth({
   //En este codigo se define la ruta por defecto cuando ocurre un error de autenticación
   //minuto 3:37
@@ -38,10 +42,10 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       // Permitir OAuth sin verificación de correo electrónico
-      console.log(
-        user,
-        account
-      );
+      // console.log(
+      //   user,
+      //   account
+      // );
 
       //Estas son las credenciales de google github y facebook
       if (account?.provider === 'credentials') {
@@ -76,10 +80,10 @@ export const {
     // el sub es el user id y podemos customizar campos
     //minuto 2:57
     async session({ session, token, user }) {
-      console.log({
-        sessionToken: token,
-        session
-      });
+      // console.log({
+      //   sessionToken: token,
+      //   session
+      // });
 
       // if (session.user) {
       //   session.user.campoCustom = token.campoCustom;
@@ -97,6 +101,18 @@ export const {
         //si vuelve a fallar revisa el video 3:14
       }
 
+      // Esto se agrego al minuto 6:25
+      if(session.user) {
+        session.user.authDobleFactor = token.authDobleFactor as boolean;
+      }
+
+      if(session.user) {
+        session.user.name = token.name;
+        // session.user.email = token.email || session.user.email;
+        session.user.email = token.email as string;
+        session.user.isOAuth = token.isOAuth as boolean;
+      }
+
       return session;
     },
     // Al parecer user y profile siempre estan como undefined asi que no los uses
@@ -106,13 +122,25 @@ export const {
       // //este es un campo agregado al token
       // token.campoCustom = 'Nuevo Campo';
 
+      // console.log("ME ESTAN LLAMANDO DE NUEVO");
+
       if(!token.sub) return token;
 
       const usuarioExistente = await getUserById(Number(token.sub));
 
       if(!usuarioExistente) return token; 
 
+
+      // Controlando con que cuenta inicio session si con OAuth o no
+      const cuentaExistente = await getCuentaById(usuarioExistente.id);
+
+
+      // token.isOAuth = cuentaExistente ? true : false;
+      token.isOAuth = !!cuentaExistente;
+      token.name = usuarioExistente.name;
+      token.email = usuarioExistente.email;
       token.rol = usuarioExistente.rol;
+      token.authDobleFactor = usuarioExistente.authDobleFactor;
 
       return token;
     }

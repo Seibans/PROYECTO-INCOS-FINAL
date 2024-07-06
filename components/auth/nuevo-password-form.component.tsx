@@ -6,7 +6,7 @@ import { useState, useTransition } from "react";
 //Estos se usan en formularios de react
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { useSearchParams } from "next/navigation";
 
 // Components UI
@@ -125,7 +125,6 @@ export const NuevoPasswordForm = () => {
           </Button>
         </form>
       </Form>
-      <Toaster richColors position="top-right" />
     </CardWrapper>
   );
 };
