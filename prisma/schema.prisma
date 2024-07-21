@@ -26,43 +26,82 @@ datasource db {
 }
 
 enum RolUsuario {
-  ADMINISTRADOR
-  USUARIO
+  Administrador
+  Usuario
 }
 
+enum TipoMascota {
+  Perro
+  Gato
+  Otro
+}
+
+enum Sexo {
+  Macho
+  Hembra
+}
 
 model User {
   id            Int       @id @default(autoincrement())
-  name          String?  @db.VarChar(255)
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  rol           RolUsuario @default(USUARIO)
-  accounts      Account[]
-  authDobleFactor Boolean @default(false)
+  name          String?   @map("nombre") @db.VarChar(150)
+  email         String?   @unique @map("correo") @db.VarChar(150)
+  emailVerified DateTime? @map("correoVerificado")
+  image         String?   @map("imagen") @db.VarChar(255)
+  password      String?   @map("contrasena") @db.VarChar(200)
+  rol           RolUsuario @default(Usuario)
+  celular       String?    @map("celular") @db.VarChar(16)
+  Account      Account?
+  authDobleFactor Boolean @default(false) @map("autenticacionDobleFactor")
   dobleFactorConfirmacion ConfirmacionDobleFactor?
+  // Optional for WebAuthn support
+  Authenticator           Authenticator[]
+  createdAt DateTime @default(now()) @map("creadoEn")
+  updatedAt DateTime @updatedAt @map("actualizadoEn")
+  @@map("Usuario")
 }
+
+// model Account {
+//   id                 Int       @id @default(autoincrement())
+//   userId             Int
+//   type               String
+//   provider           String
+//   providerAccountId  String
+//   refresh_token      String?  @db.Text
+//   access_token       String?  @db.Text
+//   expires_at         Int?
+//   token_type         String?
+//   scope              String?
+//   id_token           String?  @db.Text
+//   session_state      String?
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@unique([provider, providerAccountId])
+// }
 
 model Account {
-  id                 Int       @id @default(autoincrement())
-  userId             Int
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                       Int     @id @default(autoincrement())
+  userId                   Int     @unique @map("usuarioId")
+  type                     String  @map("tipo") @db.VarChar(20)
+  provider                 String  @map("proveedor") @db.VarChar(50)
+  providerAccountId        String  @map("idCuentaProveedor") @db.VarChar(100)
+  refresh_token            String? @map("tokenActualizacion") @db.Text
+  access_token             String? @map("tokenAcceso") @db.Text
+  expires_at               Int?    @map("expiraEn")
+  token_type               String? @map("tipoToken") @db.VarChar(50)
+  scope                    String? @map("alcance") @db.VarChar(255)
+  id_token                 String? @map("idToken") @db.Text
+  session_state            String? @map("estadoSesion") @db.VarChar(100)
+  refresh_token_expires_in Int?    @map("tokenActualizacionExpiraEn")
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("creadoEn")
+  updatedAt DateTime @updatedAt @map("actualizadoEn")
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("Cuenta")
 }
-
 model TokenVerificacion {
   id            Int    @id @default(autoincrement())
   token         String    @unique
@@ -94,21 +133,36 @@ model ConfirmacionDobleFactor{
   @@unique([usuarioId])
 }
 
-// model TokendeVerificacion {
-//   id            String       @id @default(cuid())
-//   token         String    @@unique
-//   email         String
-//   expires       DateTime
-//   createdAt     DateTime  @default(now())
-//   updatedAt     DateTime  @updatedAt
-//   @@unique([email, token])
-// }
-// model User {
-//   id            Int       @id @default(autoincrement()) @db.Integer
-//   name          String?   @db.VarChar(255)
-//   email         String?   @unique
-//   emailVerified DateTime?
-//   image         String?
-//   password      String?   @db.VarChar(100)
-//   accounts      Account[]
-// }
+model Authenticator {
+  credentialID         String  @unique @map("idCredencial") @db.VarChar(255)
+  userId               Int     @map("usuarioId")
+  providerAccountId    String  @map("idCuentaProveedor") @db.VarChar(100)
+  credentialPublicKey  String  @map("clavePublicaCredencial") @db.VarChar(255)
+  counter              Int     @map("contador")
+  credentialDeviceType String  @map("tipoDispositivoCredencial") @db.VarChar(50)
+  credentialBackedUp   Boolean @map("respaldadoCredencial")
+  transports           String? @map("transportes") @db.VarChar(100)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+  @@map("Autenticador")
+}
+
+model Mascota {
+  id              Int         @id @default(autoincrement())
+  nombre          String
+  especie         TipoMascota
+  raza            String?
+  fechaNacimiento DateTime?
+  sexo            Sexo
+  detalles        String?
+  imagen          String?
+  // idPropietario     Int
+  estado          String      @default("0")
+  creadoEn        DateTime    @default(now())
+  actualizadoEn   DateTime    @updatedAt
+
+  // Define la clave primaria de la tabla
+  @@map("mascota")
+}

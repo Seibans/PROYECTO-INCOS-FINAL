@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
 
 	const rol = await rolActual();
-	if (rol === RolUsuario.ADMINISTRADOR) { 
+	if (rol === RolUsuario.Administrador) { 
 		return new NextResponse(null, {status:200})
 	}
 

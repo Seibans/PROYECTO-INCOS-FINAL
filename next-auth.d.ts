@@ -2,7 +2,7 @@ import NextAuth, { DefaultSession } from "next-auth"
 
 
 export type UsuarioExtendido = DefaultSession["user"] & {
-	rol: "ADMINISTRADOR" | "USUARIO";
+	rol: "Administrador" | "Usuario";
 	authDobleFactor: boolean;
 	isOAuth: boolean;
 }
@@ -22,6 +22,6 @@ declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
   interface JWT {
     /** OpenID ID Token */
-    rol?: "ADMINISTRADOR" | "USUARIO"
+    rol?: "Administrador" | "Usuario"
   }
 }

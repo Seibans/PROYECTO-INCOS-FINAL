@@ -6,7 +6,7 @@ import * as z from "zod";
 export const ConfiguracionSchema = z.object({
     name: z.optional(z.string()),
     authDobleFactor: z.optional(z.boolean()),
-    rol: z.enum([RolUsuario.ADMINISTRADOR, RolUsuario.USUARIO]),
+    rol: z.enum([RolUsuario.Administrador, RolUsuario.Usuario]),
     email: z.optional(z.string().email()),
     password: z.optional(z.string().min(1)),
     nuevoPassword: z.optional(z.string().min(6, {

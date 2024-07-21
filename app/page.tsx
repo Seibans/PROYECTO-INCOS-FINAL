@@ -79,7 +79,7 @@ export default function Home() {
         <p className="text-lg">Un nuevo Sistema</p>
 
         <div>
-          <LoginButton mode="modal" asChild>
+          <LoginButton asChild>
           {/* <LoginButton> */}
             <Button variant={"outline"} className="bg-transparent">
               Ingresar
