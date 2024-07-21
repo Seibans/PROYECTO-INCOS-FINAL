@@ -3,22 +3,10 @@
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Menu, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { SideBar } from '@/components/global/Sidebar.component'
-// import { ToggleModo } from '@/components/toggle.tema'
+import { ToggleModo } from '@/components/toggle.tema'
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useRef, useState } from "react";
-import { logout } from '@/actions/logout';
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-	DropdownMenuLabel,
-	DropdownMenuItem,
-	DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
-import Link from "next/link"
 import { BotonUsuario } from '../auth/usuario-boton.component';
 
 
@@ -59,7 +47,7 @@ const NavBar = () => {
 				</div>
 				<div className='flex gap-x-4 items-center'>
 					<div className="flex gap-x-2 items-center">
-						{/* <ToggleModo /> */}
+						<ToggleModo />
 					</div>
 					<BotonUsuario/>
 					{/* <div className="block md:hidden"> */}

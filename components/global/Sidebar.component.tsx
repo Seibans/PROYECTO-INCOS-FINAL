@@ -16,7 +16,7 @@ import {
 	Syringe,
 	HandCoins
 } from 'lucide-react';
-// import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { SideBarItem } from '@/components/global/SidebarItem.component';
 import { Logo } from '@/components/global/Logo.component';
@@ -115,14 +115,14 @@ export const SideBar = () => {
 								<SideBarItem key={item.label} item={item} />
 							))}
 						</div>
-						{/* <Separator /> */}
+						<Separator />
 						<div className="p-2 md:p-4">
 							<p className="text-slate-500 mb-2">Soporte</p>
 							{datosSoporteSidebar.map((item, index) => (
 								<SideBarItem key={item.label} item={item} />
 							))}
 						</div>
-						{/* <Separator /> */}
+						<Separator />
 						<div className="p-2 md:p-4">
 							<p className="text-slate-500 mb-2">Herramientas</p>
 							{datosToolsSidebar.map((item, index) => (
@@ -136,7 +136,7 @@ export const SideBar = () => {
 								Ir a la Página Principal
 							</Button>
 						</div>
-						{/* <Separator /> */}
+						<Separator />
 						<footer className="mt-3 mb-4 p-3 text-center">
 							2024. Todos los derechos reservados
 						</footer>

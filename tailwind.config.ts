@@ -1,8 +1,18 @@
 import type { Config } from "tailwindcss"
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
+// import { withUt } from "uploadthing/tw";
+ 
+// export default withUt({
+//   // Your existing Tailwind config
+//   content: ["./src/**/*.{ts,tsx,mdx}"],
+//   ...
+// });
 
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
+
 
 const config = {
   darkMode: ["class"],
@@ -22,11 +32,17 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-abc-regular)", ...fontFamily.sans],
+        bold: ["var(--font-abc-bold)", ...fontFamily.sans],
+        light: ["var(--font-abc-light)", ...fontFamily.sans],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        gradient: "hsl(var(--gradient))",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -56,6 +72,11 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+
+
+
+
+        
       },
       borderRadius: {
         lg: "var(--radius)",

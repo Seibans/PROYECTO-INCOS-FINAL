@@ -35,6 +35,7 @@ import {
 
 // ServerComponent
 import { login } from "@/actions/login";
+
 // Schema
 import { LoginSchema } from "@/schemas";
 
@@ -64,7 +65,6 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values);
     setError("");
     setSuccess("");
     setDobleFactor(false);
@@ -80,28 +80,26 @@ export const LoginForm = () => {
       //   setError(error.message);
       // });
 
+
       login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();
             setError(data?.error);
-            // throw new Error(data?.error || urlError);
+            throw new Error(data?.error || urlError);
           }
+          // if (data?.success) {
+          //   form.reset();
+          //   setSuccess(data?.success);
+          // }
 
-          if (data?.success) {
-            form.reset();
-            setSuccess(data?.success);
-          }
-
-          if (data?.dobleFactor) {
-            setDobleFactor(true);
-          }
+          // if (data?.dobleFactor) {
+          //   setDobleFactor(true);
+          // }
         })
         .catch((error: any) => {
           setError(error.message);
         });
-
-      // .catch(()=> setError("Ocurrió un Error inesperado"));
     });
   };
 
@@ -149,12 +147,7 @@ export const LoginForm = () => {
                       <FormLabel>Código de Protección</FormLabel>
                     </div>
                     <FormControl className="flex items-center gap-2">
-                      {/* <Input
-                      {...field}
-                      disabled={isPending}
-                      placeholder="123456"
-                      /> */}
-                      <InputOTP maxLength={6} {...field}>
+                      <InputOTP maxLength={6} {...field} disabled={isPending}>
                         <InputOTPGroup>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
@@ -182,16 +175,16 @@ export const LoginForm = () => {
                     <FormItem>
                       <div className="flex space-x-2">
                         <FormLabel>Email</FormLabel>
-                        <FormMessage></FormMessage>
                       </div>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="pablo.a@ejemplo.com"
+                          placeholder="veterinaria@ejemplo.com"
                           type="email"
-                        />
+                          />
                       </FormControl>
+                          <FormMessage></FormMessage>
                     </FormItem>
                   )}
                 />
@@ -201,8 +194,7 @@ export const LoginForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex space-x-2">
-                        <FormLabel>Password</FormLabel>
-                        <FormMessage></FormMessage>
+                        <FormLabel>Contraseña</FormLabel>
                       </div>
                       <FormControl>
                         <Input
@@ -210,14 +202,15 @@ export const LoginForm = () => {
                           disabled={isPending}
                           placeholder="******"
                           type="password"
-                        />
+                          />
                       </FormControl>
+                      <FormMessage></FormMessage>
                       <Button
                         size="sm"
                         variant="link"
                         asChild
                         className="px-0 font-normal"
-                      >
+                        >
                         <Link href="/auth/reset">
                           Olvidaste tu Contraseña?
                         </Link>
@@ -233,7 +226,7 @@ export const LoginForm = () => {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full hover:bg-blue-700">
+            className="w-full bg-gradient">
             {dobleFactor ? "Confirmar" : "Ingresar"}
           </Button>
         </form>
