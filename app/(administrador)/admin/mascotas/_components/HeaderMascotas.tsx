@@ -7,7 +7,7 @@
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
-import { FormMascota } from "./FormMascota";
+import { SelectForm } from "./FormMascota";
 
 // <DialogContent className="sm:max-w-[625px]">
 // </DialogContent>
@@ -29,7 +29,7 @@ export const HeaderMascotas = () => {
 							Registra y Edita tu Mascota
 						</DialogDescription>
 					</DialogHeader>
-					<FormMascota setabrirModal={setabrirModal} />
+					<SelectForm/>
 				</DialogContent>
 			</Dialog>
 		</div>

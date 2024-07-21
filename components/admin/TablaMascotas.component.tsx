@@ -127,7 +127,8 @@ export const columns: ColumnDef<Mascota>[] = [
     header: () => <div className="text-left">Detalles</div>,
     cell: ({ row }) => {
       return (
-        <div className="font-medium w-48 text-pretty text-wrap text-balance overflow-hidden">
+        // text-pretty text-wrap text-balance
+        <div className="font-medium w-48 overflow-hidden">
           {row.getValue("detalles")}
         </div>
       );
