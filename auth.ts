@@ -59,21 +59,21 @@ export const {
 
 
       // Previene que inicie session un usuario sin verificacion de email
-      if (!usuarioExistente?.emailVerified) return false;
+      // if (!usuarioExistente?.emailVerified) return false;
 
 
       //ESTA ES LA AUTENTICACION DE DOBLE FACTOR
-      if (usuarioExistente.authDobleFactor) {
-          const dobleFactorConfirmacion = await getTwoFactorConfirmationByUserId(usuarioExistente.id);
-          if (!dobleFactorConfirmacion) return false;
+      // if (usuarioExistente.authDobleFactor) {
+      //     const dobleFactorConfirmacion = await getTwoFactorConfirmationByUserId(usuarioExistente.id);
+      //     if (!dobleFactorConfirmacion) return false;
 
-          // Eliminar la confirmación de dos factores para el próximo inicio de sesión
-          await db.confirmacionDobleFactor.delete({
-              where: {
-                  id: dobleFactorConfirmacion.id,
-              }
-          })
-      }
+      //     // Eliminar la confirmación de dos factores para el próximo inicio de sesión
+      //     await db.confirmacionDobleFactor.delete({
+      //         where: {
+      //             id: dobleFactorConfirmacion.id,
+      //         }
+      //     })
+      // }
       return true;
     },
     // ESTOS SON LOS DATOS DEL USUARIO GUARDADOS EN EL TOKEN

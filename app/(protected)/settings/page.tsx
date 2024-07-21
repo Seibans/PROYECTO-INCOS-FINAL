@@ -56,6 +56,7 @@ const SettingsPage = () => {
   const { update } = useSession();
   const usuario = useUsuarioActual();
   const [isPending, startTransition] = useTransition();
+  console.log(usuario)
 
 
   // es mejor manejarlo como undefined, ya que en el action como se le pasa ...values entonces no lo actualizara

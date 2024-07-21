@@ -32,15 +32,15 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         },
     });
 
-    const verificationToken = await generateVerificationToken(email);
+    // const verificationToken = await generateVerificationToken(email);
 
     //TODO: enviar correo de confirmación
 
 
-    await enviarCorreodeVerificacion(
-        verificationToken.email, 
-        verificationToken.token
-    );
+    // await enviarCorreodeVerificacion(
+    //     verificationToken.email, 
+    //     verificationToken.token
+    // );
 
     // return {success: "Usuario registrado correctamente!"};
     return {success: "Confirmación de correo enviada!"}; 

@@ -36,72 +36,72 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
         return { error: 'El correo no Existe!' };
     }
 
-    if (!existingUser.emailVerified) {
-        const verificationToken = await generateVerificationToken(existingUser.email);
+    // if (!existingUser.emailVerified) {
+    //     const verificationToken = await generateVerificationToken(existingUser.email);
 
-        await enviarCorreodeVerificacion(
-            verificationToken.email,
-            verificationToken.token
-        );
+    //     await enviarCorreodeVerificacion(
+    //         verificationToken.email,
+    //         verificationToken.token
+    //     );
 
 
-        return { success: "Confirmación de Correo Enviada" };
-    }
+    //     return { success: "Confirmación de Correo Enviada" };
+    // }
 
-    if (existingUser.authDobleFactor && existingUser.email) {
+    // if (existingUser.authDobleFactor && existingUser.email) {
 
-        if (codigo) {
-            const tokenDobleFactor = await getTwoFactorTokenByEmail(existingUser.email);
+    //     if (codigo) {
+    //         const tokenDobleFactor = await getTwoFactorTokenByEmail(existingUser.email);
 
-            if(!tokenDobleFactor){
-                return {error: "El código ingresado es incorrecto"};
-            }
+    //         if(!tokenDobleFactor){
+    //             return {error: "El código ingresado es incorrecto"};
+    //         }
 
-            if(tokenDobleFactor.token !== codigo){
-                return {error: "El código ingresado es incorrecto"};
-            }
+    //         if(tokenDobleFactor.token !== codigo){
+    //             return {error: "El código ingresado es incorrecto"};
+    //         }
 
-            const haExpirado = new Date(tokenDobleFactor.expires) < new Date();
+    //         const haExpirado = new Date(tokenDobleFactor.expires) < new Date();
 
-            if(haExpirado){
-                return {error: "El código expiró"};
-            }
+    //         if(haExpirado){
+    //             return {error: "El código expiró"};
+    //         }
  
-            await db.tokenDobleFactor.delete({
-                where: {
-                    id: tokenDobleFactor.id
-                }
-            });
+    //         await db.tokenDobleFactor.delete({
+    //             where: {
+    //                 id: tokenDobleFactor.id
+    //             }
+    //         });
 
-            const confirmacionExistente = await getTwoFactorConfirmationByUserId(existingUser.id);
+    //         const confirmacionExistente = await getTwoFactorConfirmationByUserId(existingUser.id);
 
-            if(confirmacionExistente){
-                await db.confirmacionDobleFactor.delete({
-                    where: {
-                        id: confirmacionExistente.id
-                    }
-                });
-            }
+    //         if(confirmacionExistente){
+    //             await db.confirmacionDobleFactor.delete({
+    //                 where: {
+    //                     id: confirmacionExistente.id
+    //                 }
+    //             });
+    //         }
 
 
-            await db.confirmacionDobleFactor.create({
-                data: {
-                    usuarioId: existingUser.id,
-                }
-            });
+    //         await db.confirmacionDobleFactor.create({
+    //             data: {
+    //                 usuarioId: existingUser.id,
+    //             }
+    //         });
 
-        } else {
+    //     } else {
 
-            const tokenDobleFactor = await generateTwoFactorToken(existingUser.email);
+    //         const tokenDobleFactor = await generateTwoFactorToken(existingUser.email);
 
-            await enviarTokenDobleFactorEmail(
-                tokenDobleFactor.email,
-                tokenDobleFactor.token
-            );
+    //         await enviarTokenDobleFactorEmail(
+    //             tokenDobleFactor.email,
+    //             tokenDobleFactor.token
+    //         );
 
-            return { dobleFactor: true };
-        }
-    }
+    //         return { dobleFactor: true };
+    //     }
+    // }
 
     try {
         await signIn("credentials", {
