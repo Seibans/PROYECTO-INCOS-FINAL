@@ -4,10 +4,12 @@
  * @see https://v0.dev/t/PJJ6K17hsY6
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
-import { SelectForm } from "./FormMascota";
+import { FormMascota } from "./FormMascota";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
 
 // <DialogContent className="sm:max-w-[625px]">
 // </DialogContent>
@@ -29,9 +31,11 @@ export const HeaderMascotas = () => {
 							Registra y Edita tu Mascota
 						</DialogDescription>
 					</DialogHeader>
-					<SelectForm/>
+					<FormMascota setabrirModal={setabrirModal} />
 				</DialogContent>
 			</Dialog>
+
 		</div>
 	)
 }
+

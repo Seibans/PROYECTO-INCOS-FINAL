@@ -26,7 +26,8 @@ export const BotonUsuario = () => {
 				<Avatar className='cursor-pointer'>
 					<AvatarImage src={user?.image || ""} />
 					<AvatarFallback className='bg-orange-400'>
-						<FaUser className='text-white' />{user?.name?.[0] || ""}
+						{/* <FaUser className='text-white' /> */}
+						{user?.name?.[0] || ""}
 					</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
@@ -44,13 +45,11 @@ export const BotonUsuario = () => {
 				<DropdownMenuSeparator />
 
 				<LogoutButton>
-					<DropdownMenuItem>
+					<DropdownMenuItem className='cursor-pointer'>
 						<ExitIcon className='h-4 w-4 mr-2' />
 						Cerrar Sessión
 					</DropdownMenuItem>
 				</LogoutButton>
-				{/* <DropdownMenuItem className='cursor-pointer' onClick={async () => await logout()}>Cerrar Sesión</DropdownMenuItem> */}
-
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)

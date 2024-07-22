@@ -9,7 +9,8 @@ export const publicRoutes = [
 	"/divz",
 	// "/settings",
 	"/auth/nueva-verificacion",
-	"/bento"
+	"/bento",
+	"/api/uploadthing"
 ];
 
 /**

@@ -35,6 +35,16 @@ const nextConfig = {
         hostname: 'lh3.googleusercontent.com',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',  // Añadido este dominio
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'utfs.io', // Añade esta línea
+        pathname: '**', // Permitir cualquier ruta
+      },
     ],
   },
 };
