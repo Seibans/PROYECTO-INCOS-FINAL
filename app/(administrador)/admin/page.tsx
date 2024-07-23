@@ -1,7 +1,7 @@
 import { BookOpenCheck, UsersRound, Waypoints, Dog, ClipboardPlus } from "lucide-react";
 import { CardEstadistica } from "./_components/CardEstadistica";
-// import { Grafico } from "@/components/admin/Grafico.component";
-// import { Grafico2 } from "@/components/admin/Grafico2.component";
+import { Grafico } from "@/components/admin/Grafico.component";
+import { Grafico2 } from "@/components/admin/Grafico2.component";
 
 import { UltimosUsuarios } from "./_components/UltimosUsuarios";
 import { Distribuidores } from "./_components/Distribuidores";
@@ -70,8 +70,8 @@ export default function Home() {
 
       </div>
       <div className="flex flex-col gap-y-4 mt-4">
-        {/* <Grafico />
-        <Grafico2 /> */}
+        <Grafico />
+        <Grafico2 />
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-x-10 mt-12">
         <UltimosUsuarios/>

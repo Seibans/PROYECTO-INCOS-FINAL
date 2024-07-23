@@ -1,10 +1,15 @@
 "use client";
+import { E164Number } from "libphonenumber-js/core";
+import 'react-phone-number-input/style.css';
+
 
 import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 
 // Components UI
 import {
@@ -17,6 +22,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import PhoneInput from "react-phone-number-input";
+
 
 //Mi components
 import { CardWrapper } from "@/components/auth/card-wrapper.component";
@@ -32,13 +39,14 @@ export const RegisterForm = () => {
   // const [error, setError] = useState<string | undefined>("");
   // const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-
+  const router = useRouter();
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
       password: "",
       name: "",
+      celular: undefined
     },
   });
 
@@ -50,6 +58,7 @@ export const RegisterForm = () => {
           if (data.error) {
             throw new Error(data.error);
           } else {
+            router.push("/auth/login");
             return `${data.success}`;
           }
         },
@@ -124,6 +133,31 @@ export const RegisterForm = () => {
                 </FormItem>
               )}
             />
+
+            <div className="flex flex-col gap-6 xl:flex-row">
+
+              <FormField
+                control={form.control}
+                name="celular"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel className="shad-input-label">Celular:</FormLabel>
+                    <FormControl>
+                      <PhoneInput
+                        defaultCountry="BO"
+                        placeholder="+591 00000000"
+                        international
+                        withCountryCallingCode
+                        value={field.value as E164Number | undefined}
+                        onChange={field.onChange}
+                        className="input-phone"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="password"

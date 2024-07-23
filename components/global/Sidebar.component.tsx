@@ -14,7 +14,8 @@ import {
 	Dna,
 	HeartPulse,
 	Syringe,
-	HandCoins
+	HandCoins,
+	Pill
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -29,11 +30,6 @@ const datosGeneralesSidebar = [
 		href: '/admin'
 	},
 	{
-		icon: Building2,
-		label: 'Veterinarias',
-		href: '/admin/veterinarias'
-	},
-	{
 		icon: Calendar,
 		label: 'Agenda',
 		href: '/admin/agenda'
@@ -43,16 +39,31 @@ const datosGeneralesSidebar = [
 		label: 'Mascotas',
 		href: '/admin/mascotas'
 	},
-	// {
-	// 	icon: Bone,
-	// 	label: 'Alimento',
-	// 	href: '/alimento'
-	// },
 	{
 		icon: ClipboardPlusIcon,
 		label: 'Historiales',
 		href: '/admin/historiales'
 	},
+	// {
+	// 	icon: Building2,
+	// 	label: 'Veterinarias',
+	// 	href: '/admin/veterinarias'
+	// },
+	{
+		icon: Pill,
+		label: 'Medicamentos',
+		href: '/admin/medicamentos'
+	},
+	{
+		icon: HandCoins,
+		label: 'Pagos',
+		href: '/admin/pagos'
+	},
+	// {
+	// 	icon: Bone,
+	// 	label: 'Alimento',
+	// 	href: '/alimento'
+	// },
 	// {
 	// 	icon: Dna,
 	// 	label: 'Resultados',
@@ -67,12 +78,7 @@ const datosGeneralesSidebar = [
 	// 	icon: Syringe,
 	// 	label: 'Vacunas',
 	// 	href: '/vacunas'
-	// },
-	{
-		icon: HandCoins,
-		label: 'Pagos',
-		href: '/admin/pagos'
-	},
+	// }
 ]
 
 const datosToolsSidebar = [
@@ -81,11 +87,11 @@ const datosToolsSidebar = [
 		label: 'Preguntas',
 		href: '/admin/preguntas'
 	},
-	{
-		icon: BarChart4,
-		label: 'Analiticas',
-		href: '/admin/analiticas'
-	}
+	// {
+	// 	icon: BarChart4,
+	// 	label: 'Analiticas',
+	// 	href: '/admin/analiticas'
+	// }
 ]
 
 const datosSoporteSidebar = [

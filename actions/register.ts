@@ -7,6 +7,7 @@ import {db} from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
 import {generateVerificationToken} from "@/lib/tokens";
 import { enviarCorreodeVerificacion } from "@/lib/mail";
+import { formatName } from "@/lib/formatearNombre";
 
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
@@ -16,19 +17,20 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         return {error: "Campos Inválidos!"};
     }
 
-    const { email, password, name } = validatedFields.data;
+    const { email, password, name, celular } = validatedFields.data;
     
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
         return {error: "El usuario ya existe!"};
     }
-
+    const nombreFormateado = formatName(name);
     const hashedPassword = await bcrypt.hash(password, 10);
     await db.user.create({
         data: {
             email,
             password: hashedPassword,
-            name,
+            name: nombreFormateado,
+            celular: celular ? celular.replaceAll(" ", "") : null,
         },
     });
 
@@ -42,6 +44,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     //     verificationToken.token
     // );
 
-    // return {success: "Usuario registrado correctamente!"};
-    return {success: "Confirmación de correo enviada!"}; 
+    return {success: "Usuario registrado correctamente, inicia sessión con tus credenciales!"};
+    // return {success: "Confirmación de correo enviada!"}; 
 };

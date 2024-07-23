@@ -5,7 +5,7 @@ import { MascotaSchema } from "@/schemas";
 import { db } from "@/lib/db";
 import { Mascota } from "@prisma/client";
 
-export const obtenerMascotas = async ():Promise<Mascota[]> => {
+export const obtenerMedicamentos = async ():Promise<Mascota[]> => {
     // const mascotas = await db.mascota.findMany();
     // const users = await db.$queryRaw`
     //         SELECT * FROM mascota WHERE sexo = ${"MACHO"}
@@ -16,7 +16,7 @@ export const obtenerMascotas = async ():Promise<Mascota[]> => {
     return mascotas;
 }
 
-export const registrarMascota = async (values: z.infer<typeof MascotaSchema>) => {
+export const registrarMedicamento = async (values: z.infer<typeof MascotaSchema>) => {
     const validatedFields = MascotaSchema.safeParse(values);
 
     if (!validatedFields.success) {
@@ -33,14 +33,13 @@ export const registrarMascota = async (values: z.infer<typeof MascotaSchema>) =>
             sexo,
             fechaNacimiento,
             detalles,
-            idPropietario: 1,
         },
     });
 
     return { success: "Mascota Registrada Correctamente!" };
 };
 
-export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMascota: number) => {
+export const editarMedicamento = async (values: z.infer<typeof MascotaSchema>, idMascota: number) => {
     const validatedFields = MascotaSchema.safeParse(values);
 
     if (!validatedFields.success) {
@@ -74,7 +73,7 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
     return { success: "Mascota Registrada Correctamente!" };
 };
 
-export const obtenerMascota = async (id: number) => {
+export const obtenerMedicamento = async (id: number) => {
     const mascota = await db.mascota.findUnique({
         where: {
             id,
@@ -83,7 +82,7 @@ export const obtenerMascota = async (id: number) => {
     return mascota;
 }
 
-export const eliminarMascota = async (id: number) => {
+export const eliminarMedicamento = async (id: number) => {
     const mascota = await db.mascota.delete ({
         where: {
             id,

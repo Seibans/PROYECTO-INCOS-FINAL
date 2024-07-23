@@ -193,6 +193,7 @@ model Mascota {
   estado          String           @default("0")
   usuario         User?            @relation(fields: [idPropietario], references: [id])
   historial       HistorialMedico? // Puede ser opcional
+  reservasMedicas ReservaMedica[]
   esterilizado      Boolean?                 // Nuevo campo
   alergias          String?                  // Nuevo campo
   observaciones     String?                  // Nuevo campo
@@ -209,7 +210,7 @@ model HistorialMedico {
   creadoEn      DateTime               @default(now()) @db.DateTime(3)
   actualizadoEn DateTime               @updatedAt @db.DateTime(3)
   mascota       Mascota                @relation(fields: [mascotaId], references: [id])
-  tratamientos  Tratamiento[]
+  tratamientos  TratamientoHistorial[]
 }
 
 model Tratamiento {
@@ -219,23 +220,34 @@ model Tratamiento {
   precio                Float
   creadoEn              DateTime                 @default(now()) @db.DateTime(3)
   actualizadoEn         DateTime                 @updatedAt @db.DateTime(3)
-  historialMedicoId     Int
-  historialMedico       HistorialMedico          @relation(fields: [historialMedicoId], references: [id])
+  tratamientosHistorial TratamientoHistorial[]
   medicamentos          TratamientoMedicamento[]
 }
-
 
 model Medicamento {
   id            Int             @id @default(autoincrement())
   nombre        String          @db.VarChar(100)
   descripcion   String?         @db.Text
   stock         Int
-  precio        Decimal
+  precio        Float
   tipo          TipoMedicamento
   creadoEn      DateTime        @default(now()) @db.DateTime(3)
   actualizadoEn DateTime        @updatedAt @db.DateTime(3)
   tratamientos  TratamientoMedicamento[]
 }
+
+model TratamientoHistorial {
+  id                Int             @id @default(autoincrement())
+  tratamientoId     Int
+  historialMedicoId Int
+  cantidad          Int
+  precioTotal       Float
+  creadoEn          DateTime        @default(now()) @db.DateTime(3)
+  actualizadoEn     DateTime        @updatedAt @db.DateTime(3)
+  tratamiento       Tratamiento     @relation(fields: [tratamientoId], references: [id])
+  historialMedico   HistorialMedico @relation(fields: [historialMedicoId], references: [id])
+}
+
 model TratamientoMedicamento {
   id            Int         @id @default(autoincrement())
   tratamientoId Int
@@ -250,12 +262,10 @@ model TratamientoMedicamento {
 model Pago {
   id            Int        @id @default(autoincrement())
   usuarioId     Int
-  total         Decimal
+  total         Float
   cuotas        Int
-  montoCuota    Decimal
+  montoCuota    Float
   estado        EstadoPago @default(Pendiente)
-  fechaPago     DateTime?
-  detalle       String?
   creadoEn      DateTime   @default(now()) @map("creadoEn")
   actualizadoEn DateTime   @updatedAt @map("actualizadoEn")
   usuario       User       @relation(fields: [usuarioId], references: [id])
@@ -265,12 +275,13 @@ model Pago {
 
 model ReservaMedica {
   id            Int           @id @default(autoincrement())
-  fechaReserva  DateTime         @db.DateTime(3)
-  detalles      String?
   usuarioId     Int?
+  mascotaId     Int
   servicio      String        @db.VarChar(100)
+  fecha         DateTime
   estado        EstadoReserva @default(Pendiente)
   creadoEn      DateTime      @default(now()) @db.DateTime(3)
   actualizadoEn DateTime      @updatedAt @db.DateTime(3)
   usuario       User?         @relation(fields: [usuarioId], references: [id])
+  mascota       Mascota       @relation(fields: [mascotaId], references: [id])
 }

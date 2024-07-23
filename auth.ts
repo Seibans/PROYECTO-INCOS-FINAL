@@ -111,6 +111,7 @@ export const {
         // session.user.email = token.email || session.user.email;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
+        session.user.celular = token.celular as string | null;
       }
 
       return session;
@@ -136,10 +137,11 @@ export const {
 
 
       // token.isOAuth = cuentaExistente ? true : false;
-      token.isOAuth = !!cuentaExistente;
+      token.isOAuth = !!cuentaExistente;  
       token.name = usuarioExistente.name;
       token.email = usuarioExistente.email;
       token.rol = usuarioExistente.rol;
+      token.celular = usuarioExistente.celular;
       token.authDobleFactor = usuarioExistente.authDobleFactor;
 
       return token;

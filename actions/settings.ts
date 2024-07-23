@@ -100,7 +100,8 @@ export const settings = async (values: z.infer<typeof ConfiguracionSchema>) => {
             name: usuarioActualizado.name,
             email: usuarioActualizado.email,
             authDobleFactor: usuarioActualizado.authDobleFactor,
-            rol: usuarioActualizado.rol
+            rol: usuarioActualizado.rol,
+            celular: usuarioActualizado.celular
         }
     });
 

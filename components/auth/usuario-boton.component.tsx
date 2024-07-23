@@ -40,8 +40,8 @@ export const BotonUsuario = () => {
 					</DropdownMenuItem>
 				</Link>
 
-				<DropdownMenuItem className='cursor-pointer'>Configuracion</DropdownMenuItem>
-				<DropdownMenuItem className='cursor-pointer'>Soporte</DropdownMenuItem>
+				{/* <DropdownMenuItem className='cursor-pointer'>Configuracion</DropdownMenuItem> */}
+				{/* <DropdownMenuItem className='cursor-pointer'>Soporte</DropdownMenuItem> */}
 				<DropdownMenuSeparator />
 
 				<LogoutButton>

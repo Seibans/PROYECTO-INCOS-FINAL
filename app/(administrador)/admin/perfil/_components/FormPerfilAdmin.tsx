@@ -1,4 +1,6 @@
 "use client"
+import { E164Number } from "libphonenumber-js/core";
+import 'react-phone-number-input/style.css';
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -25,6 +27,9 @@ import { ConfiguracionSchema } from "@/schemas";
 import { toast } from "sonner";
 
 import { settings } from "@/actions/settings";
+
+import PhoneInput from "react-phone-number-input";
+
 
 import {
   Form,
@@ -60,6 +65,7 @@ export function FormPerfilAdmin() {
       nuevoPassword: undefined,
       name: usuario?.name || undefined,
       email: usuario?.email || undefined,
+      celular: usuario?.celular || undefined,
       rol: usuario?.rol || undefined,
       authDobleFactor: usuario?.authDobleFactor || undefined,
     }
@@ -192,6 +198,31 @@ export function FormPerfilAdmin() {
                       />
                     </>
                   )}
+
+                  <div className="flex flex-col gap-6 xl:flex-row">
+
+                    <FormField
+                      control={form.control}
+                      name="celular"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel className="shad-input-label">Celular:</FormLabel>
+                          <FormControl>
+                            <PhoneInput
+                              defaultCountry="BO"
+                              placeholder="+591 00000000"
+                              international
+                              withCountryCallingCode
+                              value={field.value as E164Number | undefined}
+                              onChange={field.onChange}
+                              className="input-phone"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
                     name="rol"

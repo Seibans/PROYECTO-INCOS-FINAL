@@ -5,6 +5,7 @@ export type UsuarioExtendido = DefaultSession["user"] & {
 	rol: "Administrador" | "Usuario";
 	authDobleFactor: boolean;
 	isOAuth: boolean;
+	celular: string | null;
 }
 
 declare module "next-auth" {
