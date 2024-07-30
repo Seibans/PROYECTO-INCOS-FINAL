@@ -10,7 +10,7 @@ export const UltimosUsuarios = () => {
 			<p className="text-xl">Ultimos Usuarios</p>
 		</div>
 		<div className="">
-			<TablaUsuarios/>
+			{/* <TablaUsuarios/> */}
 		</div>
 	</div>
   )

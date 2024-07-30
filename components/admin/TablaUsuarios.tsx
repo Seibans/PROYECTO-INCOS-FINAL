@@ -19,8 +19,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Pencil } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -40,75 +41,46 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-]
+import Link from "next/link";
+import Image from "next/image";
 
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+import { User } from "@prisma/client";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<User>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    accessorKey: "image",
+    header: "Foto",
+    cell: ({ row }) => {
+      const imagen = row.getValue("image");
+
+      return (
+        <div className="px-3">
+          <Image
+            src={typeof imagen === 'string' ? imagen : "/images/imagen-gato.png"}
+            alt="Imagen del usuario"
+            width={30}
+            height={30}
+          // className="h-auto w-auto"
+          />
+        </div>
+      );
+    },
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    accessorKey: "name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nombre
+          <ArrowUpDown className="ml-2 h-3 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
     accessorKey: "email",
@@ -119,68 +91,102 @@ export const columns: ColumnDef<Payment>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
-          {/* <CaretSortIcon className="ml-2 h-4 w-4" /> */}
+          <ArrowUpDown className="ml-2 h-3 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div>{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "celular",
+    header: () => <div className="text-center">Nro: Celular</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const nombre = row.getValue("name");
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
+      if (row.getValue("celular") === null) {
+        return <div className="text-center">No tiene celular</div>;
+      } else {
+        const whatsappLink = `https://wa.me/${row.getValue("celular")}?text=Hola%20${nombre},%20me%20interesa%20contactarte%20de%20la%20veterinaria%20Gamaliel.`;
 
-      return <div className="text-right font-medium">{formatted}</div>
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="w-full flex justify-center">
+                  <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                    <Button variant="whatsapp">
+                      <FaWhatsapp className="h-5 w-5" />
+                    </Button>
+                  </Link>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#43da57]">
+                <p>Enviar Mensaje a</p>
+                <p>Con Celular: <span className="font-bold"> {row.getValue("celular")}</span></p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      }
     },
   },
   {
     id: "actions",
+    header: "Acciones",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
-
+      const { id } = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              {/* <DotsHorizontalIcon className="h-4 w-4" /> */}
+              <span className="sr-only">Abrir Menu</span>
+              <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
+            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <Link href={`/admin/usuarios/${id}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                <Pencil className="w-4 h-4 mr-2" />Editar Datos
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Ver detalles del Usuario</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(`${id}`)}
+            >
+              Copiar Id del Usuario
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
-export function TablaUsuarios() {
+interface DataTableProps<TData> {
+  data: TData[];
+}
+
+export function TablaUsuarios({
+  data
+}: DataTableProps<User>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  // const [rowSelection, setRowSelection] = React.useState({})
+  const [isMounted, setIsMounted] = React.useState(false);
 
-  const table = useReactTable({
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const table = useReactTable<User>({
     data,
     columns,
     onSortingChange: setSorting,
@@ -190,31 +196,32 @@ export function TablaUsuarios() {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    // onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
+      // rowSelection,
     },
-  })
+  });
+
+  if (!isMounted) return null;
 
   return (
-    <div className="w-full">
+    <div className="p-4 bg-background shadow-md rounded-lg mt-4 w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filtrar Usuarios"
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns
-              {/* <ChevronDownIcon className="ml-2 h-4 w-4" /> */}
+              Columnas<ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -249,9 +256,9 @@ export function TablaUsuarios() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -263,7 +270,7 @@ export function TablaUsuarios() {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                // data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -281,7 +288,7 @@ export function TablaUsuarios() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No hay Usuarios.
                 </TableCell>
               </TableRow>
             )}
@@ -289,10 +296,10 @@ export function TablaUsuarios() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+        {/* <div className="flex-1 text-sm text-muted-foreground">
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
+          </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"
@@ -300,7 +307,7 @@ export function TablaUsuarios() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
           <Button
             variant="outline"
@@ -308,7 +315,7 @@ export function TablaUsuarios() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Siguiente
           </Button>
         </div>
       </div>

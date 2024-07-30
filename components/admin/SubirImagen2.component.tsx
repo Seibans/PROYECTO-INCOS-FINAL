@@ -37,7 +37,7 @@ export default function SubirImagen2() {
       <div className="relative">
         <label
           htmlFor="file-upload"
-          className="flex items-center justify-center h-32 border-2 border-dashed border-primary rounded-lg cursor-pointer"
+          className="flex items-center justify-center h-32 w-32 border-2 border-dashed border-primary rounded-lg cursor-pointer"
         >
           <span className="text-primary">Subir imagen</span>
           <input

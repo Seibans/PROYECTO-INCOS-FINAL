@@ -1,7 +1,10 @@
-import React from 'react'
+import { Calendario } from "./_components/Calendario";
+
 
 export default function AgendaPage(){
   return (
-    <div>AgendaPage</div>
+    <>
+      <Calendario/>
+    </>
   )
 }

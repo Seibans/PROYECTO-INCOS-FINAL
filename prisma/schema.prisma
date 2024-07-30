@@ -231,6 +231,7 @@ model Medicamento {
   descripcion   String?         @db.Text
   stock         Int
   precio        Decimal
+  // precio Decimal @db.Decimal(10, 2)
   tipo          TipoMedicamento
   creadoEn      DateTime        @default(now()) @db.DateTime(3)
   actualizadoEn DateTime        @updatedAt @db.DateTime(3)

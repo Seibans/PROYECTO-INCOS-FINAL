@@ -1,46 +1,47 @@
 "use server";
 
 import * as z from "zod";
-import { MascotaSchema } from "@/schemas";
+import { MedicamentoSchema } from "@/schemas";
 import { db } from "@/lib/db";
-import { Mascota } from "@prisma/client";
+import { Medicamento } from "@prisma/client";
 
-export const obtenerMedicamentos = async ():Promise<Mascota[]> => {
+export const obtenerMedicamentos = async ():Promise<Medicamento[]> => {
     // const mascotas = await db.mascota.findMany();
     // const users = await db.$queryRaw`
     //         SELECT * FROM mascota WHERE sexo = ${"MACHO"}
     //     ` as Mascota[];
-    const mascotas = await db.$queryRaw<Mascota[]>`
-             SELECT * FROM mascota ORDER BY creadoEn DESC
-             `;
-    return mascotas;
+    // const mascotas = await db.$queryRaw<Mascota[]>`
+    //          SELECT * FROM mascota ORDER BY creadoEn DESC
+    //          `;
+    // return mascotas;
+    const medicamentos = await db.medicamento.findMany();
+    return medicamentos
 }
 
-export const registrarMedicamento = async (values: z.infer<typeof MascotaSchema>) => {
-    const validatedFields = MascotaSchema.safeParse(values);
+export const registrarMedicamento = async (values: z.infer<typeof MedicamentoSchema>) => {
+    const validatedFields = MedicamentoSchema.safeParse(values);
 
     if (!validatedFields.success) {
         return { error: "Campos Inválidos!" };
     }
 
-    const { nombre, especie, raza, sexo, fechaNacimiento, detalles } = validatedFields.data;
+    const { nombre, descripcion, stock, precio, tipo } = validatedFields.data;
 
-    const pablo = await db.mascota.create({
+    const pablo = await db.medicamento.create({
         data: {
             nombre,
-            especie,
-            raza,
-            sexo,
-            fechaNacimiento,
-            detalles,
+            descripcion,
+            stock,
+            precio,
+            tipo,
         },
     });
 
-    return { success: "Mascota Registrada Correctamente!" };
+    return { success: "Medicamento Registrado Correctamente!" };
 };
 
-export const editarMedicamento = async (values: z.infer<typeof MascotaSchema>, idMascota: number) => {
-    const validatedFields = MascotaSchema.safeParse(values);
+export const editarMedicamento = async (values: z.infer<typeof MedicamentoSchema>, idMedicamento: number) => {
+    const validatedFields = MedicamentoSchema.safeParse(values);
 
     if (!validatedFields.success) {
         return { error: "Campos Inválidos!" };
@@ -61,34 +62,34 @@ export const editarMedicamento = async (values: z.infer<typeof MascotaSchema>, i
     //     },
     // });
 
-    const mascotaActualizada = await db.mascota.update({
+    const medicamentoActualizado = await db.medicamento.update({
         where: {
-            id: idMascota
+            id: idMedicamento
         },
         data: {
             ...values
         }
     })
 
-    return { success: "Mascota Registrada Correctamente!" };
+    return { success: "Medicamento Editado Correctamente!" };
 };
 
 export const obtenerMedicamento = async (id: number) => {
-    const mascota = await db.mascota.findUnique({
+    const medicamento = await db.medicamento.findUnique({
         where: {
             id,
         },
     });
-    return mascota;
+    return medicamento;
 }
 
 export const eliminarMedicamento = async (id: number) => {
-    const mascota = await db.mascota.delete ({
+    const medicamento = await db.medicamento.delete ({
         where: {
             id,
         },
     });
 
-    if(!mascota) return {error: "Mascota no Encontrada"}
-    return {success: "La Mascota fue Removida Correctamente"};
+    if(!medicamento) return {error: "Medicamento no Encontrado"}
+    return {success: "El Medicamento fue Removido Correctamente"};
 }

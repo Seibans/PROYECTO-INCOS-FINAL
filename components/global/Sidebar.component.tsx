@@ -15,7 +15,8 @@ import {
 	HeartPulse,
 	Syringe,
 	HandCoins,
-	Pill
+	Pill,
+	User2
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,11 @@ const datosGeneralesSidebar = [
 		icon: PanelsTopLeft,
 		label: 'Datos Generales',
 		href: '/admin'
+	},
+	{
+		icon: User2,
+		label: 'Usuarios',
+		href: '/admin/usuarios'
 	},
 	{
 		icon: Calendar,

@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -20,8 +21,6 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 //TANSTACK QUERY
 import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
-
-
 
 
 
@@ -59,7 +58,10 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
-        <head />
+        <head>
+          {/* <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.cells.min.js"></script> */}
+        </head>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased theme-custom",
