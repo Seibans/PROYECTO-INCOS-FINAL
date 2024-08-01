@@ -38,10 +38,11 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
-import { Medicamento } from "@prisma/client";
+// import { Medicamento } from "@prisma/client";
 import { formatearFecha } from "@/lib/formatearFecha"
+import { MedicamentoT } from "@/types";
 
-export const columns: ColumnDef<Medicamento>[] = [
+export const columns: ColumnDef<MedicamentoT>[] = [
   {
     accessorKey: "nombre",
     header: ({ column }) => {
@@ -93,7 +94,7 @@ export const columns: ColumnDef<Medicamento>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-left font-medium">
-          {row.getValue("raza")}
+          {row.getValue("stock")}
         </div>
       );
     },
@@ -130,7 +131,7 @@ export const columns: ColumnDef<Medicamento>[] = [
       return (
         // text-pretty text-wrap text-balance
         <div className="font-medium w-48 overflow-hidden">
-          {row.getValue("creadoEn")}
+          {/* {row.getValue("creadoEn")} */}
         </div>
       );
     },
@@ -143,7 +144,7 @@ export const columns: ColumnDef<Medicamento>[] = [
       return (
         // text-pretty text-wrap text-balance
         <div className="font-medium w-48 overflow-hidden">
-          {row.getValue("actualizadoEn")}
+          {/* {row.getValue("actualizadoEn")} */}
         </div>
       );
     },
@@ -191,7 +192,7 @@ interface DataTableProps<TData> {
 
 export function TablaMedicamentos({
   data
-}: DataTableProps<Medicamento>) {
+}: DataTableProps<MedicamentoT>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -203,7 +204,7 @@ export function TablaMedicamentos({
     setIsMounted(true);
   }, []);
 
-  const table = useReactTable<Medicamento>({
+  const table = useReactTable<MedicamentoT>({
     data,
     columns,
     onSortingChange: setSorting,

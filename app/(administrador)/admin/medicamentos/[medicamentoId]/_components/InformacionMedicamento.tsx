@@ -20,7 +20,7 @@ export const InformacionMedicamento = (props: InformacionMedicamentoProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 gap-y-4">
             <div className="rounded-lg bg-background shadow-md hover:shadow-lg p-4">
                 <div>
-                    <DefaultImage src={medicamento.nombre} alt="Imagen del Medicamento" />
+                    {/* <DefaultImage src={medicamento.nombre} alt="Imagen del Medicamento" /> */}
                     <FormEditarMedicamento medicamento={medicamento} />
                 </div>
             </div>

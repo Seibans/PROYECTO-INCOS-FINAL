@@ -59,17 +59,6 @@ enum Sexo {
   Hembra
 }
 
-enum EstadoPago {
-  Pendiente
-  Pagado
-}
-
-enum EstadoReserva {
-  Pendiente
-  Confirmada
-  Cancelada
-}
-
 enum TipoMedicamento {
   Pastilla
   Vacuna
@@ -81,16 +70,21 @@ enum TipoMedicamento {
   Otro
 }
 
-
 model User {
-  id                      Int                      @id @default(autoincrement())
-  name                    String?                  @map("nombre") @db.VarChar(150)
+  id                      Int                      @id @default(autoincrement()) @db.UnsignedInt
+  name                    String                   @map("nombres") @db.VarChar(70)
+  apellidoPat             String                   @db.VarChar(40)
+  apellidoMat             String?                  @db.VarChar(40)
+  ci                      String?                  @db.VarChar(18)
+  sexo                    String?                  @db.VarChar(1)
   email                   String?                  @unique @map("correo") @db.VarChar(150)
   emailVerified           DateTime?                @map("correoVerificado")
   image                   String?                  @map("imagen") @db.VarChar(255)
   password                String?                  @map("contrasena") @db.VarChar(200)
   rol                     RolUsuario               @default(Usuario)
-  celular                 String?                  @map("celular") @db.VarChar(16)
+  celular                 String?                  @map("celular") @db.VarChar(17)
+  direccion               String?                  @db.VarChar(255)
+  estado                  Int                      @default(1) @db.TinyInt
   Account                 Account?
   authDobleFactor         Boolean                  @default(false) @map("autenticacionDobleFactor")
   dobleFactorConfirmacion ConfirmacionDobleFactor?
@@ -99,14 +93,15 @@ model User {
   reservasMedicas         ReservaMedica[]
   // Optional for WebAuthn support
   Authenticator           Authenticator[]
-  createdAt               DateTime                 @default(now()) @map("creadoEn")
-  updatedAt               DateTime                 @updatedAt @map("actualizadoEn")
+  // createdAt               DateTime                 @default(now()) @db.TimeStamp @map("creadoEn")
+  // updatedAt               DateTime?                @updatedAt @db.TimeStamp @map("actualizadoEn")
+  idUsuario               Int
 
   @@map("Usuario")
 }
 
 model Account {
-  id                       Int     @id @default(autoincrement())
+  id                       Int     @id @default(autoincrement()) @db.UnsignedInt
   userId                   Int     @unique @map("usuarioId")
   type                     String  @map("tipo") @db.VarChar(20)
   provider                 String  @map("proveedor") @db.VarChar(50)
@@ -121,8 +116,8 @@ model Account {
   refresh_token_expires_in Int?    @map("tokenActualizacionExpiraEn")
   user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now()) @map("creadoEn")
-  updatedAt DateTime @updatedAt @map("actualizadoEn")
+  // createdAt DateTime  @default(now()) @map("creadoEn") @db.TimeStamp(3)
+  // updatedAt DateTime? @updatedAt @map("actualizadoEn") @db.TimeStamp(3)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -130,7 +125,7 @@ model Account {
 }
 
 model TokenVerificacion {
-  id      Int      @id @default(autoincrement())
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
   token   String   @unique
   email   String
   expires DateTime
@@ -139,7 +134,7 @@ model TokenVerificacion {
 }
 
 model TokenReestablecimientoPassword {
-  id      Int      @id @default(autoincrement())
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
   token   String   @unique
   email   String
   expires DateTime
@@ -148,7 +143,7 @@ model TokenReestablecimientoPassword {
 }
 
 model TokenDobleFactor {
-  id      Int      @id @default(autoincrement())
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
   token   String   @unique
   email   String
   expires DateTime
@@ -157,7 +152,7 @@ model TokenDobleFactor {
 }
 
 model ConfirmacionDobleFactor {
-  id        Int  @id @default(autoincrement())
+  id        Int  @id @default(autoincrement()) @db.UnsignedInt
   usuarioId Int
   usuario   User @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
@@ -181,97 +176,102 @@ model Authenticator {
 }
 
 model Mascota {
-  id              Int              @id @default(autoincrement())
-  nombre          String           @db.VarChar(100)
+  id              Int         @id @default(autoincrement()) @db.UnsignedInt
+  nombre          String      @db.VarChar(50)
   especie         TipoMascota
-  raza            String?          @db.VarChar(60)
-  fechaNacimiento DateTime?
+  raza            String?     @db.VarChar(60)
+  fechaNacimiento DateTime?   @db.DateTime
   sexo            Sexo
-  detalles        String?
-  imagen          String?
-  idPropietario   Int?             @default(0) // Puede ser opcional
-  estado          String           @default("0")
-  usuario         User?            @relation(fields: [idPropietario], references: [id])
-  historial       HistorialMedico? // Puede ser opcional
-  esterilizado      Boolean?                 // Nuevo campo
-  alergias          String?                  // Nuevo campo
-  observaciones     String?                  // Nuevo campo
-  creadoEn        DateTime         @default(now())
-  actualizadoEn   DateTime         @updatedAt
+  detalles        String?     @db.VarChar(255)
+  imagen          String?     @db.VarChar(255)
+  estado          Int         @default(1) @db.TinyInt
+  //TODO: CORREGIR ESTO
+  idPropietario   Int?        @default(0) // Puede ser opcional
+  usuario         User?       @relation(fields: [idPropietario], references: [id])
+
+  historial     HistorialMedico? // Puede ser opcional
+  esterilizado  Boolean?         @default(false)
+  alergias      String?          @db.VarChar(255)
+  observaciones String?          @db.VarChar(255)
+  // creadoEn      DateTime         @default(now()) @db.TimeStamp
+  // actualizadoEn DateTime?        @updatedAt @db.TimeStamp
 
   // Define la clave primaria de la tabla
   @@map("mascota")
 }
 
 model HistorialMedico {
-  id            Int                    @id @default(autoincrement())
-  mascotaId     Int                    @unique
-  creadoEn      DateTime               @default(now()) @db.DateTime(3)
-  actualizadoEn DateTime               @updatedAt @db.DateTime(3)
-  mascota       Mascota                @relation(fields: [mascotaId], references: [id])
-  tratamientos  Tratamiento[]
+  id           Int           @id @default(autoincrement()) @db.UnsignedInt
+  mascotaId    Int           @unique
+  estado       Int           @default(1) @db.TinyInt
+  // creadoEn      DateTime      @default(now()) @db.TimeStamp
+  // actualizadoEn DateTime?     @updatedAt @db.TimeStamp
+  mascota      Mascota       @relation(fields: [mascotaId], references: [id])
+  tratamientos Tratamiento[]
 }
 
 model Tratamiento {
-  id                    Int                      @id @default(autoincrement())
-  nombre                String                   @db.VarChar(100)
-  descripcion           String?                  @db.Text
-  precio                Float
-  creadoEn              DateTime                 @default(now()) @db.DateTime(3)
-  actualizadoEn         DateTime                 @updatedAt @db.DateTime(3)
-  historialMedicoId     Int
-  historialMedico       HistorialMedico          @relation(fields: [historialMedicoId], references: [id])
-  medicamentos          TratamientoMedicamento[]
+  id                Int                      @id @default(autoincrement()) @db.UnsignedInt
+  nombre            String                   @db.VarChar(100)
+  descripcion       String?                  @db.Text
+  precio            Decimal                  @db.Decimal(10, 2)
+  estado            Int                      @default(1) @db.TinyInt
+  creadoEn          DateTime                 @default(now()) @db.Timestamp(3)
+  // actualizadoEn     DateTime?                @updatedAt @db.TimeStamp(3)
+  historialMedicoId Int
+  historialMedico   HistorialMedico          @relation(fields: [historialMedicoId], references: [id])
+  medicamentos      TratamientoMedicamento[]
 }
-
 
 model Medicamento {
-  id            Int             @id @default(autoincrement())
-  nombre        String          @db.VarChar(100)
-  descripcion   String?         @db.Text
-  stock         Int
-  precio        Decimal
-  // precio Decimal @db.Decimal(10, 2)
-  tipo          TipoMedicamento
-  creadoEn      DateTime        @default(now()) @db.DateTime(3)
-  actualizadoEn DateTime        @updatedAt @db.DateTime(3)
-  tratamientos  TratamientoMedicamento[]
+  id           Int                      @id @default(autoincrement()) @db.UnsignedInt
+  imagen       String?                  @db.VarChar(255)
+  nombre       String                   @db.VarChar(100)
+  descripcion  String?                  @db.Text
+  stock        Int                      @default(0)
+  estado       Int                      @default(1) @db.TinyInt
+  precio       Decimal                  @db.Decimal(10, 2)
+  tipo         TipoMedicamento
+  // creadoEn      DateTime                 @default(now()) @db.TimeStamp
+  // actualizadoEn DateTime?                @updatedAt @db.TimeStamp
+  tratamientos TratamientoMedicamento[]
 }
+
 model TratamientoMedicamento {
-  id            Int         @id @default(autoincrement())
+  id            Int         @id @default(autoincrement()) @db.UnsignedInt
   tratamientoId Int
   medicamentoId Int
   cantidad      Int
-  creadoEn      DateTime    @default(now()) @db.DateTime(3)
-  actualizadoEn DateTime    @updatedAt @db.DateTime(3)
+  // creadoEn      DateTime    @default(now()) @db.TimeStamp
+  // actualizadoEn DateTime?   @updatedAt @db.TimeStamp
   tratamiento   Tratamiento @relation(fields: [tratamientoId], references: [id])
   medicamento   Medicamento @relation(fields: [medicamentoId], references: [id])
 }
 
 model Pago {
-  id            Int        @id @default(autoincrement())
-  usuarioId     Int
-  total         Decimal
-  cuotas        Int
-  montoCuota    Decimal
-  estado        EstadoPago @default(Pendiente)
-  fechaPago     DateTime?
-  detalle       String?
-  creadoEn      DateTime   @default(now()) @map("creadoEn")
-  actualizadoEn DateTime   @updatedAt @map("actualizadoEn")
-  usuario       User       @relation(fields: [usuarioId], references: [id])
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  usuarioId  Int
+  total      Decimal   @db.Decimal(18, 2)
+  cuotas     Int
+  montoCuota Decimal   @db.Decimal(18, 2)
+  fechaPago  DateTime?
+  detalle    String?
+  estado     Int       @default(1) @db.TinyInt
+  // creadoEn      DateTime  @default(now()) @db.TimeStamp
+  // actualizadoEn DateTime? @updatedAt @db.TimeStamp
+  usuario    User      @relation(fields: [usuarioId], references: [id])
 
   @@map("Pago")
 }
 
 model ReservaMedica {
-  id            Int           @id @default(autoincrement())
-  fechaReserva  DateTime         @db.DateTime(3)
-  detalles      String?
-  usuarioId     Int?
-  servicio      String        @db.VarChar(100)
-  estado        EstadoReserva @default(Pendiente)
-  creadoEn      DateTime      @default(now()) @db.DateTime(3)
-  actualizadoEn DateTime      @updatedAt @db.DateTime(3)
-  usuario       User?         @relation(fields: [usuarioId], references: [id])
+  id           Int      @id @default(autoincrement()) @db.UnsignedInt
+  fechaReserva DateTime @db.DateTime(3)
+  detalles     String?  @db.VarChar(255)
+  usuarioId    Int?
+  servicio     String   @db.VarChar(100)
+  estado       Int      @default(1) @db.TinyInt
+  // creadoEn      DateTime  @default(now()) @db.TimeStamp
+  // actualizadoEn DateTime? @updatedAt @db.TimeStamp
+  usuario      User?    @relation(fields: [usuarioId], references: [id])
 }

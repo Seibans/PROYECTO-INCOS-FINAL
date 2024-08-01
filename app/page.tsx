@@ -4,7 +4,8 @@ import { LoginButton } from "@/components/auth/login-button.component";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { BackButton } from "@/components/auth/back-button.component";
-
+import { FloatingNav } from "@/components/ui/floating-navbar";
+import { HomeIcon, MessageCircle, User2 } from "lucide-react";
 // Definir los elementos estáticos
 const staticItems = [
   {
@@ -38,11 +39,34 @@ const staticItems = [
     image: "https://res.cloudinary.com/dy8crd62e/image/upload/v1692680027/h74ziuz3v30pdrelsk05.jpg",
   }
 ];
+const navItems = [
+  {
+    name: "Home",
+    link: "/",
+    icon: <HomeIcon className="h-4 w-4 text-neutral-500 dark:text-white" />,
+  },
+  {
+    name: "About",
+    link: "/about",
+    icon: <User2 className="h-4 w-4 text-neutral-500 dark:text-white" />,
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+    icon: (
+      <MessageCircle className="h-4 w-4 text-neutral-500 dark:text-white" />
+    ),
+  },
+];
+
 
 export default function Home() {
   return (
-    <main className="flex h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-200 to-orange-500">
-      <div className="space-y-6 text-center text-white z-10">
+    // <main className="flex h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-200 to-orange-500">
+    <main className="relative flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-200 to-orange-500">
+      <div className="space-y-6 text-center text-white z-10 mt-10 h-[1000px] border-red-700 border">
+        <FloatingNav navItems={navItems} />
+
         <h1 className={cn("text-6xl font-semibold drop-shadow-md")}>
           Veterinaria Gamaliel
         </h1>
@@ -55,10 +79,10 @@ export default function Home() {
             </Button>
           </LoginButton>
         </div>
-      <div>
-        <BackButton label="Ir al Panel De Bento Grid" href="/bento" />
-        <BackButton label="Ir al Panel de Divz" href="/divz" />
-      </div>
+        <div>
+          <BackButton label="Ir al Panel De Bento Grid" href="/bento" />
+          <BackButton label="Ir al Panel de Divz" href="/divz" />
+        </div>
       </div>
       <div className="flex mt-3 z-10">
         <AnimatedTooltip items={staticItems}></AnimatedTooltip>
@@ -70,7 +94,7 @@ export default function Home() {
           minSize={1}
           maxSize={1.8}
           particleDensity={100}
-          className="w-full h-full"
+          className="w-full h-full fixed"
           particleColor="#FFFFFF"
         />
       </div>

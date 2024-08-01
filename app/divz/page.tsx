@@ -4,11 +4,13 @@ import { BackButton } from "@/components/auth/back-button.component";
 import Image from "next/image"
 
 import { AspectRatio } from "@/components/ui/aspect-ratio"
+import VantaBackground from "@/components/global/VantaBackground";
 
 
 const DivzPage = () => {
 	return (
 		<>
+		<VantaBackground></VantaBackground>
 			<Divz
 				showNavButtons={true}
 				isExpanded={false}>

@@ -5,9 +5,10 @@ import { auth } from "@/auth";
 import { Medicamento } from "@prisma/client"
 import { obtenerMedicamentos } from "@/actions/medicamentos";
 import { TablaMedicamentos } from "@/components/admin/TablaMedicamentos.component";
-
+import { MedicamentoT } from "@/types";
 export const ListaMedicamentos = async () => {
-  const medicamentos: Medicamento[] = await obtenerMedicamentos();
+  const medicamentos: MedicamentoT[] = await obtenerMedicamentos();
+  console.log(medicamentos);
   return (
     <>
       <TablaMedicamentos data={medicamentos} />

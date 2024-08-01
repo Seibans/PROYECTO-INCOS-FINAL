@@ -103,11 +103,14 @@ export const MedicamentoSchema = z.object({
     descripcion: z.string()
         .max(1000, { message: "La descripción no puede tener más de 1000 caracteres" })
         .optional(),
-    stock: z.number()
-        .int({ message: "El stock debe ser un número entero" })
-        .positive({ message: "El stock debe ser un número positivo" }),
-    precio: z.number()
-        .positive({ message: "El precio debe ser un número positivo" }),
+    stock: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El stock debe ser un número positivo" })),
+    precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
+
+    // stock: z.number()
+    //     .int({ message: "El stock debe ser un número entero" })
+    //     .positive({ message: "El stock debe ser un número positivo" }),
+    // precio: z.number()
+    //     .positive({ message: "El precio debe ser un número positivo" }),
     tipo: z.enum(["Pastilla", "Vacuna", "Inyeccion", "Crema", "Suero", "Polvo", "Gel", "Otro"], {
         errorMap: () => ({ message: "El tipo de medicamento es inválido" })
     }),

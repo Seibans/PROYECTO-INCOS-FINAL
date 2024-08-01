@@ -25,6 +25,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dispatch, SetStateAction } from "react";
 import { useRouter } from 'next/navigation';
+import { registrarMedicamento } from '@/actions/medicamentos';
+import { toast } from 'sonner';
+
 
 
 
@@ -53,17 +56,20 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 		startTransition(() => {
 			console.log(values);
 			// Aquí puedes llamar a tu acción para registrar el medicamento
-			// toast.promise(registrarMedicamento(values), {
-			//   loading: "Cargando...",
-			//   success: (data) => {
-			//     if (data.error) {
-			//       throw new Error(data.error);
-			//     } else {
-			//       return `${data.success}`;
-			//     }
-			//   },
-			//   error: (error) => error.message,
-			// });
+			toast.promise(registrarMedicamento(values), {
+				loading: "Cargando...",
+				success: (data) => {
+					if (data.error) {
+						throw new Error(data.error);
+					} else {
+						router.refresh();
+						//Extraerlo de props
+						props.setabrirModal(false);
+						return `${data.success}`;
+					}
+				},
+				error: (error) => error.message,
+			});
 		});
 	};
 
