@@ -126,7 +126,7 @@ export const LoginForm = () => {
     <CardWrapper
       headerLabel="Bienvenido de nuevo!"
       backButtonLabel="No tienes una Cuenta?"
-      backButtonHref="/auth/register"
+      backButtonHref="/auth/registro"
       showSocial
     >
       {/* obtiene todas las propiedades desestructurandolas excepto children */}

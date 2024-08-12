@@ -5,10 +5,10 @@ import Image from "next/image";
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <div className="relative h-full flex items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-100 to-orange-400">
-        <div className="z-10">
+      <div className="relative flex items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-100 to-orange-400">
+        <div className="z-10 h-auto">
           {children}
-          <div className="hidden absolute right-7 bottom-7 lg:block">
+          <div className="hidden absolute right-7 bottom-7 xl:block">
             <Image src="/images/imagen-gato.png" alt="alt" width={300} height={300} />
           </div>
         </div>
@@ -23,7 +23,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           minSize={0.6}
           maxSize={1.4}
           particleDensity={100}
-          className="w-full h-full"
+          className="w-full h-full fixed"
           particleColor="#FFFFFF"
         />
       </div>

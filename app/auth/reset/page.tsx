@@ -1,9 +1,11 @@
 import { ResetForm } from "@/components/auth/reset-form.component";
 
- const ResetPage = () => {
+const ResetPage = () => {
 	return (
-		<ResetForm />
+		<div className="h-screen flex flex-col items-center justify-center">
+			<ResetForm />
+		</div>
 	)
- }
+}
 
- export default ResetPage;
+export default ResetPage;

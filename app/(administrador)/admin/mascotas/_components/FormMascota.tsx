@@ -82,9 +82,8 @@ export const FormMascota = (props: FormMascotaProps) => {
 			raza: "Sin Raza (Especial)",
 			fechaNacimiento: undefined,
 			sexo: undefined,
-			detalles: "",
+			detalles: undefined,
 			imagen: "",
-			estado: "1",
 		},
 	})
 	useEffect(() => {
@@ -113,6 +112,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 
 	// Definir el manejador de envío del formulario
 	function onSubmit(values: z.infer<typeof MascotaSchema>) {
+		console.log(values)
 		startTransition(() => {
 			toast.promise(registrarMascota(values), {
 				loading: "Cargando...",

@@ -5,6 +5,7 @@ import authConfig from "@/auth.config"
 import { getUserById } from "@/data/user"
 import { getTwoFactorConfirmationByUserId } from "@/data/doble-factor-confirmacion";
 import { getCuentaById } from "@/data/cuenta"
+import {actualizarNombres} from "@/lib/formatearNombreAuth"
 
 // CORRECION DE NUEVOS ATRIBUTOS EN EL TOKEN minuto 3:10
 
@@ -35,21 +36,38 @@ export const {
             emailVerified: new Date(),
          },
       })
-    }
+    },
+    async createUser({ user}) {
+
+      console.log(user, "USUARIO EN CREATE USER");
+      try {
+        const usuarioId = parseInt(user.id as string, 10);
+        const {name, apellidoPat, apellidoMat} = actualizarNombres(user.name as string)
+        await db.user.update({
+          where: { id: usuarioId },
+          data: { 
+            name: name,
+            apellidoPat: apellidoPat,
+            apellidoMat: apellidoMat,
+            idUsuario: usuarioId
+          }
+        });
+        console.log(`Usuario creado y actualizado: ${user.id}`);
+      } catch (error) {
+        console.error("Error al actualizar idUsuario:", error);
+      }
+      console.log(user, "USUARIO EN CREATE USER");
+    },
   },
   // Investigar acerca de los eventos de nextauth
   //video 3:33
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile, email, credentials }) {
       // Permitir OAuth sin verificación de correo electrónico
-      // console.log(
-      //   user,
-      //   account
-      // );
-
+      // console.log({ user, account, profile, email, credentials }, "USUARIO EN SIGN IN");
       //Estas son las credenciales de google github y facebook
       if (account?.provider === 'credentials') {
-        console.log('Credenciales de inicio de sesión');
+        // console.log('Credenciales de inicio de sesión');
       };
 
       //aca sigue la autenticacion por correo normal
@@ -60,6 +78,9 @@ export const {
 
       // Previene que inicie session un usuario sin verificacion de email
       // if (!usuarioExistente?.emailVerified) return false;
+
+      //Previene que inicie session un usuario inhabilitado
+      if (usuarioExistente?.estado === 0) return false;
 
 
       //ESTA ES LA AUTENTICACION DE DOBLE FACTOR
@@ -108,18 +129,26 @@ export const {
 
       if(session.user) {
         session.user.name = token.name;
+        session.user.apellidoPat = token.apellidoPat as string | null;
+        session.user.apellidoMat = token.apellidoMat as string | null;
+        session.user.sexo = token.sexo as "M" | "F" | null;
+        session.user.ci = token.ci as string | null;
+        session.user.direccion = token.direccion as string | null;
+        session.user.estado = token.estado as number;
+        session.user.idUsuario = token.idUsuario as number | null;
         // session.user.email = token.email || session.user.email;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
         session.user.celular = token.celular as string | null;
       }
 
+      // console.log({session, token, user}, "USUARIO EN SESSION FINAL");
       return session;
     },
     // Al parecer user y profile siempre estan como undefined asi que no los uses
     // en cambio para obtener el usuario usamos ek getuser si no devuelve el token original
     async jwt({ token, user, profile}) {
-      // console.log({token, user, profile});
+      // console.log({token, user, profile}, "USUARIO EN JWT");
       // //este es un campo agregado al token
       // token.campoCustom = 'Nuevo Campo';
 
@@ -139,7 +168,14 @@ export const {
       // token.isOAuth = cuentaExistente ? true : false;
       token.isOAuth = !!cuentaExistente;  
       token.name = usuarioExistente.name;
+      token.apellidoPat = usuarioExistente.apellidoPat;
+      token.apellidoMat = usuarioExistente.apellidoMat;
+      token.ci = usuarioExistente.ci;
+      token.direccion = usuarioExistente.direccion;
+      token.sexo = usuarioExistente.sexo;
       token.email = usuarioExistente.email;
+      token.estado = usuarioExistente.estado;
+      token.idUsuario = usuarioExistente.idUsuario;
       token.rol = usuarioExistente.rol;
       token.celular = usuarioExistente.celular;
       token.authDobleFactor = usuarioExistente.authDobleFactor;

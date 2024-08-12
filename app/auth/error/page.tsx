@@ -1,8 +1,10 @@
-import {ErrorCard }from "@/components/auth/error-card";
+import { ErrorCard } from "@/components/auth/error-card";
 
 const AuthErrorPage = () => {
 	return (
-		<ErrorCard />
+		<div className="h-screen flex flex-col items-center justify-center">
+			<ErrorCard />
+		</div>
 	)
 }
 

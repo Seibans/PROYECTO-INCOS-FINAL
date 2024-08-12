@@ -2,7 +2,9 @@ import { FormularioNuevaVerificacion } from "@/components/auth/nueva-verificacio
 
 const NuevaVerificacionPagina = () => {
 	return (
-		<FormularioNuevaVerificacion/>
+		<div className="h-screen flex flex-col items-center justify-center">
+			<FormularioNuevaVerificacion />
+		</div >
 	)
 }
 

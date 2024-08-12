@@ -6,6 +6,13 @@ export type UsuarioExtendido = DefaultSession["user"] & {
 	authDobleFactor: boolean;
 	isOAuth: boolean;
 	celular: string | null;
+	apellidoPat: string | null;
+	apellidoMat: string | null;
+	sexo: "M" | "F" | null;
+	direccion: string | null;
+	ci: string | null;
+	estado: number;
+	idUsuario: number | null;
 }
 
 declare module "next-auth" {

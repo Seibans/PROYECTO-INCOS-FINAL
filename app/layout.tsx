@@ -17,15 +17,8 @@ import { extractRouterConfig } from "uploadthing/server";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 
-
-
 //TANSTACK QUERY
 import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
-
-
-
-
-
 
 const fontABCSocialBold = localFont({
   src: "./fonts/ABCSocial-Bold.woff2",
@@ -89,14 +82,6 @@ export default async function RootLayout({
               <Toaster richColors position="bottom-right" />
             </ThemeProvider>
           </ReactQueryClientProvider>
-          {/* <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
-            {children}
-            <Toaster richColors position="bottom-right" />
-          </ThemeProvider> */}
         </body>
       </html>
     </SessionProvider>

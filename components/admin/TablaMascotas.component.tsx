@@ -106,7 +106,10 @@ export const columns: ColumnDef<Mascota>[] = [
         <div className="text-left font-medium">
           {/* {row.getValue("fechaNacimiento")?.toLocaleDateString()} */}
           {/* {row.getValue("fechaNacimiento")} */}
-          {formatearFecha(row.getValue("fechaNacimiento"), "PPP")}
+
+
+          {/* {formatearFecha(row.getValue("fechaNacimiento"), "PPP")} */}
+          EXISTE FECHA?
         </div>
       );
     },

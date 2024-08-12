@@ -1,377 +1,380 @@
-// "use client"
+"use client"
 
-// import { zodResolver } from "@hookform/resolvers/zod"
-// import { Mascota, User } from "@prisma/client";
-// import { useForm } from "react-hook-form";
-// import { z } from 'zod'
+import { E164Number } from "libphonenumber-js/core";
 
-// //Librerias para el Form
-// import React, { useEffect, useState, useTransition } from 'react';
-// import { es } from "date-fns/locale";
+import 'react-phone-number-input/style.css';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { RolUsuario } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { z } from 'zod'
 
-// //Libs
-// import { cn } from "@/lib/utils"
-// import { formatearFecha } from "@/lib/formatearFecha"
+//Librerias para el Form
+import React, { useEffect, useState, useTransition } from 'react';
+import { es } from "date-fns/locale";
 
-
-// //Iconos
-// import { CalendarIcon } from "lucide-react"
-
-// //Componentes de UI
-// import {
-// 	Popover,
-// 	PopoverContent,
-// 	PopoverTrigger,
-// } from "@/components/ui/popover"
-// import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-// import { toast } from "sonner"
-// import { Button } from "@/components/ui/button"
-// import {
-// 	Form,
-// 	FormControl,
-// 	FormDescription,
-// 	FormField,
-// 	FormItem,
-// 	FormLabel,
-// 	FormMessage,
-// } from "@/components/ui/form"
-// import { Input } from "@/components/ui/input"
-// import {
-// 	Select,
-// 	SelectContent,
-// 	SelectItem,
-// 	SelectTrigger,
-// 	SelectValue
-// } from "@/components/ui/select"
-// import { Calendar } from "@/components/ui/calendar"
-// import { Textarea } from '@/components/ui/textarea';
-
-// // enums de Prisma
-// import { TipoMascota, Sexo } from "@prisma/client";
-
-// import { MascotaSchema } from "@/schemas";
-// import { UploadButton } from '@/utils/uploadthing';
-// import { set } from 'date-fns';
-
-// import { razasGatos, razasPerros } from "@/utils/constantes";
+//Libs
+import { cn } from "@/lib/utils"
+import { formatearFecha } from "@/lib/formatearFecha"
 
 
-// //TODO:ARREGLAR
-// import { useRouter } from 'next/navigation';
-// import { editarMascota } from "@/actions/mascotas";
+//Iconos
+import { CalendarIcon } from "lucide-react"
+
+//Componentes de UI
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from "@/components/ui/select"
+import { Textarea } from '@/components/ui/textarea';
+
+import { ConfiguracionSchema } from "@/schemas";
+import { UploadButton } from '@/utils/uploadthing';
+import { set } from 'date-fns';
+
+import PhoneInput from "react-phone-number-input";
 
 
-// type FormEditarUsuarioProps = {
-// 	usuario: User;
-// };
+
+//TODO:ARREGLAR
+import { useRouter } from 'next/navigation';
+import { UsuarioT } from "@/types";
+import { editarUsuario } from "@/actions/usuarios";
 
 
-// export const FormEditarUsuario = (props: FormEditarUsuarioProps) => {
+type FormEditarUsuarioProps = {
+	usuario: UsuarioT;
+};
 
-// 	const { usuario } = props;
-// 	const [isPending, startTransition] = useTransition();
 
-// 	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
-// 	const [subirImagen, setsubirImagen] = useState<boolean>(false);
-// 	const router = useRouter();
+export const FormEditarUsuario = (props: FormEditarUsuarioProps) => {
 
-// 	// Definir el formulario utilizando React Hook Form
-// 	const form = useForm<z.infer<typeof MascotaSchema>>({
-// 		resolver: zodResolver(MascotaSchema),
-// 		defaultValues: {
-// 			name: usuario.name || undefined,
-// 			email: usuario.email || undefined,
-// 			raza: usuario?.raza || undefined,
-// 			fechaNacimiento: mascota?.fechaNacimiento || undefined,
-// 			sexo: mascota.sexo || undefined,
-// 			detalles: mascota?.detalles || undefined,
-// 			imagen: mascota?.imagen || undefined,
-// 			estado: mascota.estado || undefined
-// 		},
-// 	})
+	const { usuario } = props;
+	const [isPending, startTransition] = useTransition();
+	const [subirImagen, setsubirImagen] = useState<boolean>(false);
+	const router = useRouter();
 
-// 	useEffect(() => {
-// 		// Actualizar las opciones de raza cuando el componente se monta
-// 		if (form.getValues("especie") === TipoMascota.Perro) {
-// 			setRazaOptions(razasPerros);
-// 		} else if (form.getValues("especie") === TipoMascota.Gato) {
-// 			setRazaOptions(razasGatos);
-// 		} else {
-// 			setRazaOptions(["Sin Raza (Especial)"])
-// 		}
-// 	}, []); // [] asegura que solo se ejecute una vez al montar el componente
+	console.log(usuario);
+	console.log(usuario.estado);
 
-// 	const handleEspecieChange = (value: TipoMascota) => {
-// 		form.setValue("raza", "Sin Raza (Especial)");
+	if (usuario.estado == 0) {
+		console.log("hola");
+		router.push("/admin/usuarios")
+	}
+	// Definir el formulario utilizando React Hook Form
+	const form = useForm<z.infer<typeof ConfiguracionSchema>>({
+		resolver: zodResolver(ConfiguracionSchema),
+		defaultValues: {
+			name: usuario.name || undefined,
+			apellidoPat: usuario.apellidoPat || undefined,
+			apellidoMat: usuario.apellidoMat || undefined,
+			ci: usuario.ci || undefined,
+			email: usuario.email || undefined,
+			// sexo: usuario.sexo as "M" | "F" | undefined,
+			// Asumiendo que usuario.sexo es un string "M" o "F"
+			sexo: usuario.sexo === "M" || usuario.sexo === "F" ? usuario.sexo : undefined,
+			direccion: usuario?.direccion || undefined,
+			celular: usuario?.celular || undefined,
+			// Definir rol como una cadena de texto
+			rol: usuario.rol as "Usuario" | "Administrador" | undefined,
+			estado: usuario.estado || undefined
+		},
+	})
 
-// 		if (value === TipoMascota.Perro) {
-// 			form.setValue("especie", TipoMascota.Perro);
-// 			setRazaOptions(razasPerros);
-// 		} else if (value === TipoMascota.Gato) {
-// 			form.setValue("especie", TipoMascota.Gato);
-// 			setRazaOptions(razasGatos);
-// 		} else {
-// 			form.setValue("especie", TipoMascota.Otro);
-// 			setRazaOptions(["Sin Raza (Especial)"]);
-// 		}
-// 	}
+	// Definir el manejador de envío del formulario
+	function onSubmit(values: z.infer<typeof ConfiguracionSchema>) {
+		console.log(values);
+		startTransition(() => {
+			toast.promise(editarUsuario(values, usuario.id), {
+				loading: "Cargando...",
+				success: (data) => {
+					if (data.error) {
+						throw new Error(data.error);
+					} else {
+						router.refresh();
+						return `${data.success}`;
+					}
+				},
+				error: (error) => error.message,
+			});
+		});
+	}
 
-// 	// Definir el manejador de envío del formulario
-// 	function onSubmit(values: z.infer<typeof MascotaSchema>) {
-// 		startTransition(() => {
-// 			toast.promise(editarMascota(values, mascota.id), {
-// 				loading: "Cargando...",
-// 				success: (data) => {
-// 					if (data.error) {
-// 						throw new Error(data.error);
-// 					} else {
-// 						router.refresh();
-// 						return `${data.success}`;
-// 					}
-// 				},
-// 				error: (error) => error.message,
-// 			});
-// 		});
-// 	}
+	return (
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+				<FormField
+					disabled={isPending}
+					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Nombres:</FormLabel>
+							<FormControl>
+								<Input placeholder="Nombre" type="text" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+					<FormField
+						control={form.control}
+						name="apellidoPat"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Apellido Paterno:</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										placeholder="Apellido Paterno"
+										{...field}
+										disabled={isPending}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="apellidoMat"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Apellido Materno:</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										placeholder="Apellido Materno"
+										{...field}
+										disabled={isPending}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-// 	return (
-// 		<Form {...form}>
-// 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-// 				<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-// 					<FormField
-// 						disabled={isPending}
-// 						control={form.control}
-// 						name="nombre"
-// 						render={({ field }) => (
-// 							<FormItem>
-// 								<FormLabel>Nombre</FormLabel>
-// 								<FormControl>
-// 									<Input placeholder="Nombre de la mascota" type="text" {...field} />
-// 								</FormControl>
-// 								<FormMessage />
-// 							</FormItem>
-// 						)}
-// 					/>
-// 					<FormField
-// 						disabled={isPending}
-// 						control={form.control}
-// 						name="especie"
-// 						render={({ field }) => (
-// 							<FormItem>
-// 								<FormLabel>Especie</FormLabel>
-// 								<Select
-// 									// Aca estaba el handleEspecieChange, revisar si se puede poner los 2
-// 									// onValueChange={field.onChange}
-// 									onValueChange={handleEspecieChange}
-// 									defaultValue={field.value}
-// 								>
-// 									<FormControl>
-// 										<SelectTrigger>
-// 											<SelectValue placeholder="Selecciona la Especie" />
-// 										</SelectTrigger>
-// 									</FormControl>
-// 									<SelectContent>
-// 										<SelectItem value={TipoMascota.Perro}>Perro</SelectItem>
-// 										<SelectItem value={TipoMascota.Gato}>Gato</SelectItem>
-// 										<SelectItem value={TipoMascota.Otro}>Otro...</SelectItem>
-// 									</SelectContent>
-// 								</Select>
-// 								<FormMessage />
-// 							</FormItem>
-// 						)}
-// 					/>
-// 				</div>
-// 				<FormField
-// 					disabled={isPending}
-// 					control={form.control}
-// 					name="raza"
-// 					render={({ field }) => (
-// 						<FormItem>
-// 							<FormLabel>Raza</FormLabel>
-// 							<Select
-// 								onValueChange={field.onChange}
-// 								defaultValue={field.value}
-// 							>
-// 								<FormControl>
-// 									<SelectTrigger>
-// 										<SelectValue placeholder="Selecciona la Raza" />
-// 									</SelectTrigger>
-// 								</FormControl>
-// 								<SelectContent>
-// 									{razaOptions.map((raza) => (
-// 										<SelectItem key={raza} value={raza}>{raza}</SelectItem>
-// 									))}
-// 								</SelectContent>
-// 							</Select>
-// 							<FormMessage />
-// 						</FormItem>
-// 					)}
-// 				/>
-// 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-// 					<FormField
-// 						disabled={isPending}
-// 						control={form.control}
-// 						name="sexo"
-// 						render={({ field }) => (
-// 							<FormItem>
-// 								<FormLabel>Sexo de la Mascota</FormLabel>
-// 								<FormControl>
-// 									<RadioGroup
-// 										onValueChange={field.onChange}
-// 										defaultValue={field.value}
-// 										className="flex space-y-1"
-// 									>
-// 										<FormItem className="flex items-center space-x-3 space-y-0">
-// 											<FormControl>
-// 												<RadioGroupItem value={Sexo.Macho} />
-// 											</FormControl>
-// 											{/* <FormLabel className="font-normal-semibold w-6/12 border"> */}
-// 											<FormLabel className="outline-dotted relative flex cursor-pointer items-center gap-2 rounded-md border-b-2 border-r-2 border-gradient-to-br from-primary to-secondary px-4 py-2 text-sm font-medium transition-colors hover:bg-muted peer-checked:bg-muted peer-checked:font-semibold peer-checked:text-primary">
-// 												Macho
-// 											</FormLabel>
-// 										</FormItem>
-// 										<FormItem className="flex items-center space-x-3 space-y-0">
-// 											<FormControl>
-// 												<RadioGroupItem value={Sexo.Hembra} />
-// 											</FormControl>
-// 											<FormLabel className="outline-dotted relative flex cursor-pointer items-center gap-2 rounded-md border-b-2 border-r-2 border-gradient-to-br from-primary to-secondary px-4 py-2 text-sm font-medium transition-colors hover:bg-muted peer-checked:bg-muted peer-checked:font-semibold peer-checked:text-primary">
-// 												Hembra
-// 											</FormLabel>
-// 										</FormItem>
-// 									</RadioGroup>
-// 								</FormControl>
-// 								<FormMessage />
-// 							</FormItem>
-// 						)}
-// 					/>
-// 					<FormField
-// 						disabled={isPending}
-// 						control={form.control}
-// 						name="fechaNacimiento"
-// 						render={({ field }) => (
-// 							<FormItem>
-// 								<FormLabel>Fecha de Nacimiento</FormLabel>
-// 								<FormControl>
-// 									<Popover>
-// 										<PopoverTrigger asChild>
-// 											<Button
-// 												variant={"outline"}
-// 												className={cn(
-// 													"w-full pl-3 text-left",
-// 													!field.value && "text-muted-foreground"
-// 												)}
-// 											>
-// 												{field.value ? (
-// 													formatearFecha(field.value, "PPP")
-// 												) : (
-// 													<span>Selecciona una Fecha</span>
-// 												)}
-// 												<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-// 											</Button>
-// 										</PopoverTrigger>
-// 										<PopoverContent className="w-auto p-0" align="start">
-// 											<Calendar
-// 												mode="single"
-// 												locale={es}
-// 												captionLayout="buttons"
-// 												// captionLayout="dropdown-buttons"
-// 												// fromYear={2010}
-// 												// toYear={2024}
-// 												selected={field.value}
-// 												onSelect={field.onChange}
-// 												disabled={(date) =>
-// 													date > new Date() || date < new Date("2000-01-01")
-// 												}
-// 												initialFocus
-// 											/>
-// 										</PopoverContent>
-// 									</Popover>
-// 								</FormControl>
-// 								<FormMessage />
-// 							</FormItem>
-// 						)}
-// 					/>
-// 				</div>
-// 				{/* <div className="grid grid-cols-2 gap-3">
-// 					</div> */}
-// 				<FormField
-// 					disabled={isPending}
-// 					control={form.control}
-// 					name="detalles"
-// 					render={({ field }) => (
-// 						<FormItem>
-// 							<FormLabel>Detalles y Color de la mascota</FormLabel>
-// 							<FormControl>
-// 								<Textarea
-// 									placeholder="Detalles..."
-// 									className="resize-none"
-// 									{...field}
-// 									value={form.getValues().detalles ?? ''}
-// 								/>
-// 							</FormControl>
-// 							<FormDescription>
-// 								Agrega una descripción detallada de la mascota.
-// 							</FormDescription>
-// 							<FormMessage />
-// 						</FormItem>
-// 					)}
-// 				/>
+				</div>
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Email</FormLabel>
+							<FormControl>
+								<Input
+									type="email"
+									placeholder="Email"
+									{...field}
+									disabled={true}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+					<FormField
+						disabled={isPending}
+						control={form.control}
+						name="sexo"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Genero:</FormLabel>
+								<FormControl>
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+										className="flex gap-6 xl-justify-between"
+									>
+										<FormItem>
+											<FormLabel className="radio-group">
+												<FormControl>
+													<RadioGroupItem value={"M"} />
+												</FormControl>
+												Hombre
+											</FormLabel>
+										</FormItem>
+										<FormItem>
+											<FormLabel className="radio-group">
+												<FormControl>
+													<RadioGroupItem value={"F"} />
+												</FormControl>
+												Mujer
+											</FormLabel>
+										</FormItem>
+									</RadioGroup>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="ci"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Carnet de Identidad:</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										placeholder="Carnet de Identidad"
+										{...field}
+										disabled={isPending}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+				<FormField
+					disabled={isPending}
+					control={form.control}
+					name="direccion"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Direccion:</FormLabel>
+							<FormControl>
+								<Textarea
+									placeholder="Ciudad, Zona, Calle, Numero, Localidad"
+									className="resize-none"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<div className="flex flex-col gap-6 xl:flex-row">
+					<FormField
+						control={form.control}
+						name="celular"
+						render={({ field }) => (
+							<FormItem className="flex-1">
+								<FormLabel className="shad-input-label">Celular:</FormLabel>
+								<FormControl>
+									<PhoneInput
+										defaultCountry="BO"
+										placeholder="+591 00000000"
+										international
+										withCountryCallingCode
+										value={field.value as E164Number | undefined}
+										onChange={field.onChange}
+										className="input-phone"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 
-// 				<FormField
-// 					disabled={isPending}
-// 					control={form.control}
-// 					name="imagen"
-// 					render={({ field }) => (
-// 						<FormItem>
-// 							<FormLabel>Detalles y Color de la mascota</FormLabel>
-// 							<FormControl>{
-// 								subirImagen ? (
-// 									<p className='text-sm'>Imagen Subida!</p>
-// 								) : (
-// 									<UploadButton
-// 										{...field}
-// 										className='bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-3'
-// 										endpoint='imagenMascota'
-// 										content={{
-// 											button({ ready }) {
-// 												if (ready) return <div>Upload stuff</div>;
+				<FormField
+					control={form.control}
+					name="rol"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Rol</FormLabel>
+							<Select
+								// {...field}
+								disabled={isPending}
+								onValueChange={field.onChange}
+								defaultValue={field.value}
+							>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder="Seleccione un rol" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									<SelectItem
+										value={RolUsuario.Usuario}>Usuario</SelectItem>
+									<SelectItem
+										value={RolUsuario.Administrador}>Administrador</SelectItem>
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 
-// 												return "Getting ready...";
-// 											},
-// 											allowedContent({ ready, fileTypes, isUploading }) {
-// 												if (!ready) return "Checking what you allow";
-// 												if (isUploading) return "Seems like stuff is uploading";
-// 												return `Stuff you can upload: ${fileTypes.join(", ")}`;
-// 											},
-// 										}}
-// 										onClientUploadComplete={(res) => {
-// 											form.setValue("imagen", res?.[0].url);
-// 											setsubirImagen(true);
-// 											toast.success("Imagen Subida!");
+				{/* <FormField
+					disabled={isPending}
+					control={form.control}
+					name="imagen"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Detalles y Color de la mascota</FormLabel>
+							<FormControl>{
+								subirImagen ? (
+									<p className='text-sm'>Imagen Subida!</p>
+								) : (
+									<UploadButton
+										{...field}
+										className='bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-3'
+										endpoint='imagenMascota'
+										content={{
+											button({ ready }) {
+												if (ready) return <div>Upload stuff</div>;
 
-// 										}}
-// 										onUploadError={(err) => {
-// 											toast.error(err.message);
-// 										}}
-// 									/>
-// 								)}
-// 							</FormControl>
-// 							<FormDescription>
-// 							</FormDescription>
-// 							<FormMessage />
-// 						</FormItem>
-// 					)}
-// 				/>
+												return "Getting ready...";
+											},
+											allowedContent({ ready, fileTypes, isUploading }) {
+												if (!ready) return "Checking what you allow";
+												if (isUploading) return "Seems like stuff is uploading";
+												return `Stuff you can upload: ${fileTypes.join(", ")}`;
+											},
+										}}
+										onClientUploadComplete={(res) => {
+											form.setValue("imagen", res?.[0].url);
+											setsubirImagen(true);
+											toast.success("Imagen Subida!");
 
-// 				<div className="flex justify-center">
-// 					<Button
-// 						disabled={isPending}
-// 						type="submit"
-// 						className="">
-// 						Editar Mascota
-// 					</Button>
-// 				</div>
-// 			</form>
-// 		</Form>
-// 	)
-// }
+										}}
+										onUploadError={(err) => {
+											toast.error(err.message);
+										}}
+									/>
+								)}
+							</FormControl>
+							<FormDescription>
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/> */}
+
+				<div className="flex justify-center">
+					<Button
+						disabled={isPending}
+						type="submit"
+						className="bg-gradient">
+						Editar Los Datos de la Cuenta
+					</Button>
+				</div>
+			</form>
+		</Form>
+	)
+}

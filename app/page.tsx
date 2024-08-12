@@ -41,18 +41,18 @@ const staticItems = [
 ];
 const navItems = [
   {
-    name: "Home",
+    name: "Principal",
     link: "/",
     icon: <HomeIcon className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
   {
-    name: "About",
-    link: "/about",
+    name: "Panel Grid",
+    link: "/bento",
     icon: <User2 className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
   {
-    name: "Contact",
-    link: "/contact",
+    name: "Divz",
+    link: "/divz",
     icon: (
       <MessageCircle className="h-4 w-4 text-neutral-500 dark:text-white" />
     ),

@@ -120,7 +120,7 @@ export const NuevoPasswordForm = () => {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full hover:bg-blue-700">
+            className="w-full bg-gradient">
             Cambiar la Contraseña
           </Button>
         </form>

@@ -19,9 +19,9 @@ export const HeaderUsuarios = () => {
 		<div className="flex justify-between items-center">
 			<h2 className="text-2xl">Lista de Usuarios Registrados</h2>
 			<Dialog open={abrirModal} onOpenChange={setabrirModal}>
-				<DialogTrigger asChild>
+				{/* <DialogTrigger asChild>
 					<Button variant="outline">Registrar Usuario</Button>
-				</DialogTrigger>
+				</DialogTrigger> */}
 				<DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-auto">
 					<DialogHeader>
 						<DialogTitle>

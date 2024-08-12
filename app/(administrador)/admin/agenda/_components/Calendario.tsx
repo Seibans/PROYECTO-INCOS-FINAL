@@ -66,6 +66,7 @@ export const Calendario = () => {
                 selectMirror={true}
                 select={handleDateClick}
                 eventClick={handleEventClick}
+                locale={"es"}
               />
         </div>
       </div>

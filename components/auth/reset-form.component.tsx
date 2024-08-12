@@ -117,8 +117,8 @@ export const ResetForm = () => {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full hover:bg-blue-700">
-            Enviar Correo para Reestablecer la Contraseña
+            className="w-full bg-gradient">
+            Reestablecer mi Contraseña
           </Button>
         </form>
       </Form>

@@ -86,7 +86,7 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 			sexo: mascota.sexo || undefined,
 			detalles: mascota?.detalles || undefined,
 			imagen: mascota?.imagen || undefined,
-			estado: mascota.estado || undefined
+			// estado: mascota.estado || undefined
 		},
 	})
 

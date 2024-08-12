@@ -103,6 +103,10 @@ html, body, :root{
   body {
     @apply bg-background text-foreground;
   }
+
+  .radio-group {
+    @apply flex h-full flex-1 items-center gap-2 rounded-md border border-dashed p-3 cursor-pointer;
+  }
 }
 
 @layer utilities{

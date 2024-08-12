@@ -4,8 +4,9 @@ import * as z from "zod";
 import { MascotaSchema } from "@/schemas";
 import { db } from "@/lib/db";
 import { Mascota } from "@prisma/client";
+import { usuarioIdActual } from "@/lib/auth";
 
-export const obtenerMascotas = async ():Promise<Mascota[]> => {
+export const obtenerMascotas = async (): Promise<Mascota[]> => {
     // const mascotas = await db.mascota.findMany();
     // const users = await db.$queryRaw`
     //         SELECT * FROM mascota WHERE sexo = ${"MACHO"}
@@ -17,27 +18,37 @@ export const obtenerMascotas = async ():Promise<Mascota[]> => {
 }
 
 export const registrarMascota = async (values: z.infer<typeof MascotaSchema>) => {
-    const validatedFields = MascotaSchema.safeParse(values);
+    try {
 
-    if (!validatedFields.success) {
-        return { error: "Campos Inválidos!" };
+
+        const validatedFields = MascotaSchema.safeParse(values);
+
+        if (!validatedFields.success) {
+            return { error: "Campos Inválidos!" };
+        }
+
+        const { nombre, especie, raza, sexo, fechaNacimiento, detalles } = validatedFields.data;
+        const idUActual = await usuarioIdActual();
+        console.log({idUActual}, validatedFields.data);
+
+        const pablo = await db.mascota.create({
+            data: {
+                nombre,
+                especie,
+                raza,
+                sexo,
+                fechaNacimiento,
+                detalles,
+                idUsuario: idUActual,
+                idPropietario: idUActual
+            },
+        });
+
+        return { success: "Mascota Registrada Correctamente!" };
+    } catch (error) {
+        console.log(error)
+        return { error: "La Mascota no se Pudo Registrar!" };
     }
-
-    const { nombre, especie, raza, sexo, fechaNacimiento, detalles } = validatedFields.data;
-
-    const pablo = await db.mascota.create({
-        data: {
-            nombre,
-            especie,
-            raza,
-            sexo,
-            fechaNacimiento,
-            detalles,
-            idPropietario: 1,
-        },
-    });
-
-    return { success: "Mascota Registrada Correctamente!" };
 };
 
 export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMascota: number) => {
@@ -84,12 +95,12 @@ export const obtenerMascota = async (id: number) => {
 }
 
 export const eliminarMascota = async (id: number) => {
-    const mascota = await db.mascota.delete ({
+    const mascota = await db.mascota.delete({
         where: {
             id,
         },
     });
 
-    if(!mascota) return {error: "Mascota no Encontrada"}
-    return {success: "La Mascota fue Removida Correctamente"};
+    if (!mascota) return { error: "Mascota no Encontrada" }
+    return { success: "La Mascota fue Removida Correctamente" };
 }

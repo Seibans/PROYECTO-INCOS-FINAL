@@ -17,7 +17,7 @@ import million from "million/compiler";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
@@ -45,6 +45,11 @@ const nextConfig = {
         hostname: 'utfs.io', // Añade esta línea
         pathname: '**', // Permitir cualquier ruta
       },
+      {
+        protocol: 'https',
+        hostname: 'platform-lookaside.fbsbx.com',
+        pathname: '**'
+      }
     ],
   },
 };

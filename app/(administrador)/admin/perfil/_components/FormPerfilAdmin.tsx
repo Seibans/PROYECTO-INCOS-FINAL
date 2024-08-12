@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Tabs,
   TabsContent,
@@ -23,10 +22,10 @@ import { useTransition } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ConfiguracionSchema } from "@/schemas";
+import { CambiarPasswordSchema, ConfiguracionSchema } from "@/schemas";
 import { toast } from "sonner";
 
-import { settings } from "@/actions/settings";
+import { perfil, perfilPassword } from "@/actions/settings";
 
 import PhoneInput from "react-phone-number-input";
 
@@ -50,20 +49,27 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { RolUsuario } from "@prisma/client";
 import { useSession } from "next-auth/react"
+import { Textarea } from '@/components/ui/textarea';
+import { Router } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 
 export function FormPerfilAdmin() {
   const { update } = useSession();
   const usuario = useUsuarioActual();
   const [isPending, startTransition] = useTransition();
-
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof ConfiguracionSchema>>({
     resolver: zodResolver(ConfiguracionSchema),
     defaultValues: {
-      password: undefined,
-      nuevoPassword: undefined,
       name: usuario?.name || undefined,
+      apellidoPat: usuario?.apellidoPat || undefined,
+      apellidoMat: usuario?.apellidoMat || undefined,
+      ci: usuario?.ci || undefined,
+      sexo: usuario?.sexo || undefined,
+      // password: undefined,
+      // nuevoPassword: undefined,
       email: usuario?.email || undefined,
       celular: usuario?.celular || undefined,
       rol: usuario?.rol || undefined,
@@ -71,16 +77,50 @@ export function FormPerfilAdmin() {
     }
   });
 
+  const formPassword = useForm<z.infer<typeof CambiarPasswordSchema>>({
+    resolver: zodResolver(CambiarPasswordSchema),
+    defaultValues: {
+      password: "",
+      nuevoPassword: "",
+      repetirPassword: "",
+    }
+  });
+
 
   const onSubmit = (values: z.infer<typeof ConfiguracionSchema>) => {
     startTransition(() => {
-      toast.promise(settings(values), {
+      toast.promise(perfil(values), {
         loading: "Guardando Datos...",
         success: (data) => {
           if (data.error) {
             throw new Error(data.error);
           }
           if (data.success) {
+            update();
+            return `${data.success}`;
+          }
+        },
+        error: (error) => error.message,
+      });
+    });
+  };
+
+  const onSubmitPassword = (values: z.infer<typeof CambiarPasswordSchema>) => {
+    startTransition(() => {
+      toast.promise(perfilPassword(values), {
+        loading: "Guardando Datos...",
+        success: (data) => {
+          if (data.error) {
+            throw new Error(data.error);
+          }
+          if (data.success) {
+            console.log("Values before reset:", formPassword.getValues());
+            formPassword.reset({
+              password: "",
+              nuevoPassword: "",
+              repetirPassword: ""
+            });
+            console.log("Values after reset:", formPassword.getValues());
             update();
             return `${data.success}`;
           }
@@ -98,11 +138,10 @@ export function FormPerfilAdmin() {
         <TabsTrigger value="contrasena">Contraseña</TabsTrigger>
       </TabsList>
       <TabsContent value="cuenta">
-
         <Card>
           <CardHeader>
             <p className="text-2xl font-semibold text-center">
-              Configuración
+              Configuración de los Campos del Usuario
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -126,13 +165,87 @@ export function FormPerfilAdmin() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nombre</FormLabel>
+                        <FormLabel>Nombre:</FormLabel>
                         <FormControl>
                           <Input
                             type="text"
                             placeholder="Nombre"
                             {...field}
                             disabled={isPending}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="apellidoPat"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Apellido Paterno:</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Apellido Paterno"
+                            {...field}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="apellidoMat"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Apellido Materno:</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Apellido Materno"
+                            {...field}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="ci"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Carnet de Identidad:</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Carnet de Identidad"
+                            {...field}
+                            disabled={isPending}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    disabled={isPending}
+                    control={form.control}
+                    name="direccion"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Direccion:</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Ciudad, Zona, Calle, Numero, Localidad"
+                            className="resize-none"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
@@ -160,47 +273,10 @@ export function FormPerfilAdmin() {
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Contraseña</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="password"
-                                placeholder="******"
-                                {...field}
-                                disabled={isPending}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="nuevoPassword"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nueva Contraseña</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="password"
-                                placeholder="******"
-                                {...field}
-                                disabled={isPending}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                     </>
                   )}
 
                   <div className="flex flex-col gap-6 xl:flex-row">
-
                     <FormField
                       control={form.control}
                       name="celular"
@@ -223,34 +299,33 @@ export function FormPerfilAdmin() {
                       )}
                     />
                   </div>
-                  <FormField
-                    control={form.control}
-                    name="rol"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Rol</FormLabel>
-                        <Select
-                          // {...field}
-                          disabled={isPending}
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Seleccione un rol" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem
-                              value={RolUsuario.Usuario}>Usuario</SelectItem>
-                            <SelectItem
-                              value={RolUsuario.Administrador}>Administrador</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {usuario?.rol === RolUsuario.Administrador && (
+                    <FormField
+                      control={form.control}
+                      name="rol"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Rol</FormLabel>
+                          <Select
+                            disabled={isPending}
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Seleccione un rol" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value={RolUsuario.Usuario}>Usuario</SelectItem>
+                              <SelectItem value={RolUsuario.Administrador}>Administrador</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                   {usuario?.isOAuth === false && (
 
                     <FormField
@@ -294,9 +369,89 @@ export function FormPerfilAdmin() {
 
 
       <TabsContent value="contrasena">
-        <div className="h-dvh">
-          Para Cambiar la contraseña
-        </div>
+        <Card>
+          <CardHeader>
+            <p className="text-2xl font-semibold text-center">
+              Cambiar la Contraseña
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {usuario?.isOAuth ? (
+              <p className="text-center text-red-500">
+                Has iniciado sesión con un proveedor como Google o Facebook. No puedes cambiar la contraseña desde aquí.
+              </p>
+            ) : (
+              <Form {...formPassword}>
+                <form
+                  className="space-y-6"
+                  onSubmit={formPassword.handleSubmit(onSubmitPassword)}
+                >
+                  <div className="space-y-4">
+                    <FormField
+                      control={formPassword.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Contraseña:</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="******"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={formPassword.control}
+                      name="nuevoPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nueva Contraseña</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="******"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={formPassword.control}
+                      name="repetirPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Repetir Contraseña:</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="******"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={isPending}>
+                    Cambiar Contraseña
+                  </Button>
+                </form>
+              </Form>
+            )}
+          </CardContent>
+        </Card>
       </TabsContent>
     </Tabs>
   )

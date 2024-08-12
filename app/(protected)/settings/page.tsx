@@ -20,7 +20,7 @@ import {
   CardContent,
   CardHeader
 } from "@/components/ui/card";
-import { settings } from "@/actions/settings";
+import { perfil } from "@/actions/settings";
 import { useTransition, useState } from "react";
 
 //Esto es importante ya que actualiza los datos del usuario en el token y asi actualiza todo
@@ -75,7 +75,7 @@ const SettingsPage = () => {
 
   const onSubmit = (values: z.infer<typeof ConfiguracionSchema>) => {
     startTransition(() => {
-      toast.promise(settings(values), {
+      toast.promise(perfil(values), {
         loading: "Guardando Datos...",
         success: (data) => {
           if (data.error) {

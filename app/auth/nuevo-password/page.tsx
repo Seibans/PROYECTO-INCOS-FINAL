@@ -2,7 +2,9 @@ import { NuevoPasswordForm } from "@/components/auth/nuevo-password-form.compone
 
 const NuevoPasswordPage = () => {
 	return (
-		<NuevoPasswordForm/>
+		<div className="h-screen flex flex-col items-center justify-center">
+			<NuevoPasswordForm/>
+		</div>
 	)
 }
 

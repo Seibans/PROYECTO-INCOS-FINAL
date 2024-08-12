@@ -6,6 +6,12 @@ export const usuarioActual = async () => {
 	return session?.user;
 }
 
+export const usuarioIdActual = async () => {
+	const session = await auth();
+
+	return parseInt(session?.user.id as string, 10);
+}
+
 export const rolActual = async () => {
 	const session = await auth();
 
