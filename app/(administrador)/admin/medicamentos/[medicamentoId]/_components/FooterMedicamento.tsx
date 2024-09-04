@@ -1,5 +1,4 @@
 "use client"
-import { eliminarMascota } from '@/actions/mascotas'
 import { eliminarMedicamento } from '@/actions/medicamentos'
 import { Button } from '@/components/ui/button'
 import { Toast } from '@/components/ui/toast'

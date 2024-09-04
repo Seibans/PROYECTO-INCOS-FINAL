@@ -10,7 +10,7 @@ import { DateSelectArg, EventContentArg } from "@fullcalendar/core/index.js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ModalAgregarReserva from "./ModalAgregarReserva";
-
+import esLocale from '@fullcalendar/core/locales/es';
 
 
 export const Calendario = () => {
@@ -54,8 +54,19 @@ export const Calendario = () => {
                 headerToolbar={{
                   left: "prev,next today",
                   center: "title",
-                  right: "timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth"
+                  right: "timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth",
+                  
                 }}
+                buttonText={
+                  {
+                    today:    'Hoy',
+                    month:    'Mes',
+                    week:     'Semana',
+                    day:      'Dia',
+                    year:     'Año',
+                    list:     'Listado'
+                  }
+                }
                 height="80vh"
                 initialView="dayGridMonth"
                 weekends={false}
@@ -66,7 +77,8 @@ export const Calendario = () => {
                 selectMirror={true}
                 select={handleDateClick}
                 eventClick={handleEventClick}
-                locale={"es"}
+                locale={esLocale}
+                noEventsText="No hay eventos para mostrar"
               />
         </div>
       </div>

@@ -12,6 +12,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+
+
+    // "allowSyntheticDefaultImports": true,
+    // "moduleResolution": "node",
+
+
     "plugins": [
       {
         "name": "next"

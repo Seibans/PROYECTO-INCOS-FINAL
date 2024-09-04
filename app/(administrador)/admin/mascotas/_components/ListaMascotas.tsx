@@ -10,6 +10,7 @@ import { Mascota } from "@prisma/client"
 
 export const ListaMascotas = async () => {
   const mascotas: Mascota[] = await obtenerMascotas();
+  console.log(mascotas)
   return (
     <>
       <TablaMascotas data={mascotas} />

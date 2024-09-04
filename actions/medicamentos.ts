@@ -60,6 +60,7 @@ export const registrarMedicamento = async (values: z.infer<typeof MedicamentoSch
                 stock,
                 precio,
                 tipo,
+                idUsuario: 1,
             },
         });
         return { success: "Medicamento Registrado Correctamente!" };

@@ -74,6 +74,12 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
 	const [subirImagen, setsubirImagen] = useState<boolean>(false);
 	const router = useRouter();
+	console.log(mascota);
+	console.log(mascota.estado);
+
+	if (mascota.estado == 0) {
+		router.push("/admin/mascotas")
+	}
 
 	// Definir el formulario utilizando React Hook Form
 	const form = useForm<z.infer<typeof MascotaSchema>>({

@@ -1,5 +1,4 @@
 "use client"
-import { eliminarMascota } from '@/actions/mascotas'
 import { deshabilitarUsuario } from '@/actions/usuarios'
 import { Button } from '@/components/ui/button'
 import { Toast } from '@/components/ui/toast'
@@ -55,29 +54,29 @@ export const FooterUsuario = (props: FooterUsuarioProps) => {
 	}
 	return (
 		<div className='flex justify-end mt-5'>
-		<AlertDialog>
-			<AlertDialogTrigger asChild>
-				<Button variant="destructive">
-					<Trash className='w-4 h-4 mr-2' />
-					Eliminar Usuario
+			<AlertDialog>
+				<AlertDialogTrigger asChild>
+					<Button variant="destructive">
+						<Trash className='w-4 h-4 mr-2' />
+						Eliminar Usuario
 
-				</Button>
-			</AlertDialogTrigger>
-			<AlertDialogContent>
-				<AlertDialogHeader>
-					<AlertDialogTitle>Esta Seguro de Eliminar el Usuario?</AlertDialogTitle>
-					<AlertDialogDescription>
-						{/* This action cannot be undone. This will permanently delete your
+					</Button>
+				</AlertDialogTrigger>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Esta Seguro de Eliminar el Usuario?</AlertDialogTitle>
+						<AlertDialogDescription>
+							{/* This action cannot be undone. This will permanently delete your
 			  account and remove your data from our servers. */}
-						Esta acción no se puede deshacer. Esto eliminará permanentemente la cuenta pero conservará sus datos en nuestros servidores.
-					</AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel>Cancelar</AlertDialogCancel>
-					<AlertDialogAction onClick={onDeshabilitarUsuario}>Continuar</AlertDialogAction>
-				</AlertDialogFooter>
-			</AlertDialogContent>
-		</AlertDialog>
+							Esta acción no se puede deshacer. Esto eliminará permanentemente la cuenta pero conservará sus datos en nuestros servidores.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Cancelar</AlertDialogCancel>
+						<AlertDialogAction onClick={onDeshabilitarUsuario}>Continuar</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 
 	)

@@ -4,11 +4,14 @@ export interface MedicamentoT {
     id: number;
     nombre: string;
     descripcion: string | null;  // Permitir que sea string o null
-    stock: number;
     precio: number;  // 'precio' es un number en lugar de Decimal
+    stock: number;
+    estado: number;
     tipo: TipoMedicamento;
+    imagen: string | null;
     creadoEn: Date;
-    actualizadoEn: Date;
+    actualizadoEn: Date | null;
+    idUsuario: number;
 }
 
 // types.ts
@@ -30,5 +33,38 @@ export interface UsuarioT {
     createdAt: Date;
     updatedAt: Date | null;
     idUsuario: number | null;
-  }
-  
+}
+
+
+
+// types.ts
+export interface TratamientoT {
+    id: number;
+    nombre: string;
+    descripcion: string | null;
+    precio: number;
+    creadoEn: Date;
+    actualizadoEn: Date | null;
+    idUsuario: number;
+}
+
+export interface MascotaT {
+    nombre: string;
+    sexo: 'Macho' | 'Hembra';
+    imagen: string | null;
+    especie: 'Perro' | 'Gato' | 'Otro';
+    raza: string | null;
+}
+
+export interface HistorialMedicoT {
+    id: number;
+    estado: number;
+    creadoEn: Date;
+    actualizadoEn: Date | null;
+    nombreMascota: string;
+    imagenMascota: string | null;
+    especieMascota: 'Perro' | 'Gato' | 'Otro';
+    razaMascota: string | null;
+    sexoMascota: 'Macho' | 'Hembra';
+    tratamientos: TratamientoT[];
+}

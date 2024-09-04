@@ -108,8 +108,8 @@ export const columns: ColumnDef<Mascota>[] = [
           {/* {row.getValue("fechaNacimiento")} */}
 
 
-          {/* {formatearFecha(row.getValue("fechaNacimiento"), "PPP")} */}
-          EXISTE FECHA?
+          {formatearFecha(row.getValue("fechaNacimiento"), "PPP")}
+          {/* EXISTE FECHA? */}
         </div>
       );
     },
