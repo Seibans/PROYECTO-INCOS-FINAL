@@ -45,8 +45,8 @@ const options = {
 		selected: "",
 	},
 	icons: {
-		prev: () => <span>Previous</span>,
-		next: () => <span>Next</span>,
+		prev: () => <span>{"<"}</span>,
+		next: () => <span>{">"}</span>,
 	},
 	datepickerClassNames: "top-12",
 	defaultDate: new Date("2022-01-01"),
@@ -109,6 +109,23 @@ export const DatePicker = () => {
 			<div>
 				<Datepicker options={options} onChange={handleChange} show={show} setShow={handleClose} />
 			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
 			<p className="text-sm text-muted-foreground">Status</p>
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>

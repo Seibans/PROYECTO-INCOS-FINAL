@@ -105,10 +105,10 @@ export const columns: ColumnDef<Mascota>[] = [
       return (
         <div className="text-left font-medium">
           {/* {row.getValue("fechaNacimiento")?.toLocaleDateString()} */}
-          {/* {row.getValue("fechaNacimiento")} */}
+          {row.getValue("fechaNacimiento").toLocaleDateString()}
 
 
-          {formatearFecha(row.getValue("fechaNacimiento"), "PPP")}
+          {/* {formatearFecha(row.getValue("fechaNacimiento"), "PPP")} */}
           {/* EXISTE FECHA? */}
         </div>
       );
@@ -181,6 +181,7 @@ interface DataTableProps<TData> {
 export function TablaMascotas({
   data
 }: DataTableProps<Mascota>) {
+  console.log(data)
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});

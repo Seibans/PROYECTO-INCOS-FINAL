@@ -208,35 +208,34 @@ export const FormMascota = (props: FormMascotaProps) => {
 						control={form.control}
 						name="sexo"
 						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Sexo de la Mascota</FormLabel>
-								<FormControl>
-									<RadioGroup
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-										className="flex space-y-1"
-									>
-										<FormItem className="flex items-center space-x-3 space-y-0">
-											<FormControl>
-												<RadioGroupItem value={Sexo.Macho} />
-											</FormControl>
-											{/* <FormLabel className="font-normal-semibold w-6/12 border"> */}
-											<FormLabel className="outline-dotted relative flex cursor-pointer items-center gap-2 rounded-md border-b-2 border-r-2 border-gradient-to-br from-primary to-secondary px-4 py-2 text-sm font-medium transition-colors hover:bg-muted peer-checked:bg-muted peer-checked:font-semibold peer-checked:text-primary">
-												Macho
-											</FormLabel>
-										</FormItem>
-										<FormItem className="flex items-center space-x-3 space-y-0">
-											<FormControl>
-												<RadioGroupItem value={Sexo.Hembra} />
-											</FormControl>
-											<FormLabel className="outline-dotted relative flex cursor-pointer items-center gap-2 rounded-md border-b-2 border-r-2 border-gradient-to-br from-primary to-secondary px-4 py-2 text-sm font-medium transition-colors hover:bg-muted peer-checked:bg-muted peer-checked:font-semibold peer-checked:text-primary">
-												Hembra
-											</FormLabel>
-										</FormItem>
-									</RadioGroup>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
+						<FormItem>
+							<FormLabel>Sexo de la Mascota:</FormLabel>
+							<FormControl>
+							<RadioGroup
+								onValueChange={field.onChange}
+								defaultValue={field.value}
+								className="flex gap-6 xl-justify-between"
+							>
+								<FormItem>
+								<FormLabel className="radio-group">
+									<FormControl>
+									<RadioGroupItem value={Sexo.Macho} />
+									</FormControl>
+									Macho
+								</FormLabel>
+								</FormItem>
+								<FormItem>
+								<FormLabel className="radio-group">
+									<FormControl>
+									<RadioGroupItem value={Sexo.Hembra} />
+									</FormControl>
+									Hembra
+								</FormLabel>
+								</FormItem>
+							</RadioGroup>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
 						)}
 					/>
 					<FormField
@@ -287,8 +286,6 @@ export const FormMascota = (props: FormMascotaProps) => {
 						)}
 					/>
 				</div>
-				{/* <div className="grid grid-cols-2 gap-3">
-					</div> */}
 				<FormField
 					disabled={isPending}
 					control={form.control}
@@ -338,7 +335,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 						type="submit"
 						className="">
 							Registrar Mascota
-							</Button>
+					</Button>
 				</div>
 			</form>
 		</Form>

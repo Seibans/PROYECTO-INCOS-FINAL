@@ -41,6 +41,7 @@ export const obtenerMascotas = async (): Promise<Mascota[]> => {
             observaciones: true,
         },
     });
+    console.log(mascotas)
     return mascotas;
 }
 

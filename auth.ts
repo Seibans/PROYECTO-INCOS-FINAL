@@ -97,6 +97,45 @@ export const {
       // }
       return true;
     },
+    // Al parecer user y profile siempre estan como undefined asi que no los uses
+    // en cambio para obtener el usuario usamos ek getuser si no devuelve el token original
+    async jwt({ token, user, account, profile}) {
+      // console.log({token, user, profile}, "USUARIO EN JWT");
+      // //este es un campo agregado al token
+      // token.campoCustom = 'Nuevo Campo';
+
+      // console.log("ME ESTAN LLAMANDO DE NUEVO");
+      // console.log("USUARIO  ",user);
+
+      if(!token.sub) return token;
+
+      const usuarioExistente = await getUserById(Number(token.sub));
+
+      if(!usuarioExistente) return token; 
+
+
+      // Controlando con que cuenta inicio session si con OAuth o no
+      const cuentaExistente = await getCuentaById(usuarioExistente.id);
+
+
+      // token.isOAuth = cuentaExistente ? true : false;
+      token.isOAuth = !!cuentaExistente;  
+      token.name = usuarioExistente.name;
+      token.apellidoPat = usuarioExistente.apellidoPat;
+      token.apellidoMat = usuarioExistente.apellidoMat;
+      token.ci = usuarioExistente.ci;
+      token.direccion = usuarioExistente.direccion;
+      token.sexo = usuarioExistente.sexo;
+      token.email = usuarioExistente.email;
+      token.estado = usuarioExistente.estado;
+      token.idUsuario = usuarioExistente.idUsuario;
+      token.rol = usuarioExistente.rol;
+      token.celular = usuarioExistente.celular;
+      token.authDobleFactor = usuarioExistente.authDobleFactor;
+
+      // console.log("TOKEN  ",token);
+      return token;
+    },
     // ESTOS SON LOS DATOS DEL USUARIO GUARDADOS EN EL TOKEN
     // el sub es el user id y podemos customizar campos
     //minuto 2:57
@@ -141,47 +180,11 @@ export const {
         session.user.isOAuth = token.isOAuth as boolean;
         session.user.celular = token.celular as string | null;
       }
+      // console.log("SESION: ", session);
 
       // console.log({session, token, user}, "USUARIO EN SESSION FINAL");
       return session;
     },
-    // Al parecer user y profile siempre estan como undefined asi que no los uses
-    // en cambio para obtener el usuario usamos ek getuser si no devuelve el token original
-    async jwt({ token, user, profile}) {
-      // console.log({token, user, profile}, "USUARIO EN JWT");
-      // //este es un campo agregado al token
-      // token.campoCustom = 'Nuevo Campo';
-
-      // console.log("ME ESTAN LLAMANDO DE NUEVO");
-
-      if(!token.sub) return token;
-
-      const usuarioExistente = await getUserById(Number(token.sub));
-
-      if(!usuarioExistente) return token; 
-
-
-      // Controlando con que cuenta inicio session si con OAuth o no
-      const cuentaExistente = await getCuentaById(usuarioExistente.id);
-
-
-      // token.isOAuth = cuentaExistente ? true : false;
-      token.isOAuth = !!cuentaExistente;  
-      token.name = usuarioExistente.name;
-      token.apellidoPat = usuarioExistente.apellidoPat;
-      token.apellidoMat = usuarioExistente.apellidoMat;
-      token.ci = usuarioExistente.ci;
-      token.direccion = usuarioExistente.direccion;
-      token.sexo = usuarioExistente.sexo;
-      token.email = usuarioExistente.email;
-      token.estado = usuarioExistente.estado;
-      token.idUsuario = usuarioExistente.idUsuario;
-      token.rol = usuarioExistente.rol;
-      token.celular = usuarioExistente.celular;
-      token.authDobleFactor = usuarioExistente.authDobleFactor;
-
-      return token;
-    }
   },
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
