@@ -125,31 +125,6 @@ export const columns: ColumnDef<MedicamentoT>[] = [
     },
   },
   {
-    accessorKey: "creadoEn",
-    header: () => <div className="text-left">Creado en</div>,
-    cell: ({ row }) => {
-      return (
-        // text-pretty text-wrap text-balance
-        <div className="font-medium w-48 overflow-hidden">
-          {/* {row.getValue("creadoEn")} */}
-        </div>
-      );
-    },
-  },
-  
-  {
-    accessorKey: "actualizadoEn",
-    header: () => <div className="text-left">Actualizado en</div>,
-    cell: ({ row }) => {
-      return (
-        // text-pretty text-wrap text-balance
-        <div className="font-medium w-48 overflow-hidden">
-          {/* {row.getValue("actualizadoEn")} */}
-        </div>
-      );
-    },
-  },
-  {
     id: "actions",
     header: "Acciones",
     enableHiding: false,

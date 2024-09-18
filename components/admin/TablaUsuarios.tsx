@@ -13,7 +13,7 @@ import {
   useReactTable,
   FilterFn,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Pencil } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Pencil, Eye, CopyIcon } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +25,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -34,12 +37,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"; // Usar el helper cn de shadcn
+
 import Link from "next/link"
 import Image from "next/image"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 import { UsuarioT } from "@/types"
 import { formatearFechaYHora } from "@/lib/formatearFecha"
 import { useQuery } from "@tanstack/react-query"
+import {useState, useEffect} from "react"
 
 // Define una función de filtro global
 const globalFilterFn: FilterFn<UsuarioT> = (row, columnId, filterValue) => {
@@ -54,166 +62,175 @@ const globalFilterFn: FilterFn<UsuarioT> = (row, columnId, filterValue) => {
       .includes(String(filterValue).toLowerCase())
   })
 }
-
-export const columns: ColumnDef<UsuarioT>[] = [
-  {
-    accessorKey: "image",
-    header: "Foto",
-    cell: ({ row }) => {
-      const imagen = row.getValue("image")
-      return (
-        <div className="px-3">
-          <Image
-            src={typeof imagen === "string" ? imagen : "/images/usuario.png"}
-            alt="Imagen del usuario"
-            width={30}
-            height={30}
-          />
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Nombre Completo
-        <ArrowUpDown className="ml-2 h-3 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const { name, apellidoPat, apellidoMat } = row.original
-      return <div>{`${name} ${apellidoPat || ""} ${apellidoMat || ""}`}</div>
-    },
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Email
-        <ArrowUpDown className="ml-2 h-3 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "estado",
-    header: "Estado",
-    cell: ({ row }) => <div>{row.getValue("estado")}</div>,
-  },
-  {
-    accessorKey: "celular",
-    header: () => <div className="text-center">Nro: Celular</div>,
-    cell: ({ row }) => {
-      const nombre = row.getValue("name")
-      if (row.getValue("celular") === null) {
-        return <div className="text-center">No tiene celular</div>
-      } else {
-        const whatsappLink = `https://wa.me/${row.getValue("celular")}?text=Hola%20${nombre},%20me%20interesa%20contactarte%20de%20la%20veterinaria%20Gamaliel.`
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="w-full flex justify-center">
-                  <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                    <Button variant="whatsapp">
-                      <FaWhatsapp className="h-5 w-5" />
-                    </Button>
-                  </Link>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent className="bg-[#43da57]">
-                <p>Enviar Mensaje a</p>
-                <p>Con Celular: <span className="font-bold"> {row.getValue("celular")}</span></p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )
-      }
-    },
-  },
-  {
-    accessorKey: "rol",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Rol
-        <ArrowUpDown className="ml-2 h-3 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("rol")}</div>
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: () => <div className="text-center">Creado en:</div>,
-    cell: ({ row }) => <div className="text-center">{formatearFechaYHora(row.getValue("createdAt"))}</div>,
-  },
-  {
-    accessorKey: "updatedAt",
-    header: () => <div className="text-center">Actualizado en:</div>,
-    cell: ({ row }) => <div className="text-center">{formatearFechaYHora(row.getValue("updatedAt"))}</div>,
-  },
-  {
-    id: "actions",
-    header: "Acciones",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const { id } = row.original
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Abrir Menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <Link href={`/admin/usuarios/${id}`}>
-              <DropdownMenuItem className="cursor-pointer">
-                <Pencil className="w-4 h-4 mr-2" />Editar Datos
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Ver detalles del Usuario</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(`${id}`)}>
-              Copiar Id del Usuario
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
-
 interface DataTableProps<TData> {
   data: TData[]
 }
 
 export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState<string>("")
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [isMounted, setIsMounted] = useState(false)
 
-  //Poner el codigo para controlar los usuarios con tans
+  // Estado para controlar el usuario seleccionado y el diálogo
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<UsuarioT | null>(null);
 
-
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = React.useState<string>("")
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [isMounted, setIsMounted] = React.useState(false)
-
-  React.useEffect(() => {
+  useEffect(() => {
     setIsMounted(true)
   }, [])
+
+
+  const columns: ColumnDef<UsuarioT>[] = [
+    {
+      accessorKey: "image",
+      header: "Foto",
+      cell: ({ row }) => {
+        const imagen = row.getValue("image")
+        return (
+          <div className="px-3">
+            <Image
+              src={typeof imagen === "string" ? imagen : "/images/usuario.png"}
+              alt="Imagen del usuario"
+              width={30}
+              height={30}
+            />
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nombre Completo
+          <ArrowUpDown className="ml-2 h-3 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const { name, apellidoPat, apellidoMat } = row.original
+        return <div>{`${name} ${apellidoPat || ""} ${apellidoMat || ""}`}</div>
+      },
+    },
+    {
+      accessorKey: "email",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown className="ml-2 h-3 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
+    },
+    {
+      accessorKey: "estado",
+      header: "Estado",
+      cell: ({ row }) => {
+        const estado = row.getValue("estado");
+  
+        const estadoTexto =
+          estado === 0 ? "Eliminado" : estado === 1 ? "Activo" : "Desconocido";
+  
+        const badgeClass = cn({
+          "bg-red-500": estado === 0,
+          "bg-green-500": estado === 1,
+          "bg-gray-500": estado === 2,
+        });
+  
+        return (
+          <div>
+            <Badge className={badgeClass}>{estadoTexto}</Badge>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "celular",
+      header: () => <div className="text-center">Nro: Celular</div>,
+      cell: ({ row }) => {
+        const nombre = row.getValue("name")
+        if (row.getValue("celular") === null) {
+          return <div className="text-center">No tiene celular</div>
+        } else {
+          const whatsappLink = `https://wa.me/${row.getValue("celular")}?text=Hola%20${nombre},%20me%20interesa%20contactarte%20de%20la%20veterinaria%20Gamaliel.`
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="w-full flex justify-center">
+                    <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                      <Button variant="whatsapp">
+                        <FaWhatsapp className="h-5 w-5" />
+                      </Button>
+                    </Link>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-[#43da57]">
+                  <p>Enviar Mensaje a</p>
+                  <p>Con Celular: <span className="font-bold"> {row.getValue("celular")}</span></p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )
+        }
+      },
+    },
+    {
+      accessorKey: "rol",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Rol
+          <ArrowUpDown className="ml-2 h-3 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        return <div className="text-center">{row.getValue("rol")}</div>
+      },
+    },
+    {
+      id: "actions",
+      header: "Acciones",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const { id } = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Abrir Menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <Link href={`/admin/usuarios/${id}`}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Pencil className="w-4 h-4 mr-2" /> Editar Datos
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setUsuarioSeleccionado(row.original)}>
+                <Eye className="w-4 h-4 mr-2" /> Ver detalles del Usuario
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(`${id}`)}>
+              <CopyIcon className="w-4 h-4 mr-2" /> Copiar Id del Usuario
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    }
+  ]
+  
 
   const table = useReactTable<UsuarioT>({
     data,
@@ -279,9 +296,9 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -332,6 +349,27 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
           </Button>
         </div>
       </div>
+
+      {/* Aquí va el diálogo para ver los detalles del usuario */}
+      <Dialog open={!!usuarioSeleccionado} onOpenChange={() => setUsuarioSeleccionado(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{usuarioSeleccionado?.name} {usuarioSeleccionado?.apellidoPat}</DialogTitle>
+            <DialogDescription>
+              <p>Email: {usuarioSeleccionado?.email}</p>
+              <p>Rol: {usuarioSeleccionado?.rol}</p>
+              <p>Estado: {usuarioSeleccionado?.estado === 1 ? "Activo" : "Eliminado"}</p>
+              <p>Celular: {usuarioSeleccionado?.celular}</p>
+              <div>
+                <div className="">Creado en:</div>
+                <div className="">{formatearFechaYHora(usuarioSeleccionado?.createdAt)}</div>
+                <div className="">Actualizado en:</div>
+                <div className="">{formatearFechaYHora(usuarioSeleccionado?.updatedAt)}</div>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

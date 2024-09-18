@@ -1,6 +1,6 @@
 "use client";
 import { HeaderFormAdmin } from "./_components/HeaderAdmin";
-import { FormPerfilAdmin } from "./_components/FormPerfilAdmin"
+import { FormPerfilAdmin } from "@/components/global/FormPerfilAdmin";
 
 
 export default function PerfilAdminPage() {

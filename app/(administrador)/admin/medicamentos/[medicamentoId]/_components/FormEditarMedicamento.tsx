@@ -162,7 +162,7 @@ export const FormEditarMedicamento = (props: FormEditarMedicamentoProps) => {
           )}
         />
         <div className="flex justify-center">
-          <Button disabled={isPending} type="submit" className="">
+          <Button disabled={isPending} type="submit" className="bg-gradient">
             Editar Medicamento
           </Button>
         </div>

@@ -5,16 +5,9 @@ import { MascotaSchema } from "@/schemas";
 import { db } from "@/lib/db";
 import { Mascota } from "@prisma/client";
 import { usuarioIdActual } from "@/lib/auth";
+import { addHours } from "date-fns"; 
 
 export const obtenerMascotas = async (): Promise<Mascota[]> => {
-    // const mascotas = await db.mascota.findMany();
-    // const users = await db.$queryRaw`
-    //         SELECT * FROM mascota WHERE sexo = ${"MACHO"}
-    //     ` as Mascota[];
-    // const mascotas = await db.$queryRaw<Mascota[]>`
-    //          SELECT * FROM mascota ORDER BY creadoEn DESC
-    //          `;
-
     const mascotas = await db.mascota.findMany({
         where: {
             estado: 1,
@@ -41,8 +34,12 @@ export const obtenerMascotas = async (): Promise<Mascota[]> => {
             observaciones: true,
         },
     });
-    console.log(mascotas)
-    return mascotas;
+    const mascotasConFechaAjustada = mascotas.map(mascota => ({
+        ...mascota,
+        fechaNacimiento: mascota.fechaNacimiento ? addHours(new Date(mascota.fechaNacimiento), 4) : null,
+    }));
+
+    return mascotasConFechaAjustada;
 }
 
 export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSchema>) => {
@@ -57,7 +54,6 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
     const idUActual = await usuarioIdActual();
     try {
         const mascota = await db.$transaction(async (tx) => {
-            // Crear la mascota
             const createdMascota = await tx.mascota.create({
                 data: {
                     nombre,
@@ -96,21 +92,6 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
         return { error: "Campos Inválidos!" };
     }
 
-    // const { nombre, especie, raza, sexo, fechaNacimiento, detalles } = validatedFields.data;
-    // console.log(validatedFields.data)
-    // console.log(idMascota)
-
-    // const pablo = await db.mascota.update({
-    //     data: {
-    //         nombre,
-    //         especie,
-    //         raza,
-    //         sexo,
-    //         fechaNacimiento,
-    //         detalles,
-    //     },
-    // });
-
     const mascotaActualizada = await db.mascota.update({
         where: {
             id: idMascota
@@ -129,8 +110,16 @@ export const obtenerMascota = async (id: number) => {
             id,
         },
     });
-    return mascota;
-}
+
+    if (mascota) {
+        return {
+            ...mascota,
+            fechaNacimiento: mascota.fechaNacimiento ? addHours(new Date(mascota.fechaNacimiento), 4) : null,
+        };
+    }
+
+    return null;
+};
 
 export const eliminarMascota = async (id: number) => {
     const mascota = await db.mascota.delete({

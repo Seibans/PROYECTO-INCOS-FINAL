@@ -111,21 +111,6 @@ export const DatePicker = () => {
 			</div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			
 			<p className="text-sm text-muted-foreground">Status</p>
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
@@ -159,6 +144,11 @@ export const DatePicker = () => {
 					</Command>
 				</PopoverContent>
 			</Popover>
+
+
+
+
+			
 		</div>
 	)
 }

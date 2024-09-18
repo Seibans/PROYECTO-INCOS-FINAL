@@ -14,7 +14,7 @@ export const HeaderMedicamentos = () => {
 			<h2 className="text-2xl">Lista de Medicamentos</h2>
 			<Dialog open={abrirModal} onOpenChange={setabrirModal}>
 				<DialogTrigger asChild>
-					<Button variant="outline">Registrar Medicamento</Button>
+					<Button variant="outline" className="bg-gradient">Registrar Medicamento</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-auto">
 					<DialogHeader>

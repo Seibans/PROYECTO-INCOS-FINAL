@@ -44,6 +44,7 @@ import {
 import { Calendar } from "@/components/ui/calendar"
 import { Textarea } from '@/components/ui/textarea';
 
+
 // enums de Prisma
 import { TipoMascota, Sexo } from "@prisma/client";
 
@@ -66,12 +67,82 @@ type FormMascotaProps = {
 	setabrirModal: Dispatch<SetStateAction<boolean>>;
 };
 
+type Usuario = {
+	value: number
+	label: string
+}
+
+const usuarios: Usuario[] = [
+	{ value: 1, label: "Juan Pérez" },
+	{ value: 2, label: "María García" },
+	{ value: 3, label: "Carlos Fernández" },
+	{ value: 4, label: "Carlos Fernández" },
+	{ value: 5, label: "Carlos Fernández" },
+	{ value: 6, label: "Carlos Fernández" },
+	{ value: 7, label: "Carlos Fernández" },
+	{ value: 8, label: "Carlos Fernández" },
+	{ value: 9, label: "Carlos Fernández" },
+	{ value: 10, label: "Carlos Fernández" },
+	{ value: 11, label: "Carlos Fernández" },
+	{ value: 12, label: "Carlos Fernández" },
+	{ value: 13, label: "Carlos Fernández" },
+	{ value: 14, label: "Carlos Fernández" },
+	{ value: 15, label: "Carlos Fernández" },
+	{ value: 16, label: "Carlos Fernández" },
+	{ value: 17, label: "Carlos Fernández" },
+	{ value: 18, label: "Carlos Fernández" },
+	{ value: 19, label: "Carlos Fernández" },
+	{ value: 20, label: "Carlos Fernández" },
+]
+
+type Estado = {
+	value: number
+	label: string
+}
+
+const estados: Estado[] = [
+	{ value: 1, label: "Registrado" },
+	{ value: 2, label: "Atendido" },
+	{ value: 3, label: "En Tratamiento" },
+	{ value: 4, label: "En Observación" },
+	{ value: 5, label: "Dado de Alta" },
+	{ value: 6, label: "Internado" },
+	{ value: 7, label: "Fallecido" }
+]
+
 export const FormMascota = (props: FormMascotaProps) => {
 	const [isPending, startTransition] = useTransition();
 
 	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
 	const [subirImagen, setsubirImagen] = useState<boolean>(false);
 	const router = useRouter();
+
+
+
+	// Buscador y select de Usuario
+	const [selectedUsuario, setSelectedUsuario] = useState<Usuario | null>(null);
+	const [searchTermUsuario, setSearchTermUsuario] = useState("");
+	const [openUsuario, setOpenUsuario] = useState(false);
+
+	// Buscador y select de Estado
+	const [selectedEstado, setSelectedEstado] = useState<Estado | null>(null);
+	const [searchTermEstado, setSearchTermEstado] = useState("");
+	const [openEstado, setOpenEstado] = useState(false);
+
+	const filteredUsuarios = React.useMemo(() =>
+		usuarios.filter((usuario) =>
+			usuario.label.toLowerCase().includes(searchTermUsuario.toLowerCase())
+		),
+		[searchTermUsuario]
+	);
+
+	const filteredEstados = React.useMemo(() =>
+		estados.filter((estado) =>
+			estado.label.toLowerCase().includes(searchTermEstado.toLowerCase())
+		),
+		[searchTermEstado]
+	);
+
 
 	// Definir el formulario utilizando React Hook Form
 	const form = useForm<z.infer<typeof MascotaSchema>>({
@@ -328,6 +399,87 @@ export const FormMascota = (props: FormMascotaProps) => {
 						</FormItem>
 					)}
 				/>
+
+
+				{/* Select Usuario */}
+				<div className="mb-4">
+					<Select
+						open={openUsuario}
+						onOpenChange={setOpenUsuario}
+						value={selectedUsuario?.value.toString() || ""}
+						onValueChange={(value) => {
+							const usuarioSeleccionado = usuarios.find(u => u.value.toString() === value);
+							setSelectedUsuario(usuarioSeleccionado || null);
+						}}
+					>
+						<SelectTrigger className="w-full">
+							<SelectValue placeholder="Selecciona el Usuario Propietario" />
+						</SelectTrigger>
+						<SelectContent>
+							<div className="mb-2 px-2">
+								<Input
+									placeholder="Buscar Usuario..."
+									value={searchTermUsuario}
+									onChange={(e) => setSearchTermUsuario(e.target.value)}
+									className="h-8"
+								/>
+							</div>
+							{filteredUsuarios.length === 0 ? (
+								<div className="py-2 px-2 text-sm text-gray-500">
+									No se encontraron resultados.
+								</div>
+							) : (
+								filteredUsuarios.map((usuario) => (
+									<SelectItem key={usuario.value.toString()} value={usuario.value.toString()}>
+										{usuario.label}
+									</SelectItem>
+								))
+							)}
+						</SelectContent>
+					</Select>
+				</div>
+
+				{/* Select Estado */}
+				<div className="mb-4">
+					<Select
+						open={openEstado}
+						onOpenChange={setOpenEstado}
+						value={selectedEstado?.value.toString() || ""}
+						onValueChange={(value) => {
+							const estadoSeleccionado = estados.find(e => e.value.toString() === value);
+							setSelectedEstado(estadoSeleccionado || null);
+						}}
+					>
+						<SelectTrigger className="w-full">
+							<SelectValue placeholder="Selecciona el Estado" />
+						</SelectTrigger>
+						<SelectContent>
+							<div className="mb-2 px-2">
+								<Input
+									placeholder="Buscar Estado..."
+									value={searchTermEstado}
+									onChange={(e) => setSearchTermEstado(e.target.value)}
+									className="h-8"
+								/>
+							</div>
+							{filteredEstados.length === 0 ? (
+								<div className="py-2 px-2 text-sm text-gray-500">
+									No se encontraron resultados.
+								</div>
+							) : (
+								filteredEstados.map((estado) => (
+									<SelectItem key={estado.value.toString()} value={estado.value.toString()}>
+										{estado.label}
+									</SelectItem>
+								))
+							)}
+						</SelectContent>
+					</Select>
+				</div>
+
+
+
+					
 
 				<div className="flex justify-center">
 					<Button

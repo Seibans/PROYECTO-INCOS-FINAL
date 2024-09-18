@@ -20,7 +20,7 @@ export const HeaderMascotas = () => {
 			<h2 className="text-2xl">Lista de Mascotas</h2>
 			<Dialog open={abrirModal} onOpenChange={setabrirModal}>
 				<DialogTrigger asChild>
-					<Button variant="outline">Registrar Mascota</Button>
+					<Button variant="outline" className="bg-gradient">Registrar Mascota</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-auto">
 					<DialogHeader>

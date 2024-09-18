@@ -74,7 +74,7 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
 	const [subirImagen, setsubirImagen] = useState<boolean>(false);
 	const router = useRouter();
-	console.log(mascota);
+	// console.log(mascota);
 
 	if (mascota.estado == 0) {
 		router.push("/admin/mascotas")
@@ -215,41 +215,41 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
 
-<FormField
-                disabled={isPending}
-                control={form.control}
-                name="sexo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sexo de la Mascota:</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex gap-6 xl-justify-between"
-                      >
-                        <FormItem>
-                          <FormLabel className="radio-group">
-                            <FormControl>
-                              <RadioGroupItem value={Sexo.Macho} />
-                            </FormControl>
-                            Macho
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem>
-                          <FormLabel className="radio-group">
-                            <FormControl>
-                              <RadioGroupItem value={Sexo.Hembra} />
-                            </FormControl>
-                            Hembra
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+					<FormField
+						disabled={isPending}
+						control={form.control}
+						name="sexo"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Sexo de la Mascota:</FormLabel>
+								<FormControl>
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+										className="flex gap-6 xl-justify-between"
+									>
+										<FormItem>
+											<FormLabel className="radio-group">
+												<FormControl>
+													<RadioGroupItem value={Sexo.Macho} />
+												</FormControl>
+												Macho
+											</FormLabel>
+										</FormItem>
+										<FormItem>
+											<FormLabel className="radio-group">
+												<FormControl>
+													<RadioGroupItem value={Sexo.Hembra} />
+												</FormControl>
+												Hembra
+											</FormLabel>
+										</FormItem>
+									</RadioGroup>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
 					<FormField
 						disabled={isPending}
@@ -374,7 +374,7 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 					<Button
 						disabled={isPending}
 						type="submit"
-						className="">
+						className="bg-gradient">
 						Editar Mascota
 					</Button>
 				</div>

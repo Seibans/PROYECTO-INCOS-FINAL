@@ -16,27 +16,8 @@
 // ESTE COMANDO CREA LOS ESUQEMAS DE MANERA REVERSA, SOLO DEBES VINCULAR LA BASE DE DATOS CON EL datasource db nada mas
 // npx prisma db pull con esto prisma lee la base de datos y crea los esquemas
 
-// model Account {
-//   id                 Int       @id @default(autoincrement())
-//   userId             Int
-//   type               String
-//   provider           String
-//   providerAccountId  String
-//   refresh_token      String?  @db.Text
-//   access_token       String?  @db.Text
-//   expires_at         Int?
-//   token_type         String?
-//   scope              String?
-//   id_token           String?  @db.Text
-//   session_state      String?
-
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-//   @@unique([provider, providerAccountId])
-// }
 generator client {
   provider = "prisma-client-js"
-  // previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -92,8 +73,6 @@ model User {
   pagos                   Pago[]
   mascotas                Mascota[]
   reservasMedicas         ReservaMedica[]
-  // Optional for WebAuthn support
-  // Authenticator           Authenticator[]
   createdAt               DateTime                 @default(now()) @map("creadoEn") @db.Timestamp(3)
   updatedAt               DateTime?                @updatedAt @map("actualizadoEn") @db.Timestamp(3)
   idUsuario               Int?                     @db.UnsignedInt
@@ -123,18 +102,6 @@ model Account {
   @@index([userId])
   @@map("Cuenta")
 }
-
-// TRIGUER
-// DELIMITER $$
-// CREATE TRIGGER trigger_usuario_id
-// AFTER INSERT ON Usuario
-// FOR EACH ROW
-// BEGIN
-//     UPDATE Usuario
-//     SET idUsuario = NEW.id
-//     WHERE id = NEW.id;
-// END
-// $$;
 
 model TokenVerificacion {
   id      Int      @id @default(autoincrement()) @db.UnsignedInt
@@ -171,22 +138,6 @@ model ConfirmacionDobleFactor {
   @@unique([usuarioId])
 }
 
-// model Authenticator {
-//   credentialID         String  @unique @map("idCredencial") @db.VarChar(255)
-//   userId               Int     @map("usuarioId") @db.UnsignedInt
-//   providerAccountId    String  @map("idCuentaProveedor") @db.VarChar(100)
-//   credentialPublicKey  String  @map("clavePublicaCredencial") @db.VarChar(255)
-//   counter              Int     @map("contador")
-//   credentialDeviceType String  @map("tipoDispositivoCredencial") @db.VarChar(50)
-//   credentialBackedUp   Boolean @map("respaldadoCredencial")
-//   transports           String? @map("transportes") @db.VarChar(100)
-
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-//   @@id([userId, credentialID])
-//   @@map("Autenticador")
-// }
-
 model Mascota {
   id              Int         @id @default(autoincrement()) @db.UnsignedInt
   nombre          String      @db.VarChar(50)
@@ -198,8 +149,7 @@ model Mascota {
   detalles        String?     @db.VarChar(255)
   imagen          String?     @db.VarChar(255)
   estado          Int         @default(1) @db.TinyInt
-  //TODO: CORREGIR ESTO
-  idPropietario   Int?        @default(0) @db.UnsignedInt // Puede ser opcional
+  idPropietario   Int?        @default(0) @db.UnsignedInt
   usuario         User?       @relation(fields: [idPropietario], references: [id])
 
   historial     HistorialMedico? // Puede ser opcional
@@ -268,7 +218,6 @@ model Pago {
   total         Decimal   @db.Decimal(18, 2)
   cuotas        Int
   montoCuota    Decimal   @db.Decimal(18, 2)
-  //TODO: Controlar esta fecha Pago
   fechaPago     DateTime?
   detalle       String?   @db.VarChar(100)
   estado        Int       @default(1) @db.TinyInt

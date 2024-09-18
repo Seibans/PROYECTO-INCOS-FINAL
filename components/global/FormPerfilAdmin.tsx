@@ -352,11 +352,14 @@ export function FormPerfilAdmin() {
                   )}
 
                 </div>
-                <Button
-                  type="submit"
-                  disabled={isPending}>
-                  Guardar Datos
-                </Button>
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    disabled={isPending}
+                    className="bg-gradient">
+                    Guardar Datos
+                  </Button>
+                </div>
               </form>
 
             </Form>

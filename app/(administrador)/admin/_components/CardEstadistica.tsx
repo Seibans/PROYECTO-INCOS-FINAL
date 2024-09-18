@@ -16,23 +16,15 @@ export function CardEstadistica(props: CardEstadisticaProps) {
 		<div className="shadow-sm bg-background rounded-lg p-5 py-3 hover:shadow-lg transition border">
 			<div className="flex justify-between">
 				<div className="flex gap-2 items-center">
-					<span className="text-black dark:text-white">
-						<CustomIcon icon={props.icon} />
-					</span>
-
-					<span className="text-black dark:text-white">
-						{props.titulo}
-					</span>
+					<CustomIcon icon={props.icon} />
+					{props.titulo}
 				</div>
-				<span className="text-black dark:text-white">
-
 				<CustomTooltip
 					content={props.tooltipTexto}
 				/>
-					</span>
 
 			</div>
-			<div className="flex gap-4 mt-2 md:mt-4 text-black dark:text-white">
+			<div className="flex gap-4 mt-2 md:mt-4">
 				<p className="text-2xl">{props.total}</p>
 				<div className={cn(`flex items-center gap-1 px-2 text-xs rounded-lg h-[20px] bg-slate-200 dark:bg-slate-600`)}>
 					{props.average} %
