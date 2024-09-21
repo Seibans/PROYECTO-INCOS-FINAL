@@ -20,11 +20,11 @@ export function SideBarItem({ item }: SideBarItemProps) {
   return (
     <Link
       href={item.href}
-      passHref
-      key={item.label} // Asegúrate de incluir la key aquí
+      // passHref
+      key={item.label}
       className={cn(
         `flex items-center gap-x-2 text-sm mt-2 light:text-slate-700 dark:text-white hover:bg-slate-300/20 rounded-lg py-2 px-4`,
-        rutaActiva && 'bg-slate-400/20'
+        rutaActiva && 'bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-300 to-transparent'
       )}
     >
       <item.icon strokeWidth={1} className="w-5 h-5" />

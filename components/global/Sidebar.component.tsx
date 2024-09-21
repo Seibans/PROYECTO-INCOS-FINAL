@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import { SideBarItem } from '@/components/global/SidebarItem.component';
 import { Logo } from '@/components/global/Logo.component';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useRouter } from 'next/navigation';
 
 const datosGeneralesSidebar = [
 	{
@@ -50,11 +51,6 @@ const datosGeneralesSidebar = [
 		label: 'Historiales',
 		href: '/admin/historiales'
 	},
-	// {
-	// 	icon: Building2,
-	// 	label: 'Veterinarias',
-	// 	href: '/admin/veterinarias'
-	// },
 	{
 		icon: Pill,
 		label: 'Medicamentos',
@@ -65,26 +61,11 @@ const datosGeneralesSidebar = [
 		label: 'Pagos',
 		href: '/admin/pagos'
 	},
-	// {
-	// 	icon: Bone,
-	// 	label: 'Alimento',
-	// 	href: '/alimento'
-	// },
-	// {
-	// 	icon: Dna,
-	// 	label: 'Resultados',
-	// 	href: '/resultados'
-	// },
-	// {
-	// 	icon: HeartPulse,
-	// 	label: 'Estado',
-	// 	href: '/estado'
-	// },
-	// {
-	// 	icon: Syringe,
-	// 	label: 'Vacunas',
-	// 	href: '/vacunas'
-	// }
+	{
+		icon: HeartPulse,
+		label: 'Tratamientos',
+		href: '/estado'
+	}
 ]
 
 const datosToolsSidebar = [
@@ -92,12 +73,7 @@ const datosToolsSidebar = [
 		icon: CircleHelpIcon,
 		label: 'Preguntas',
 		href: '/admin/preguntas'
-	},
-	// {
-	// 	icon: BarChart4,
-	// 	label: 'Analiticas',
-	// 	href: '/admin/analiticas'
-	// }
+	}
 ]
 
 const datosSoporteSidebar = [
@@ -113,48 +89,49 @@ const datosSoporteSidebar = [
 	}
 ]
 
-// TODO: Corregir lo de la Key que al llegar al item es undefined
 export const SideBar = () => {
+	const router = useRouter();
 	return (
-		<div className="h-screen">
-			<div className="h-dvh flex flex-col">
-				<Logo />
-				<ScrollArea className='flex flex-col h-full justify-between'>
-					<div>
-						<div className="p-2 md:p-4">
-							<p className="text-slate-500 mb-2">General</p>
-							{datosGeneralesSidebar.map((item, index) => (
-								<SideBarItem key={item.label} item={item} />
-							))}
-						</div>
-						<Separator />
-						<div className="p-2 md:p-4">
-							<p className="text-slate-500 mb-2">Soporte</p>
-							{datosSoporteSidebar.map((item, index) => (
-								<SideBarItem key={item.label} item={item} />
-							))}
-						</div>
-						<Separator />
-						<div className="p-2 md:p-4">
-							<p className="text-slate-500 mb-2">Herramientas</p>
-							{datosToolsSidebar.map((item, index) => (
-								<SideBarItem key={item.label} item={item} />
-							))}
-						</div>
+		<>
+			<Logo />
+			<Separator />
+			<ScrollArea className='h-[90dvh]'>
+				<div>
+					<div className="p-1 md:p-3">
+						<p className="text-slate-500 mb-2">General</p>
+						{datosGeneralesSidebar.map((item, index) => (
+							<SideBarItem key={item.label} item={item} />
+						))}
 					</div>
-					<div>
-						<div className="text-center p-4">
-							<Button variant={"outline"} className='w-full'>
-								Ir a la Página Principal
-							</Button>
-						</div>
-						<Separator />
-						<footer className="mt-3 mb-4 p-3 text-center">
-							2024. Todos los derechos reservados
-						</footer>
+					<Separator />
+					<div className="p-1 md:p-3">
+						<p className="text-slate-500 mb-2">Soporte</p>
+						{datosSoporteSidebar.map((item, index) => (
+							<SideBarItem key={item.label} item={item} />
+						))}
 					</div>
-				</ScrollArea>
-			</div>
-		</div>
+					<Separator />
+					<div className="p-1 md:p-3">
+						<p className="text-slate-500 mb-2">Herramientas</p>
+						{datosToolsSidebar.map((item, index) => (
+							<SideBarItem key={item.label} item={item} />
+						))}
+					</div>
+				</div>
+				<div className="text-center p-4">
+					<Button
+						variant="outline"
+						className="w-full"
+						onClick={() => router.push('/')}
+					>
+						Ir a la Página Principal
+					</Button>
+				</div>
+				<Separator />
+				<div className="mb-10 p-3 text-center">
+					2024. Todos los derechos reservados
+				</div>
+			</ScrollArea>
+		</>
 	)
 }

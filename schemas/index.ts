@@ -236,7 +236,9 @@ export const MedicamentoSchema = z.object({
         .max(255, { message: "La descripción no puede tener más de 255 caracteres" })
         .optional(),
     stock: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El stock debe ser un número positivo" })),
-    precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
+    // precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
+    precio: z.string().min(1, "El precio es requerido"),
+    imagen: z.instanceof(File, { message: "La imagen es requerida" }),
     // stock: z.number()
     //     .int({ message: "El stock debe ser un número entero" })
     //     .positive({ message: "El stock debe ser un número positivo" }),
@@ -244,7 +246,8 @@ export const MedicamentoSchema = z.object({
     //     .positive({ message: "El precio debe ser un número positivo" }),
     tipo: z.enum([TipoMedicamento.Pastilla, TipoMedicamento.Vacuna, TipoMedicamento.Inyeccion, TipoMedicamento.Crema, TipoMedicamento.Suero, TipoMedicamento.Polvo, TipoMedicamento.Gel, TipoMedicamento.Otro], {
         errorMap: () => ({ message: "El tipo de medicamento es inválido" })
-    })
+    }),
+    archivo: z.optional(z.instanceof(File, { message: "El archivo es requerido" })),
 });
 
 export const PagoSchema = z.object({
@@ -270,3 +273,17 @@ export const ReservaMedicaSchema = z.object({
         .max(150, { message: "El servicio no puede tener más de 150 caracteres" }),
     estado: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El estado debe ser un número positivo" })),
 });
+
+
+export const formSchema = z.object({
+    fechaReserva: z.date({
+      required_error: "Por favor seleccione una fecha.",
+    }),
+    hora: z.object({
+      hour: z.string().min(1, "Seleccione la hora"),
+      minute: z.string().min(1, "Seleccione los minutos"),
+      period: z.string().min(1, "Seleccione AM/PM"),
+    }),
+    detalles: z.string().min(1, "Por favor ingrese los detalles de la cita."),
+    servicio: z.string().min(1, "Por favor seleccione un servicio."),
+  })

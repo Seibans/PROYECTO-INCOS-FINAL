@@ -49,7 +49,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'platform-lookaside.fbsbx.com',
         pathname: '**'
-      }
+      },
+      // Aquí agregamos localhost para permitir cargar imágenes desde allí.
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000', // Especifica el puerto si es necesario (3000 en desarrollo)
+        pathname: '/uploads/**', // Permite imágenes de la carpeta /uploads
+      },
     ],
   },
 };

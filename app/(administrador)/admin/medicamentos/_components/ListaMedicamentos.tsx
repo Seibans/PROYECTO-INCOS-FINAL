@@ -8,7 +8,6 @@ import { TablaMedicamentos } from "@/components/admin/TablaMedicamentos.componen
 import { MedicamentoT } from "@/types";
 export const ListaMedicamentos = async () => {
   const medicamentos: MedicamentoT[] = await obtenerMedicamentos();
-  console.log(medicamentos);
   return (
     <>
       <TablaMedicamentos data={medicamentos} />

@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { FormMedicamento } from "./FormMedicamento";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import CurrencyForm from "./InputBs";
+import { FormMedicamentoGlobal } from "./FormMedicamentoGlobal2";
 
 
 // <DialogContent className="sm:max-w-[625px]">
@@ -25,7 +27,8 @@ export const HeaderMedicamentos = () => {
 							Registra y Edita tu Medicamento
 						</DialogDescription>
 					</DialogHeader>
-					<FormMedicamento setabrirModal={setabrirModal} />
+					<FormMedicamentoGlobal setabrirModal={setabrirModal} />
+					{/* <CurrencyForm/> */}
 				</DialogContent>
 			</Dialog>
 

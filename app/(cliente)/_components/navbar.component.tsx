@@ -43,7 +43,7 @@ export const Navbar = () => {
 					</Link>
 				</Button>
 			</div>
-			<BotonUsuario/>
+			{/* <BotonUsuario/> */}
 		</nav>
 	);
 };

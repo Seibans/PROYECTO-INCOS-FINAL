@@ -16,8 +16,11 @@ import { useUsuarioActual } from '@/hooks/use-usuario-actual';
 import { LogoutButton } from '@/components/auth/logout.component'
 import Link from 'next/link';
 
-export const BotonUsuario = () => {
+interface BotonUsuarioProps {
+	profileRoute: string; // Recibe la ruta como prop
+}
 
+export const BotonUsuario: React.FC<BotonUsuarioProps> = ({ profileRoute }) => {
 	const user = useUsuarioActual();
 
 	return (
@@ -34,9 +37,9 @@ export const BotonUsuario = () => {
 			<DropdownMenuContent className='w-40' align='end'>
 				<DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<Link href={'/admin/perfil'}>
+				<Link href={profileRoute}> {/* Usamos la prop para el Link */}
 					<DropdownMenuItem className='cursor-pointer'>
-						Perfil
+						Mi Perfil
 					</DropdownMenuItem>
 				</Link>
 

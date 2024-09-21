@@ -74,8 +74,8 @@ export const FormEditarUsuario = (props: FormEditarUsuarioProps) => {
 	const [subirImagen, setsubirImagen] = useState<boolean>(false);
 	const router = useRouter();
 
-	console.log(usuario);
-	console.log(usuario.estado);
+	// console.log(usuario);
+	// console.log(usuario.estado);
 
 	if (usuario.estado == 0) {
 		console.log("hola");
@@ -370,7 +370,8 @@ export const FormEditarUsuario = (props: FormEditarUsuarioProps) => {
 					<Button
 						disabled={isPending}
 						type="submit"
-						className="bg-gradient">
+						className="bg-gradient"
+						variant="outline">
 						Editar Los Datos de la Cuenta
 					</Button>
 				</div>

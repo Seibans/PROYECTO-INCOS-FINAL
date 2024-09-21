@@ -41,8 +41,20 @@ import Image from "next/image";
 // import { Medicamento } from "@prisma/client";
 import { formatearFecha } from "@/lib/formatearFecha"
 import { MedicamentoT } from "@/types";
+import { formatearPrecio } from "@/lib/formatearPrecio";
 
 export const columns: ColumnDef<MedicamentoT>[] = [
+  {
+    id: "nro",
+    header: () => <div className="text-center">Nro</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-center">
+          {row.index + 1}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "nombre",
     header: ({ column }) => {
@@ -105,10 +117,7 @@ export const columns: ColumnDef<MedicamentoT>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-left font-medium">
-          {/* {row.getValue("fechaNacimiento")?.toLocaleDateString()} */}
-          {/* {row.getValue("fechaNacimiento")} */}
-          {/* {formatearFecha(row.getValue("fechaNacimiento"), "PPP")} */}
-          {row.getValue("precio")}
+          { formatearPrecio(row.getValue("precio"))}
         </div>
       );
     },

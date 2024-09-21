@@ -1,9 +1,9 @@
 "use client"
 
 // Librerías para el Formulario
-import React, { useState, useTransition } from 'react';
+import { useState, useTransition, forwardRef } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
 
 // Esquema Zod
@@ -27,9 +27,30 @@ import { Dispatch, SetStateAction } from "react";
 import { useRouter } from 'next/navigation';
 import { registrarMedicamento } from '@/actions/medicamentos';
 import { toast } from 'sonner';
+import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field';
 
-
-
+// Componente personalizado para el CurrencyInput
+const FormCurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
+	(props, ref) => {
+		return (
+			<CurrencyInput
+				id="input-example"
+				name="precio"
+				placeholder="Ingrese el precio"
+				decimalsLimit={2}
+				prefix="Bs."
+				decimalSeparator="."
+				groupSeparator=","
+				intlConfig={{ locale: "es-BO", currency: "BOB" }}
+				allowNegativeValue={false}
+				className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				{...props}
+				ref={ref}
+			/>
+		)
+	}
+)
+FormCurrencyInput.displayName = "FormCurrencyInput"
 
 type FormMedicamentoProps = {
 	setabrirModal: Dispatch<SetStateAction<boolean>>;
@@ -47,7 +68,7 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 			nombre: "",
 			descripcion: "",
 			stock: 0,
-			precio: 0,
+			precio: "",
 			tipo: "Otro",
 		},
 	});
@@ -63,7 +84,6 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 						throw new Error(data.error);
 					} else {
 						router.refresh();
-						//Extraerlo de props
 						props.setabrirModal(false);
 						return `${data.success}`;
 					}
@@ -83,7 +103,7 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 						name="nombre"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Nombre</FormLabel>
+								<FormLabel>Nombre:</FormLabel>
 								<FormControl>
 									<Input placeholder="Nombre del medicamento" {...field} />
 								</FormControl>
@@ -97,9 +117,9 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 						name="descripcion"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Descripción</FormLabel>
+								<FormLabel>Descripción:</FormLabel>
 								<FormControl>
-									<Textarea placeholder="Descripción del medicamento" {...field} />
+									<Textarea placeholder="Descripción del medicamento" {...field} className='resize-none'/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -113,36 +133,50 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 						name="stock"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Stock</FormLabel>
+								<FormLabel>Stock:</FormLabel>
 								<FormControl>
-									<Input type="number" placeholder="Stock disponible" {...field} />
+									<Input type="number" placeholder="Stock disponible" {...field} min={0} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 					<FormField
-						disabled={isPending}
 						control={form.control}
 						name="precio"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Precio</FormLabel>
 								<FormControl>
-									<Input type="number" placeholder="Precio del medicamento" {...field} />
+									<Controller
+										name="precio"
+										control={form.control}
+										render={({ field: { onChange, value, ...restField } }) => (
+											<FormCurrencyInput
+												{...restField}
+												value={value}
+												onValueChange={(value: string | undefined) => onChange(value)}
+											/>
+										)}
+									/>
 								</FormControl>
+								<FormDescription>
+									Ingrese el precio en bolivianos (Bs.) usando el punto (.) como separador decimal.
+								</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
+
 				</div>
+
 				<FormField
 					disabled={isPending}
 					control={form.control}
 					name="tipo"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Tipo de Medicamento</FormLabel>
+							<FormLabel>Tipo de Medicamento:</FormLabel>
 							<Select onValueChange={field.onChange} defaultValue={field.value}>
 								<FormControl>
 									<SelectTrigger>
@@ -165,7 +199,7 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 					)}
 				/>
 				<div className="flex justify-center">
-					<Button disabled={isPending} type="submit" className="">
+					<Button disabled={isPending} type="submit" className="bg-gradient">
 						Registrar Medicamento
 					</Button>
 				</div>
@@ -173,3 +207,19 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 		</Form>
 	);
 };
+
+
+{/* <CurrencyInput
+					id="input-example"
+					name="precio"
+					placeholder="Ingrese el precio"
+					decimalsLimit={2}
+					prefix='Bs.'
+					decimalSeparator='.'
+					groupSeparator=','
+					intlConfig={{ locale: 'es-BO', currency: 'BOB' }}
+					disabled={isPending}
+					allowNegativeValue={false}
+					onValueChange={(value, name, values) => console.log(value, name, values)}
+					className="form-control border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full p-3 sm:text-sm"
+					/> */}

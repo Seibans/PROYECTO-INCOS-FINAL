@@ -30,6 +30,9 @@ import { MedicamentoSchema } from "@/schemas";
 import { useRouter } from 'next/navigation';
 import { editarMedicamento } from "@/actions/medicamentos";
 
+import { toast } from 'sonner';
+
+
 // Props del formulario de edición
 type FormEditarMedicamentoProps = {
   medicamento: Medicamento;
@@ -47,27 +50,27 @@ export const FormEditarMedicamento = (props: FormEditarMedicamentoProps) => {
       nombre: medicamento.nombre,
       descripcion: medicamento.descripcion || '',
       stock: medicamento.stock,
-    //   precio: medicamento.precio.toString(),
+      precio: medicamento.precio.toString(),
       tipo: medicamento.tipo,
     },
   });
 
   // Definir el manejador de envío del formulario
   const onSubmit = (values: z.infer<typeof MedicamentoSchema>) => {
-    // startTransition(() => {
-    //   toast.promise(editarMedicamento(values, medicamento.id), {
-    //     loading: "Cargando...",
-    //     success: (data) => {
-    //       if (data.error) {
-    //         throw new Error(data.error);
-    //       } else {
-    //         router.refresh();
-    //         return `${data.success}`;
-    //       }
-    //     },
-    //     error: (error) => error.message,
-    //   });
-    // });
+    startTransition(() => {
+      toast.promise(editarMedicamento(values, medicamento.id), {
+        loading: "Cargando...",
+        success: (data) => {
+          if (data.error) {
+            throw new Error(data.error);
+          } else {
+            router.refresh();
+            return `${data.success}`;
+          }
+        },
+        error: (error) => error.message,
+      });
+    });
   };
 
   return (
@@ -162,7 +165,7 @@ export const FormEditarMedicamento = (props: FormEditarMedicamentoProps) => {
           )}
         />
         <div className="flex justify-center">
-          <Button disabled={isPending} type="submit" className="bg-gradient">
+          <Button disabled={isPending} type="submit" className="bg-gradient" variant="outline">
             Editar Medicamento
           </Button>
         </div>

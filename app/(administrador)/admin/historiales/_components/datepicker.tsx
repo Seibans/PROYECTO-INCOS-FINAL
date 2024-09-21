@@ -17,32 +17,36 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover"
 
+// import { Datepicker } from 'flowbite-react'; // Importa el datepicker
+
 type Status = {
 	value: string
 	label: string
 }
 
+
 import Datepicker from "tailwind-datepicker-react"
 
 
 const options = {
-	title: "Demo Title",
+	title: "Fecha Inicial",
 	autoHide: true,
-	todayBtn: false,
+	todayBtn: true,
 	clearBtn: true,
-	clearBtnText: "Clear",
+	todayBtnText: "Hoy",
+	clearBtnText: "Borrar",
 	maxDate: new Date("2030-01-01"),
 	minDate: new Date("1950-01-01"),
 	theme: {
 		background: "bg-gray-700 dark:bg-gray-800",
-		todayBtn: "",
+		todayBtn: "bg-gradient",
 		clearBtn: "",
 		icons: "",
 		text: "",
-		disabledText: "bg-red-500",
+		disabledText: "opacity-25",
 		input: "",
 		inputIcon: "",
-		selected: "",
+		selected: "bg-gradient",
 	},
 	icons: {
 		prev: () => <span>{"<"}</span>,
@@ -50,12 +54,12 @@ const options = {
 	},
 	datepickerClassNames: "top-12",
 	defaultDate: new Date("2022-01-01"),
-	language: "en",
+	language: "es",
 	disabledDates: [],
-	weekDays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+	weekDays: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
 	inputNameProp: "date",
 	inputIdProp: "date",
-	inputPlaceholderProp: "Select Date",
+	inputPlaceholderProp: "Selecciona una Fecha",
 	inputDateFormatProp: {
 		day: "numeric" as "numeric" | "2-digit",
 		month: "long" as "numeric" | "2-digit" | "long" | "short" | "narrow",

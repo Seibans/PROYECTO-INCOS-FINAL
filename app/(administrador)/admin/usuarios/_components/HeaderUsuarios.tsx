@@ -7,7 +7,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
-// import { FormMascota } from "./FormMascota";
+import { FormUsuario } from "./FormUsuario";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 
@@ -19,9 +19,9 @@ export const HeaderUsuarios = () => {
 		<div className="flex justify-between items-center">
 			<h2 className="text-2xl">Lista de Usuarios Registrados</h2>
 			<Dialog open={abrirModal} onOpenChange={setabrirModal}>
-				{/* <DialogTrigger asChild>
-					<Button variant="outline">Registrar Usuario</Button>
-				</DialogTrigger> */}
+				<DialogTrigger asChild>
+					<Button variant="outline" className="bg-gradient">Registrar Usuario</Button>
+				</DialogTrigger>
 				<DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-auto">
 					<DialogHeader>
 						<DialogTitle>
@@ -31,7 +31,7 @@ export const HeaderUsuarios = () => {
 							Registra un Nuevo Usuario
 						</DialogDescription>
 					</DialogHeader>
-					{/* <FormMascota setabrirModal={setabrirModal} /> */}
+					<FormUsuario />
 				</DialogContent>
 			</Dialog>
 

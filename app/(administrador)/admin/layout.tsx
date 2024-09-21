@@ -6,27 +6,39 @@ import { redirect } from 'next/navigation'
 import { RolUsuario } from "@prisma/client";
 
 export default async function LayoutDashboard({ children }: { children: React.ReactElement }) {
-    const rol = await rolActual();
+	const rol = await rolActual();
 
 	if (!rol) {
 		redirect('/login')
 	}
 
 	if (rol === RolUsuario.Usuario) {
-		redirect('/client')
+		redirect('/cliente')
 	}
 
 	return (
-		// <div className='flex w-full h-full'>
-		<div className='flex w-full'>
-			<div className='w-full xl:ml-60'>
-				<NavBar />
+		// // <div className='flex w-full h-full'>
+		// <div className='flex w-full'>
+		// 	<div className='w-full xl:ml-60'>
+		// 		<NavBar profileRoute="/admin/perfil" />
+		// 		{/* <div className="p-6 bg-[#fafbfc] dark:bg-secondary"> */}
+		// 		<div className="p-6 dark:bg-secondary">
+		// 			{children}
+		// 		</div>
+		// 	</div>
+		// 	<div className='hidden xl:block xl:fixed w-60 h-full'>
+		// 		<SideBar />
+		// 	</div>
+		// </div>
+		<div className='flex'>
+			<div className='w-screen xl:w-10/12'>
+				<NavBar profileRoute="/admin/perfil" />
 				{/* <div className="p-6 bg-[#fafbfc] dark:bg-secondary"> */}
 				<div className="p-6 dark:bg-secondary">
 					{children}
 				</div>
 			</div>
-			<div className='hidden xl:block xl:fixed w-60 h-full'>
+			<div className='hidden xl:block xl:w-2/12 h-full'>
 				<SideBar />
 			</div>
 		</div>

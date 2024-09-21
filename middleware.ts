@@ -53,22 +53,22 @@ export default auth(async (req) => {
     if (isLoggedIn) {
       // Accede al rol del usuario correctamente
       const userRole = req.auth?.user?.rol;
-      console.log("User role:", userRole);
-      console.log("Auth object:", req.auth);
-      console.log("User object:", req.auth?.user);
+      // console.log("User role:", userRole);
+      // console.log("Auth object:", req.auth);
+      // console.log("User object:", req.auth?.user);
 
-      const { auth } = req;
-      console.log("Auth object:", auth);
+      // const { auth } = req;
+      // console.log("Auth object:", auth);
       
-      if (auth?.user) {
-        console.log("User role:", auth.user.rol);
-      }
+      // if (auth?.user) {
+      //   console.log("User role:", auth.user.rol);
+      // }
       
       // Redirige basado en el rol
       if (userRole === RolUsuario.Administrador) {
         return NextResponse.redirect(new URL("/admin", nextUrl));
       } else if (userRole === RolUsuario.Usuario) {
-        return NextResponse.redirect(new URL("/client", nextUrl));
+        return NextResponse.redirect(new URL("/cliente", nextUrl));
       }
       // Si no hay un rol específico, usa el redirect por defecto
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));

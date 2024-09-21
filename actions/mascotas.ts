@@ -15,24 +15,24 @@ export const obtenerMascotas = async (): Promise<Mascota[]> => {
         orderBy: {
             creadoEn: 'desc',
         },
-        select: {
-            id: true,
-            nombre: true,
-            especie: true,
-            raza: true,
-            sexo: true,
-            fechaNacimiento: true,
-            detalles: true,
-            imagen: true,
-            estado: true,
-            creadoEn: true,
-            actualizadoEn: true,
-            idUsuario: true,
-            idPropietario: true,
-            esterilizado: true,
-            alergias: true,
-            observaciones: true,
-        },
+        // select: {
+        //     id: true,
+        //     nombre: true,
+        //     especie: true,
+        //     raza: true,
+        //     sexo: true,
+        //     fechaNacimiento: true,
+        //     detalles: true,
+        //     imagen: true,
+        //     estado: true,
+        //     creadoEn: true,
+        //     actualizadoEn: true,
+        //     idUsuario: true,
+        //     idPropietario: true,
+        //     esterilizado: true,
+        //     alergias: true,
+        //     observaciones: true,
+        // },
     });
     const mascotasConFechaAjustada = mascotas.map(mascota => ({
         ...mascota,
@@ -51,8 +51,8 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
 
     const { nombre, especie, raza, fechaNacimiento, sexo, detalles } = validatedMascota.data;
 
-    const idUActual = await usuarioIdActual();
     try {
+        const idUActual = await usuarioIdActual();
         const mascota = await db.$transaction(async (tx) => {
             const createdMascota = await tx.mascota.create({
                 data: {
@@ -89,72 +89,106 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
     const validatedFields = MascotaSchema.safeParse(values);
 
     if (!validatedFields.success) {
-        return { error: "Campos Inválidos!" };
+        return { error: "Campos inválidos!" };
     }
 
-    const mascotaActualizada = await db.mascota.update({
-        where: {
-            id: idMascota
-        },
-        data: {
-            ...values
-        }
-    })
+    // const { nombre, especie, raza, sexo, fechaNacimiento, detalles } = validatedFields.data;
+    // console.log(validatedFields.data)
+    // console.log(idMascota)
 
-    return { success: "Mascota Registrada Correctamente!" };
+    // const pablo = await db.mascota.update({
+    //     data: {
+    //         nombre,
+    //         especie,
+    //         raza,
+    //         sexo,
+    //         fechaNacimiento,
+    //         detalles,
+    //     },
+    // });
+    try {
+        const idUActual = await usuarioIdActual();
+        const mascotaActualizada = await db.mascota.update({
+            where: {
+                id: idMascota,
+            },
+            data: {
+                ...values,
+                idUsuario: idUActual,
+            },
+        });
+
+        return { success: "Mascota Editada Correctamente!" };
+    } catch (error) {
+        console.error("Error al actualizar la mascota:", error);
+        return { error: "Ocurrió un error al actualizar la mascota." };
+    }
 };
 
 export const obtenerMascota = async (id: number) => {
-    const mascota = await db.mascota.findUnique({
-        where: {
-            id,
-        },
-    });
-
-    if (mascota) {
-        return {
-            ...mascota,
-            fechaNacimiento: mascota.fechaNacimiento ? addHours(new Date(mascota.fechaNacimiento), 4) : null,
-        };
-    }
-
-    return null;
-};
-
-export const eliminarMascota = async (id: number) => {
-    const mascota = await db.mascota.delete({
-        where: {
-            id,
-        },
-    });
-
-    if (!mascota) return { error: "Mascota no Encontrada" }
-    return { success: "La Mascota fue Removida Correctamente" };
-}
-
-export const deshabilitarMascota = async (id: number) => {
-    const usuarioActualId = await usuarioIdActual();
-    if (!usuarioActualId) {
-        throw new Error('ID del usuario autenticado no está definido');
-    }
-
-    if (isNaN(usuarioActualId)) {
-        throw new Error('ID del usuario autenticado no es un número válido');
-    }
     try {
-        const mascota = await db.mascota.update({
+        // Intentamos obtener la mascota
+        const mascota = await db.mascota.findUnique({
             where: {
                 id,
             },
+        });
+
+        // Si se encuentra la mascota, ajustamos la fecha de nacimiento
+        if (mascota) {
+            return {
+                ...mascota,
+                fechaNacimiento: mascota.fechaNacimiento
+                    ? addHours(new Date(mascota.fechaNacimiento), 4) // Agregamos 4 horas a la fecha de nacimiento
+                    : null,
+            };
+        }
+
+        // Si no se encuentra la mascota, devolvemos null
+        return null;
+    } catch (error) {
+        console.error("Error al obtener la mascota:", error);
+        throw new Error("Ocurrió un error al obtener la mascota.");
+    }
+};
+
+
+
+export const eliminarMascota = async (id: number) => {
+    try {
+        const mascota = await db.mascota.delete({
+            where: { id },
+        });
+
+        if (!mascota) return { error: "Mascota no Encontrada" };
+        return { success: "La Mascota fue Removida Correctamente" };
+    } catch (error) {
+        console.error("Error al eliminar la mascota:", error);
+        return { error: "Ocurrió un error al eliminar la mascota." };
+    }
+};
+
+
+export const deshabilitarMascota = async (id: number) => {
+    try {
+        const usuarioActualId = await usuarioIdActual();
+
+        if (!usuarioActualId || isNaN(usuarioActualId)) {
+            throw new Error('ID del usuario autenticado no es válido');
+        }
+
+        const mascota = await db.mascota.update({
+            where: { id },
             data: {
                 estado: 0,
                 idUsuario: usuarioActualId,
             },
         });
-        if (!mascota) return { error: "Mascota no Encontrada" }
-        return { success: "La Mascota fue Eliminada Correctamente" };
-    } catch (error) {
-        return { error: "Mascota no Encontrada" }
-    }
 
-}
+        if (!mascota) return { error: "Mascota no Encontrada" };
+        return { success: "La Mascota fue Deshabilitada Correctamente" };
+    } catch (error) {
+        console.error("Error al deshabilitar la mascota:", error);
+        return { error: "Ocurrió un error al deshabilitar la mascota." };
+    }
+};

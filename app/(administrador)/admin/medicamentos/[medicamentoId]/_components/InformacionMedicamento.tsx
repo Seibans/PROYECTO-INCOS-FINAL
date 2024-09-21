@@ -3,9 +3,11 @@ import { Medicamento } from '@prisma/client'
 import Image from 'next/image';
 import { Dog } from 'lucide-react';
 import { FormEditarMedicamento } from './FormEditarMedicamento';
+import { FormMedicamentoGlobal } from '../../_components/FormMedicamentoGlobal2';
+import { MedicamentoT } from '@/types';
 
 type InformacionMedicamentoProps = {
-    medicamento: Medicamento;
+    medicamento: MedicamentoT;
 };
 
 const DefaultImage: React.FC<{ src: string | null, alt: string }> = ({ src, alt }) => {
@@ -21,7 +23,7 @@ export const InformacionMedicamento = (props: InformacionMedicamentoProps) => {
             <div className="rounded-lg bg-background shadow-md hover:shadow-lg p-4">
                 <div>
                     {/* <DefaultImage src={medicamento.nombre} alt="Imagen del Medicamento" /> */}
-                    <FormEditarMedicamento medicamento={medicamento} />
+                    <FormMedicamentoGlobal medicamento={medicamento} />
                 </div>
             </div>
 

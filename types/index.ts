@@ -4,7 +4,7 @@ export interface MedicamentoT {
     id: number;
     nombre: string;
     descripcion: string | null;  // Permitir que sea string o null
-    precio: number;  // 'precio' es un number en lugar de Decimal
+    precio: any;
     stock: number;
     estado: number;
     tipo: TipoMedicamento;
@@ -68,3 +68,14 @@ export interface HistorialMedicoT {
     sexoMascota: 'Macho' | 'Hembra';
     tratamientos: TratamientoT[];
 }
+
+export interface ReservaMedica {
+    id: string
+    fechaReserva: Date
+    detalles: string
+    servicio: string
+    estado: 'pendiente' | 'completada' | 'cancelada'
+    usuarioId: string
+    creadoEn: Date
+    actualizadoEn: Date
+  }

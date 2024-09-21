@@ -132,20 +132,22 @@ export function FormPerfilAdmin() {
 
 
   return (
-    <Tabs defaultValue="cuenta" className="w-4/5 bg-background p-4 rounded-lg">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="cuenta">Datos de la Cuenta</TabsTrigger>
-        <TabsTrigger value="contrasena">Contraseña</TabsTrigger>
-      </TabsList>
-      <TabsContent value="cuenta">
-        <Card>
-          <CardHeader>
-            <p className="text-2xl font-semibold text-center">
-              Configuración de los Campos del Usuario
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+    <>
+      <h2 className="text-2xl">Mi Perfil</h2>
+      <Tabs defaultValue="cuenta" className="w-4/5 bg-background p-4 rounded-lg">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="cuenta">Datos de la Cuenta</TabsTrigger>
+          <TabsTrigger value="contrasena">Contraseña</TabsTrigger>
+        </TabsList>
+        <TabsContent value="cuenta">
+          <Card>
+            <CardHeader>
+              <p className="text-2xl font-semibold text-center">
+                Configuración de los Campos del Usuario
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">
             Nombre
           </p>
@@ -153,309 +155,313 @@ export function FormPerfilAdmin() {
             {usuario?.name}
           </p>
           </div> */}
-            <Form {...form}>
-              <form
-                className="space-y-6"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
+              <Form {...form}>
+                <form
+                  className="space-y-6"
+                  onSubmit={form.handleSubmit(onSubmit)}
+                >
 
-                <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nombre:</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Nombre"
-                            {...field}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nombre:</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Nombre"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="apellidoPat"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Apellido Paterno:</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Apellido Paterno"
-                            {...field}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="apellidoMat"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Apellido Materno:</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Apellido Materno"
-                            {...field}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="ci"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Carnet de Identidad:</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Carnet de Identidad"
-                            {...field}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={form.control}
+                      name="apellidoPat"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Apellido Paterno:</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Apellido Paterno"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="apellidoMat"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Apellido Materno:</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Apellido Materno"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ci"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Carnet de Identidad:</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Carnet de Identidad"
+                              {...field}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    disabled={isPending}
-                    control={form.control}
-                    name="direccion"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Direccion:</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Ciudad, Zona, Calle, Numero, Localidad"
-                            className="resize-none"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      disabled={isPending}
+                      control={form.control}
+                      name="direccion"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Direccion:</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Ciudad, Zona, Calle, Numero, Localidad"
+                              className="resize-none"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {usuario?.isOAuth === false && (
-                    <>
+                    {usuario?.isOAuth === false && (
+                      <>
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="email"
+                                  placeholder="Email"
+                                  {...field}
+                                  disabled={true}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </>
+                    )}
+
+                    <div className="flex flex-col gap-6 xl:flex-row">
                       <FormField
                         control={form.control}
-                        name="email"
+                        name="celular"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
+                          <FormItem className="flex-1">
+                            <FormLabel className="shad-input-label">Celular:</FormLabel>
                             <FormControl>
-                              <Input
-                                type="email"
-                                placeholder="Email"
-                                {...field}
-                                disabled={true}
+                              <PhoneInput
+                                defaultCountry="BO"
+                                placeholder="+591 00000000"
+                                international
+                                withCountryCallingCode
+                                value={field.value as E164Number | undefined}
+                                onChange={field.onChange}
+                                className="input-phone"
                               />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                    </>
-                  )}
+                    </div>
+                    {usuario?.rol === RolUsuario.Administrador && (
+                      <FormField
+                        control={form.control}
+                        name="rol"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Rol</FormLabel>
+                            <Select
+                              disabled={isPending}
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Seleccione un rol" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value={RolUsuario.Usuario}>Usuario</SelectItem>
+                                <SelectItem value={RolUsuario.Administrador}>Administrador</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                    {usuario?.isOAuth === false && (
 
-                  <div className="flex flex-col gap-6 xl:flex-row">
-                    <FormField
-                      control={form.control}
-                      name="celular"
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormLabel className="shad-input-label">Celular:</FormLabel>
-                          <FormControl>
-                            <PhoneInput
-                              defaultCountry="BO"
-                              placeholder="+591 00000000"
-                              international
-                              withCountryCallingCode
-                              value={field.value as E164Number | undefined}
-                              onChange={field.onChange}
-                              className="input-phone"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  {usuario?.rol === RolUsuario.Administrador && (
-                    <FormField
-                      control={form.control}
-                      name="rol"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Rol</FormLabel>
-                          <Select
-                            disabled={isPending}
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                      <FormField
+                        control={form.control}
+                        name="authDobleFactor"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0 5">
+                              <FormLabel>Autenticacion de Doble Factor</FormLabel>
+                              <FormDescription>Habilitar la autenticacion de doble factor para Mi Cuenta</FormDescription>
+                            </div>
+
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Seleccione un rol" />
-                              </SelectTrigger>
+                              <Switch
+                                disabled={isPending}
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
                             </FormControl>
-                            <SelectContent>
-                              <SelectItem value={RolUsuario.Usuario}>Usuario</SelectItem>
-                              <SelectItem value={RolUsuario.Administrador}>Administrador</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
-                  {usuario?.isOAuth === false && (
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
 
-                    <FormField
-                      control={form.control}
-                      name="authDobleFactor"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                          <div className="space-y-0 5">
-                            <FormLabel>Autenticacion de Doble Factor</FormLabel>
-                            <FormDescription>Habilitar la autenticacion de doble factor para Mi Cuenta</FormDescription>
-                          </div>
-
-                          <FormControl>
-                            <Switch
-                              disabled={isPending}
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
-
-                </div>
-                <div className="flex justify-end">
-                  <Button
-                    type="submit"
-                    disabled={isPending}
-                    className="bg-gradient">
-                    Guardar Datos
-                  </Button>
-                </div>
-              </form>
-
-            </Form>
-            {/* <Button disabled={isPending}>
-            Cambiar Nombre
-          </Button> */}
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-
-      <TabsContent value="contrasena">
-        <Card>
-          <CardHeader>
-            <p className="text-2xl font-semibold text-center">
-              Cambiar la Contraseña
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {usuario?.isOAuth ? (
-              <p className="text-center text-red-500">
-                Has iniciado sesión con un proveedor como Google o Facebook. No puedes cambiar la contraseña desde aquí.
-              </p>
-            ) : (
-              <Form {...formPassword}>
-                <form
-                  className="space-y-6"
-                  onSubmit={formPassword.handleSubmit(onSubmitPassword)}
-                >
-                  <div className="space-y-4">
-                    <FormField
-                      control={formPassword.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Contraseña:</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="******"
-                              {...field}
-                              disabled={isPending}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={formPassword.control}
-                      name="nuevoPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nueva Contraseña</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="******"
-                              {...field}
-                              disabled={isPending}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={formPassword.control}
-                      name="repetirPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Repetir Contraseña:</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="******"
-                              {...field}
-                              disabled={isPending}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
-                  <Button
-                    type="submit"
-                    disabled={isPending}>
-                    Cambiar Contraseña
-                  </Button>
+                  <div className="flex justify-end">
+                    <Button
+                      type="submit"
+                      disabled={isPending}
+                      className="bg-gradient"
+                      variant={"outline"}>
+                      Guardar Datos
+                    </Button>
+                  </div>
                 </form>
+
               </Form>
-            )}
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+
+        <TabsContent value="contrasena">
+          <Card>
+            <CardHeader>
+              <p className="text-2xl font-semibold text-center">
+                Cambiar la Contraseña
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {usuario?.isOAuth ? (
+                <p className="text-center text-red-500">
+                  Has iniciado sesión con un proveedor como Google o Facebook. No puedes cambiar la contraseña desde aquí.
+                </p>
+              ) : (
+                <Form {...formPassword}>
+                  <form
+                    className="space-y-6"
+                    onSubmit={formPassword.handleSubmit(onSubmitPassword)}
+                  >
+                    <div className="space-y-4">
+                      <FormField
+                        control={formPassword.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Contraseña:</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="password"
+                                placeholder="******"
+                                {...field}
+                                disabled={isPending}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={formPassword.control}
+                        name="nuevoPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nueva Contraseña</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="password"
+                                placeholder="******"
+                                {...field}
+                                disabled={isPending}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={formPassword.control}
+                        name="repetirPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Repetir Contraseña:</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="password"
+                                placeholder="******"
+                                {...field}
+                                disabled={isPending}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex justify-end">
+                      <Button
+                        type="submit"
+                        disabled={isPending}
+                        className="bg-gradient"
+                        variant={"outline"}>
+                        Cambiar Contraseña
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </>
   )
 }
