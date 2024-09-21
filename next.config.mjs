@@ -1,19 +1,4 @@
 import million from "million/compiler";
- 
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   reactStrictMode: true,
-//   images: {
-//     domains: ['res.cloudinary.com', 'unsplash.com', 'lh3.googleusercontent.com'],
-//   },
-// };
- 
-// const millionConfig = {
-//   auto: true,// if you're using RSC: auto: { rsc: true },
-// };
- 
-// export default million.next(nextConfig, millionConfig);
-
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,25 +22,24 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',  // Añadido este dominio
+        hostname: 'images.unsplash.com',
         pathname: '**',
       },
       {
         protocol: 'https',
-        hostname: 'utfs.io', // Añade esta línea
-        pathname: '**', // Permitir cualquier ruta
+        hostname: 'utfs.io',
+        pathname: '**',
       },
       {
         protocol: 'https',
         hostname: 'platform-lookaside.fbsbx.com',
         pathname: '**'
       },
-      // Aquí agregamos localhost para permitir cargar imágenes desde allí.
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3000', // Especifica el puerto si es necesario (3000 en desarrollo)
-        pathname: '/uploads/**', // Permite imágenes de la carpeta /uploads
+        port: '3000',
+        pathname: '/uploads/**',
       },
     ],
   },

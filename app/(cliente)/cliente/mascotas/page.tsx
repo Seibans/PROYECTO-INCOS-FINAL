@@ -1,7 +1,7 @@
-import PetViewer from "../../_components/pet-viewer";
+import VisorMascotas from "../../_components/visor-mascotas";
 
 export default function MascotasPage() {
   return (
-      <PetViewer />
+      <VisorMascotas />
   );
 }

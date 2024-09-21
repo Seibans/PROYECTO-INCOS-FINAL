@@ -34,7 +34,7 @@ export const TimePicker = ({ value, onChange }: any) => {
 		  </SelectContent>
 		</Select>
 		<Select onValueChange={(period) => onChange({ ...value, period })}>
-		  <SelectTrigger className="w-[70px]">
+		  <SelectTrigger className="w-[90px]">
 			<SelectValue placeholder="AM/PM" />
 		  </SelectTrigger>
 		  <SelectContent>

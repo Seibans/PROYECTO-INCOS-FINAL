@@ -1,3 +1,4 @@
+
 export default function ClientPage() {
 	return (
 	  <div className="text-center">

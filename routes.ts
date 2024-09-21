@@ -3,11 +3,9 @@
  * Estas rutas no requieren autenticación
  * @type {string[]}	
  */
-
 export const publicRoutes = [
 	"/",
 	"/divz",
-	// "/settings",
 	"/auth/nueva-verificacion",
 	"/bento",
 	"/api/uploadthing"
@@ -18,7 +16,6 @@ export const publicRoutes = [
  * Estas rutas redigiran al logueo a los usuarios que van a /settings
  * @type {string[]}	
  */
-
 export const authRoutes = [
 	"/auth/login",
 	"/auth/registro",
@@ -27,20 +24,15 @@ export const authRoutes = [
 	"/auth/nuevo-password",
 ];
 
-
 /**
  * Este prefijo para la autenticacion de rutas API
  * Las rutas que comienzan con este prefijo se utilizan para la autenticación de la API.
  * @type {string}	
  */
-
-export const apiAuthPrefix = "/api/auth";	
+export const apiAuthPrefix = "/api/auth";
 
 /**
  * La ruta de redirección por defecto después de iniciar sesión
  * @type {string}	
  */
-
-
-// export const DEFAULT_LOGIN_REDIRECT = "/settings";
 export const DEFAULT_LOGIN_REDIRECT = "/admin";

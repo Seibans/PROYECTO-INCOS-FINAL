@@ -8,8 +8,8 @@ import { CalendarIcon, FileTextIcon, PawPrintIcon, UserIcon, PlusCircleIcon, Bel
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 import { FormPerfilAdmin } from "@/components/global/FormPerfilAdmin";
-import PetViewer from './pet-viewer'
-import CitasMedicas from './CitasMedicas'
+import PetViewer from '../../app/(cliente)/_components/visor-mascotas'
+import CitasMedicas from '../../app/(cliente)/_components/CitasMedicas'
 import NavBar from "@/components/global/Navbar.component";
 
 

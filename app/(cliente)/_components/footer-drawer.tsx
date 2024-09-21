@@ -36,12 +36,6 @@ export default function FooterDrawer() {
 
   return (
     <>
-      {/* <Button
-        variant="outline"
-        size="icon"
-        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 rounded-full shadow-lg z-50"
-        onClick={() => setIsOpen(true)}
-      > */}
       <Button
         variant="outline"
         size="icon"

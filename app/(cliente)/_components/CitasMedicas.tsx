@@ -78,15 +78,7 @@ export default function CitasMedicas() {
               <TableCell>{cita.servicio}</TableCell>
               <TableCell>{cita.detalles}</TableCell>
               <TableCell>
-                <Badge
-                  variant={
-                    cita.estado === "pendiente"
-                      ? "default"
-                      : cita.estado === "completada"
-                      ? "success"
-                      : "destructive"
-                  }
-                >
+                <Badge>
                   {cita.estado}
                 </Badge>
               </TableCell>

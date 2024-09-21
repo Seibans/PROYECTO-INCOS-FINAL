@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -25,7 +25,7 @@ import {formSchema} from "@/schemas"
 
 
 export default function FormCitaMedica() {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = React.useTransition();
 
   // Configuración del formulario con React Hook Form y Zod
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,7 +50,6 @@ export default function FormCitaMedica() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* Campo para seleccionar la fecha */}
         <FormField
           control={form.control}
           name="fechaReserva"
@@ -82,8 +81,6 @@ export default function FormCitaMedica() {
             </FormItem>
           )}
         />
-
-        {/* Campo para seleccionar la hora */}
         <FormField
           control={form.control}
           name="hora"
@@ -136,8 +133,6 @@ export default function FormCitaMedica() {
             </FormItem>
           )}
         />
-
-        {/* Campo para detalles de la cita */}
         <FormField
           control={form.control}
           name="detalles"
@@ -151,8 +146,6 @@ export default function FormCitaMedica() {
             </FormItem>
           )}
         />
-
-        {/* Campo para seleccionar el servicio */}
         <FormField
           control={form.control}
           name="servicio"
@@ -175,8 +168,6 @@ export default function FormCitaMedica() {
             </FormItem>
           )}
         />
-
-        {/* Botón de envío */}
         <Button disabled={isPending} type="submit" className="w-full">
           Crear Cita
         </Button>

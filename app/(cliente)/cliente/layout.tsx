@@ -1,4 +1,4 @@
-import ModernClientProfile from "../_components/modern-client-profile";
+import ModernClientProfile from "../../../components/otros/modern-client-profile";
 import { Navbar } from "../_components/navbar.component";
 // "use client"
 // import { motion } from 'framer-motion'
@@ -7,7 +7,7 @@ import { rolActual } from "@/lib/auth";
 import { redirect } from 'next/navigation'
 import { RolUsuario } from "@prisma/client";
 import NavBar from '@/components/global/Navbar.component'
-import { FooterNav } from "../_components/footerNav";
+import { FooterNav } from "../../../components/otros/footerNav";
 import ClientMotionWrapper from "./_components/ClientMotionWrapper";
 import FooterDrawer from "../_components/footer-drawer";
 

@@ -88,7 +88,7 @@ const mascotas: Mascota[] = [
   }
 ]
 
-export default function PetViewer() {
+export default function VisorMascotas() {
   const [selectedPet, setSelectedPet] = useState<Mascota | null>(null)
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
 
