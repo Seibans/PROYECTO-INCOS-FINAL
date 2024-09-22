@@ -1,5 +1,4 @@
-import crypto from "crypto"; //Es una dependencia que no se necesita instalar porque ya existe
-
+import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "@/lib/db";
 import { getVerificationTokenByEmail } from "@/data/verificacion-token";
@@ -56,7 +55,7 @@ export const generatePasswordResetToken = async (email: string) => {
 
 export const generateVerificationToken = async (email: string) => {
 	const token = uuidv4();
-	const expires = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 30 * 2)); //el token tendra un tiempo de vida de 
+	const expires = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 30 * 2));
 
 	const existingToken = await getVerificationTokenByEmail(email);
 	

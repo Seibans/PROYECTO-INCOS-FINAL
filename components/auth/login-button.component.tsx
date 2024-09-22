@@ -1,6 +1,4 @@
 "use client";
-//Detalle por defecto lo importa de router pero tu usa el de navigation
-
 import { useRouter } from "next/navigation";
 import {
     Dialog,
@@ -12,9 +10,7 @@ import { LoginForm } from "@/components/auth/login-form.component";
 // TODO: FORMA DE IMPLEMENTAR UN COMPONENTE MODAL
 interface LoginButtonProps {
 	children: React.ReactNode;
-
-	// Esta Propiedad es opcional y se coloco de forma manual investigar las propos de un componente
-	mode?:"modal" | "redirect",
+	mode?: "modal" | "redirect",
 	asChild?: boolean;
 }
 
@@ -34,7 +30,7 @@ export function LoginButton({
                 <DialogTrigger asChild={asChild}>
                     {children}
                 </DialogTrigger>
-                <DialogContent className="p- w-auto bg-transparent border-none">
+                <DialogContent className="w-auto bg-transparent border-none">
                     <LoginForm />
                 </DialogContent>
             </Dialog>

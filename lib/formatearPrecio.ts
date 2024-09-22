@@ -4,7 +4,7 @@ export const formatearPrecio = (precio: number) => {
 		currency: "BOB",
 	}).format(precio);
 }
-
+//TODO:Los de abajo no se usan
 export const formatearPrecioPorcentaje = (precio: number, porcentaje: number) => {
 	return new Intl.NumberFormat("es-ES", {
 		style: "currency",

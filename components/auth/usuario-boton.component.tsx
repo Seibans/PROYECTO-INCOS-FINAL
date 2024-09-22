@@ -37,7 +37,7 @@ export const BotonUsuario: React.FC<BotonUsuarioProps> = ({ profileRoute }) => {
 			<DropdownMenuContent className='w-40' align='end'>
 				<DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<Link href={profileRoute}> {/* Usamos la prop para el Link */}
+				<Link href={profileRoute}>
 					<DropdownMenuItem className='cursor-pointer'>
 						Mi Perfil
 					</DropdownMenuItem>

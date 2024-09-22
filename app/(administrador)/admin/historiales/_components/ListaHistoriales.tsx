@@ -3,7 +3,7 @@
 // actions/historiales.ts
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import SubirImagen from "@/components/admin/SubirImagen.component";
+import SubirImagen from "@/components/global/SubirImagen.component";
 import SubirImagen2 from "@/components/admin/SubirImagen2.component";
 import { obtenerMascotas } from "@/actions/mascotas";
 import { Mascota } from "@prisma/client";

@@ -1,5 +1,4 @@
 "use server";
-//Esto es un server action
 import * as z from "zod";
 import { RegistroSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
@@ -8,15 +7,12 @@ import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 // import { enviarCorreodeVerificacion } from "@/lib/mail";
 import { enviarCorreodeVerificacion } from "@/lib/nodemailer";
-import { formatName } from "@/lib/formatearNombre";
-import { formatInTimeZone } from 'date-fns-tz';
-import { enGB } from 'date-fns/locale/en-GB'
-import { sendMail } from "@/lib/nodemailer";
+import { formatearNombre } from "@/lib/formatearNombre";
 
 export const registro = async (values: z.infer<typeof RegistroSchema>) => {
-    const validatedFields = RegistroSchema.safeParse(values);
+    const camposValidos = RegistroSchema.safeParse(values);
 
-    if (!validatedFields.success) {
+    if (!camposValidos.success) {
         return { error: "Campos Inválidos!" };
     }
 
@@ -30,31 +26,22 @@ export const registro = async (values: z.infer<typeof RegistroSchema>) => {
         email,
         password,
         direccion,
-    } = validatedFields.data;
+    } = camposValidos.data;
 
-    // Normalizar nombres
-    const formattedName = formatName(name);
-    const formattedApellidoPat = apellidoPat ? formatName(apellidoPat) : null;
-    const formattedApellidoMat = apellidoMat ? formatName(apellidoMat) : null;
+    const formattedName = formatearNombre(name);
+    const formattedApellidoPat = apellidoPat ? formatearNombre(apellidoPat) : null;
+    const formattedApellidoMat = apellidoMat ? formatearNombre(apellidoMat) : null;
     const formattedDireccion = direccion ? direccion.trim() : null;
 
-
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
+    const usuarioExistente = await getUserByEmail(email);
+    if (usuarioExistente) {
         return { error: "El usuario ya existe!" };
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const passwordEncriptado = await bcrypt.hash(password, 10);
 
     try {
-        // console.log(new Date());
-        // console.log(formatInTimeZone(new Date(), 'America/La_Paz', 'yyyy-MM-dd HH:mm:ss'));
-        // console.log(formatInTimeZone(new Date(), 'America/La_Paz', 'yyyy-MM-dd HH:mm:ss zzz', { locale: enGB }));
-        // const fecha = formatInTimeZone(new Date(), 'America/La_Paz', 'yyyy-MM-dd HH:mm:ss');
-
-
         await db.$transaction(async (tx) => {
-            // Crear el nuevo usuario
             const user = await tx.user.create({
                 data: {
                     name: formattedName,
@@ -65,11 +52,10 @@ export const registro = async (values: z.infer<typeof RegistroSchema>) => {
                     celular: celular ? celular.replaceAll(" ", "") : null,
                     direccion: formattedDireccion,
                     email,
-                    password: hashedPassword
+                    password: passwordEncriptado
                 },
             });
 
-            // Actualizar el mismo usuario con el campo idUsuario
             await tx.user.update({
                 where: { id: user.id },
                 data: {
@@ -79,29 +65,14 @@ export const registro = async (values: z.infer<typeof RegistroSchema>) => {
 
             return user;
         });
-
-        // await db.user.create({
-        //     data: {
-        //         name: formattedName,
-        //         apellidoPat: formattedApellidoPat,
-        //         apellidoMat: formattedApellidoMat,
-        //         ci: ci ? ci.replaceAll(" ", "") : null,
-        //         sexo: sexo ? sexo.replaceAll(" ", "") : null,
-        //         celular: celular ? celular.replaceAll(" ", "") : null,
-        //         direccion: formattedDireccion,
-        //         email,
-        //         password: hashedPassword,
-        //     },
-        // });   
-        const verificationToken = await generateVerificationToken(email);
+        const tokenVerificacion = await generateVerificationToken(email);
 
         await enviarCorreodeVerificacion(
-            verificationToken.email,
-            verificationToken.token
+            tokenVerificacion.email,
+            tokenVerificacion.token
         )
 
         return { success: "Te enviamos un correo de confirmación a tu correo electrónico, para confirmar tu cuenta." };
-        // return {success: "Confirmación de correo enviada!"}; 
     } catch (error) {
         console.log(error);
         return { error: "Error al registrar usuario!" };

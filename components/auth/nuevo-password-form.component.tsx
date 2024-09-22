@@ -49,12 +49,8 @@ export const NuevoPasswordForm = () => {
 
   // El error de la data se resuelve en el minuto 3:45
   const onSubmit = (values: z.infer<typeof NuevoPasswordSchema>) => {
-
-    console.log(values);
-
     setError("");
     setSuccess("");
-
     startTransition(() => {
       nuevoPassword(values, token)
         .then((data) => {
@@ -86,7 +82,6 @@ export const NuevoPasswordForm = () => {
       backButtonLabel="Regresar al Login"
       backButtonHref="/auth/login"
     >
-      {/* obtiene todas las propiedades desestructurandolas excepto children */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -100,7 +95,7 @@ export const NuevoPasswordForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex space-x-2">
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Password:</FormLabel>
                     <FormMessage></FormMessage>
                   </div>
                   <FormControl>

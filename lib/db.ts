@@ -15,27 +15,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // USANDO AcceleratedAnimation, PERO LAS CONSULTAS NO SIRVEN
 // import { PrismaClient } from '@prisma/client/edge';
 // import { withAccelerate } from '@prisma/extension-accelerate';

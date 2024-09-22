@@ -143,15 +143,15 @@ export const ConfiguracionSchema = z.object({
     )),
     apellidoPat: z.preprocess((value) => value === "" ? undefined : value, z.optional(
         z.string()
-        .min(2, {
-            message: "* El apellido paterno es requerido"
-        })
-        .max(40, {
-            message: "* El apellido paterno no puede tener más de 40 caracteres"
-        })
-        .refine((value) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value), {
-            message: "* El apellido paterno solo puede contener letras y espacios"
-        })
+            .min(2, {
+                message: "* El apellido paterno es requerido"
+            })
+            .max(40, {
+                message: "* El apellido paterno no puede tener más de 40 caracteres"
+            })
+            .refine((value) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value), {
+                message: "* El apellido paterno solo puede contener letras y espacios"
+            })
     )),
     apellidoMat: z.preprocess((value) => value === "" ? undefined : value, z.optional(
         z.string().max(40, {
@@ -167,24 +167,18 @@ export const ConfiguracionSchema = z.object({
             message: "* Ingrese Un C.I. válido"
         })
     )),
-    // sexo: z.optional(z.enum(["M", "F"])),
     sexo: z.preprocess(
-        (value) => value === undefined || value === "" ? undefined : value, 
+        (value) => value === undefined || value === "" ? undefined : value,
         z.optional(z.enum(["M", "F"]))
-      ),
+    ),
     email: z.optional(z.string().email()),
-    // password: z.optional(z.string().min(1)),
     rol: z.enum([RolUsuario.Administrador, RolUsuario.Usuario]),
     celular: z.optional(z.string().refine((celular) => /^\+\d{10,15}$/.test(celular), "Numero de Celular Invalido")),
     direccion: z.optional(z.string()
         .max(255, { message: "La dirección no debe tener más de 255 caracteres." }),
     ),
-    // TODO:Posible error
     estado: z.optional(z.number().positive({ message: "El estado debe ser un número positivo" })),
     authDobleFactor: z.optional(z.boolean()),
-    // nuevoPassword: z.optional(z.string().min(6, {
-    //     message: "* La Nueva Contraseña debe ser de mínimo 6 caracteres"
-    // })),
 });
 
 export const MascotaSchema = z.object({
@@ -254,9 +248,7 @@ export const PagoSchema = z.object({
     usuarioId: z.number({ required_error: "El ID del usuario es obligatorio" }),
     total: z.preprocess((val) => parseInt(val as string, 10), z.number().int({ message: "El total debe ser un número entero" }).positive({ message: "El total debe ser un número positivo" })),
     cuotas: z.preprocess((val) => parseInt(val as string, 10), z.number().int({ message: "Las cuotas deben ser un número entero" }).positive({ message: "Las cuotas deben ser un número positivo" })),
-    // cuotas: z.number()
-    //     .int({ message: "Las cuotas deben ser un número entero" })
-    //     .positive({ message: "Las cuotas deben ser un número positivo" }),
+    // cuotas: z.number().int({ message: "Las cuotas deben ser un número entero" }).positive({ message: "Las cuotas deben ser un número positivo" }),
     montoCuota: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El monto de la cuota debe ser un número positivo" })),
     detalle: z.string().max(100, { message: "El detalle no puede tener más de 100 caracteres" }).optional(),
     estado: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El estado debe ser un número positivo" })),
@@ -277,13 +269,13 @@ export const ReservaMedicaSchema = z.object({
 
 export const formSchema = z.object({
     fechaReserva: z.date({
-      required_error: "Por favor seleccione una fecha.",
+        required_error: "Por favor seleccione una fecha.",
     }),
     hora: z.object({
-      hour: z.string().min(1, "Seleccione la hora"),
-      minute: z.string().min(1, "Seleccione los minutos"),
-      period: z.string().min(1, "Seleccione AM/PM"),
+        hour: z.string().min(1, "Seleccione la hora"),
+        minute: z.string().min(1, "Seleccione los minutos"),
+        period: z.string().min(1, "Seleccione AM/PM"),
     }),
     detalles: z.string().min(1, "Por favor ingrese los detalles de la cita."),
     servicio: z.string().min(1, "Por favor seleccione un servicio."),
-  })
+})

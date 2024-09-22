@@ -88,14 +88,14 @@ export const LoginForm = () => {
             setError(data?.error);
             throw new Error(data?.error || urlError);
           }
-          // if (data?.success) {
-          //   form.reset();
-          //   setSuccess(data?.success);
-          // }
+          if (data?.success) {
+            form.reset();
+            setSuccess(data?.success);
+          }
 
-          // if (data?.dobleFactor) {
-          //   setDobleFactor(true);
-          // }
+          if (data?.dobleFactor) {
+            setDobleFactor(true);
+          }
         })
         .catch((error: any) => {
           setError(error.message);
@@ -129,7 +129,6 @@ export const LoginForm = () => {
       backButtonHref="/auth/registro"
       showSocial
     >
-      {/* obtiene todas las propiedades desestructurandolas excepto children */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

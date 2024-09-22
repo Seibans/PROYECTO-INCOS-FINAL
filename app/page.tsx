@@ -6,6 +6,7 @@ import { SparklesCore } from "@/components/ui/sparkles";
 import { BackButton } from "@/components/auth/back-button.component";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import { HomeIcon, MessageCircle, User2 } from "lucide-react";
+import { ToggleModo } from "@/components/toggle.tema";
 // Definir los elementos estáticos
 const staticItems = [
   {
@@ -64,8 +65,14 @@ export default function Home() {
   return (
     // <main className="flex h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-200 to-orange-500">
     <main className="relative flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-orange-200 to-orange-500">
-      <div className="space-y-6 text-center text-white z-10 mt-10 h-[1000px]">
+      <div className="flex justify-end w-full pr-5 pt-5 z-10">
+        <ToggleModo />
+      </div>
+      <div className="space-y-6 text-center z-10 mt-10 h-[1000px]">
         <FloatingNav navItems={navItems} />
+
+
+
 
         <h1 className={cn("text-6xl font-semibold drop-shadow-md")}>
           Veterinaria Gamaliel

@@ -8,7 +8,8 @@ import { CambiarPasswordSchema, ConfiguracionSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
 import { usuarioActual } from "@/lib/auth";
 import { generateVerificationToken } from "@/lib/tokens";
-import { enviarCorreodeVerificacion } from "@/lib/mail";
+// import { enviarCorreodeVerificacion } from "@/lib/mail";
+import { enviarCorreodeVerificacion } from "@/lib/nodemailer";
 import bcrypt from "bcryptjs"
 
 export const perfil = async (values: z.infer<typeof ConfiguracionSchema>) => {
@@ -17,9 +18,6 @@ export const perfil = async (values: z.infer<typeof ConfiguracionSchema>) => {
     if (!usuario) {
         return { error: "No tienes permisos para cambiar la configuración" };
     }
-
-    // lo de abajo es para comprobar, si realmente existe en la base de datos el usuario actual
-    //y no es una sesssión sobrante
 
     const dbUsuario = await getUserById(Number(usuario.id));
 

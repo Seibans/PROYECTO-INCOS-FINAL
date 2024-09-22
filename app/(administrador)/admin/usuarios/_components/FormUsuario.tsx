@@ -255,6 +255,10 @@ export const FormUsuario = () => {
 												value={field.value as E164Number | undefined}
 												onChange={field.onChange}
 												className="input-phone"
+												countries={['PE', 'BO', 'AR', 'CL', 'CO', 'EC', 'MX', 'PY', 'UY', 'VE']}
+												countrySelectProps={{
+													className: 'bg-white text-black dark:bg-gray-800 dark:text-white !w-[10rem]',
+												}}
 											/>
 										</FormControl>
 										<FormMessage />
@@ -302,7 +306,7 @@ export const FormUsuario = () => {
 					/>
 
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-{/* 
+						{/* 
 						<FormField
 							control={form.control}
 							name="password"

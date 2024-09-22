@@ -16,7 +16,6 @@ export const FormularioNuevaVerificacion = () => {
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 
-
 	const onSubmit = useCallback(() => {
 		console.log(token);
 		// enviarCorreodeVerificacion(email, token);

@@ -16,7 +16,6 @@ import {
 
 import { ArrowUpDown, ChevronDown, MoreHorizontal, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -42,6 +41,17 @@ import { Mascota } from "@prisma/client";
 import { formatearFecha } from "@/lib/formatearFecha"
 
 export const columns: ColumnDef<Mascota>[] = [
+  {
+    id: "nro",
+    header: () => <div className="text-center">Nro.</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-center">
+          {row.index + 1}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "imagen",
     header: "Foto",
@@ -125,7 +135,7 @@ export const columns: ColumnDef<Mascota>[] = [
     header: () => <div className="text-left">Detalles</div>,
     cell: ({ row }) => {
       return (
-        // text-pretty text-wrap text-balance
+        //TODO: text-pretty text-wrap text-balance
         <div className="font-medium w-48 overflow-hidden">
           {row.getValue("detalles")}
         </div>
@@ -138,7 +148,6 @@ export const columns: ColumnDef<Mascota>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const { id } = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -176,13 +185,11 @@ interface DataTableProps<TData> {
 export function TablaMascotas({
   data
 }: DataTableProps<Mascota>) {
-  console.log(data)
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [isMounted, setIsMounted] = React.useState(false);
   // const [rowSelection, setRowSelection] = React.useState({}) //para el select de cada uno o muchos
-
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -198,6 +205,7 @@ export function TablaMascotas({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
+    // onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,

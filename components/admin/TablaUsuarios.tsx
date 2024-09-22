@@ -82,6 +82,17 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
 
   const columns: ColumnDef<UsuarioT>[] = [
     {
+      id: "nro",
+      header: () => <div className="text-center">Nro.</div>,
+      cell: ({ row }) => {
+        return (
+          <div className="text-center">
+            {row.index + 1}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "image",
       header: "Foto",
       cell: ({ row }) => {

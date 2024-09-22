@@ -11,7 +11,7 @@
 // npx prisma migrate reset
 // npx prisma migrate dev --name migracion_inicial
 // npx prisma migrate deploy
-//npx prisma db push
+// npx prisma db push
 
 // ESTE COMANDO CREA LOS ESUQEMAS DE MANERA REVERSA, SOLO DEBES VINCULAR LA BASE DE DATOS CON EL datasource db nada mas
 // npx prisma db pull con esto prisma lee la base de datos y crea los esquemas
@@ -28,6 +28,7 @@ datasource db {
 enum RolUsuario {
   Administrador
   Usuario
+  Veterinario
 }
 
 enum TipoMascota {
@@ -40,6 +41,17 @@ enum Sexo {
   Macho
   Hembra
 }
+
+// enum EstadoPago {
+//  Pendiente
+//  Pagado
+//}
+
+// enum EstadoReserva {
+//   Pendiente
+//   Confirmada
+//   Cancelada
+// }
 
 enum TipoMedicamento {
   Pastilla
@@ -142,7 +154,6 @@ model Mascota {
   id              Int         @id @default(autoincrement()) @db.UnsignedInt
   nombre          String      @db.VarChar(50)
   especie         TipoMascota
-  // Maximo 40 caracteres
   raza            String?     @db.VarChar(40)
   fechaNacimiento DateTime?   @db.Date
   sexo            Sexo
@@ -151,8 +162,7 @@ model Mascota {
   estado          Int         @default(1) @db.TinyInt
   idPropietario   Int?        @default(0) @db.UnsignedInt
   usuario         User?       @relation(fields: [idPropietario], references: [id])
-
-  historial     HistorialMedico? // Puede ser opcional
+  historial     HistorialMedico?
   esterilizado  Boolean?         @default(false)
   alergias      String?          @db.VarChar(255)
   observaciones String?          @db.VarChar(255)
@@ -200,6 +210,19 @@ model Medicamento {
   actualizadoEn DateTime?                @updatedAt @db.Timestamp(3)
   idUsuario     Int                      @db.UnsignedInt
 }
+
+// EXPERIMENTAL
+// model TratamientoHistorial {
+//   id                Int             @id @default(autoincrement())
+//   tratamientoId     Int
+//   historialMedicoId Int
+//   cantidad          Int
+//   precioTotal       Float
+//   creadoEn          DateTime        @default(now()) @db.DateTime(3)
+//   actualizadoEn     DateTime        @updatedAt @db.DateTime(3)
+//   tratamiento       Tratamiento     @relation(fields: [tratamientoId], references: [id])
+//   historialMedico   HistorialMedico @relation(fields: [historialMedicoId], references: [id])
+// }
 
 model TratamientoMedicamento {
   id            Int         @id @default(autoincrement()) @db.UnsignedInt

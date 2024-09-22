@@ -83,7 +83,6 @@ export const ResetForm = () => {
       backButtonLabel="Regresar al Login"
       backButtonHref="/auth/login"
     >
-      {/* obtiene todas las propiedades desestructurandolas excepto children */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

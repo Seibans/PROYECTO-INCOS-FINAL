@@ -1,5 +1,6 @@
 "use client";
 import { E164Number } from "libphonenumber-js/core";
+import PhoneInput from "react-phone-number-input";
 import 'react-phone-number-input/style.css';
 
 import * as z from "zod";
@@ -20,10 +21,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import PhoneInput from "react-phone-number-input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from '@/components/ui/textarea';
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importa los íconos
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 //Mi components
 import { CardWrapper } from "@/components/auth/card-wrapper.component";
@@ -156,7 +156,7 @@ export const RegistroForm = () => {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <FormField
                 disabled={isPending}
                 control={form.control}
@@ -192,7 +192,6 @@ export const RegistroForm = () => {
                   </FormItem>
                 )}
               />
-
               <div className="flex flex-col gap-6 xl:flex-row">
                 <FormField
                   control={form.control}
@@ -209,6 +208,10 @@ export const RegistroForm = () => {
                           value={field.value as E164Number | undefined}
                           onChange={field.onChange}
                           className="input-phone"
+                          countries={['PE', 'BO', 'AR', 'CL', 'CO', 'EC', 'MX', 'PY', 'UY', 'VE']}
+                          countrySelectProps={{
+                            className: 'bg-white text-black dark:bg-gray-800 dark:text-white !w-[10rem]',
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -217,7 +220,6 @@ export const RegistroForm = () => {
                 />
               </div>
             </div>
-
             <FormField
               disabled={isPending}
               control={form.control}
@@ -260,8 +262,6 @@ export const RegistroForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contraseña *:</FormLabel>
-
-
                   <div className="relative">
                     <FormControl>
                       <Input
@@ -269,7 +269,7 @@ export const RegistroForm = () => {
                         disabled={isPending}
                         placeholder="******"
                         type={showPassword ? "text" : "password"}
-                        className="pr-10" // Add padding to make room for the icon
+                        className="pr-10"
                       />
                     </FormControl>
                     <div

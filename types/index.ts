@@ -3,7 +3,7 @@ import { TipoMedicamento } from "@prisma/client";
 export interface MedicamentoT {
     id: number;
     nombre: string;
-    descripcion: string | null;  // Permitir que sea string o null
+    descripcion: string | null;
     precio: any;
     stock: number;
     estado: number;
@@ -13,8 +13,6 @@ export interface MedicamentoT {
     actualizadoEn: Date | null;
     idUsuario: number;
 }
-
-// types.ts
 export interface UsuarioT {
     id: number;
     name: string;
@@ -25,7 +23,7 @@ export interface UsuarioT {
     email: string | null;
     emailVerified: Date | null;
     image: string | null;
-    rol: string; // o el tipo correcto para el rol
+    rol: string;
     celular: string | null;
     direccion: string | null;
     estado: number;
@@ -34,10 +32,6 @@ export interface UsuarioT {
     updatedAt: Date | null;
     idUsuario: number | null;
 }
-
-
-
-// types.ts
 export interface TratamientoT {
     id: number;
     nombre: string;
@@ -78,4 +72,4 @@ export interface ReservaMedica {
     usuarioId: string
     creadoEn: Date
     actualizadoEn: Date
-  }
+}

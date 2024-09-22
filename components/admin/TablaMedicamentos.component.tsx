@@ -46,7 +46,7 @@ import { formatearPrecio } from "@/lib/formatearPrecio";
 export const columns: ColumnDef<MedicamentoT>[] = [
   {
     id: "nro",
-    header: () => <div className="text-center">Nro</div>,
+    header: () => <div className="text-center">Nro.</div>,
     cell: ({ row }) => {
       return (
         <div className="text-center">

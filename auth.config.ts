@@ -1,39 +1,3 @@
-// import type { NextAuthConfig } from "next-auth";
-// import bcrypt from "bcryptjs";
-// import Credentials from "next-auth/providers/credentials";
-// import { LoginSchema } from "@/schemas"
-// import { getUserByEmail } from "@/data/user";
-
-// export default {
-// 	providers: [
-// 		Credentials({
-//             async authorize(credentials) {
-//                 const validateFields = LoginSchema.safeParse(credentials);
-
-//                 if (validateFields.success) {
-//                     const { email, password } = validateFields.data;
-
-//                     const user = await getUserByEmail(email);
-//                     if (!user || !user.password) return null;
-
-//                     const passwordMatch = await bcrypt.compare(
-//                         password,
-//                         user.password,
-//                     );
-
-//                     if (passwordMatch) return user;
-//                 }
-
-//                 return null;
-//             }
-//         })
-// 	]
-// } satisfies NextAuthConfig
-
-
-
-
-
 import type { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
 import Credentials from "next-auth/providers/credentials";
@@ -62,20 +26,20 @@ export default {
         }),
         Credentials({
             async authorize(credentials) {
-                const validateFields = LoginSchema.safeParse(credentials);
+                const camposValidos = LoginSchema.safeParse(credentials);
 
-                if (validateFields.success) {
-                    const { email, password } = validateFields.data;
+                if (camposValidos.success) {
+                    const { email, password } = camposValidos.data;
 
-                    const user = await getUserByEmail(email);
-                    if (!user || !user.password) return null;
+                    const usuario = await getUserByEmail(email);
+                    if (!usuario || !usuario.password) return null;
 
-                    const passwordMatch = await bcrypt.compare(password, user.password);
+                    const matchPassword = await bcrypt.compare(password, usuario.password);
 
-                    if (passwordMatch) {
+                    if (matchPassword) {
                         return {
-                            ...user,
-                            id: user.id.toString(), // Convert the id to string for NextAuth
+                            ...usuario,
+                            id: usuario.id.toString(),
                         };
                     }
                 }
@@ -85,18 +49,3 @@ export default {
         })
     ],
 } satisfies NextAuthConfig;
-
-// callbacks: {
-//     async session({ session, token }) {
-//         if (session?.user) {
-//             session.user.id = token.id as string; // Use the string id from the token
-//         }
-//         return session;
-//     },
-//     async jwt({ token, user }) {
-//         if (user) {
-//             token.id = user.id as string; // Set the string id in the token
-//         }
-//         return token;
-//     }
-// }

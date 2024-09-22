@@ -1,7 +1,6 @@
 "use client";
 
 import { logout } from "@/actions/logout";
-import next from "next";
 // igual puedes usar signOut de next-auth/react
 
 interface LogoutButtonProps {

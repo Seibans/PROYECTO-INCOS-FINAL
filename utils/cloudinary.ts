@@ -20,12 +20,6 @@
 // //   });
 // // }
 
-
-
-
-
-
-
 // (async function() {
 //     // Upload an image
 //      const uploadResult = await cloudinary.uploader

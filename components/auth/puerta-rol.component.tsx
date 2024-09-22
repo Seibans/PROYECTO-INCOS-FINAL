@@ -17,5 +17,6 @@ export const PuertaRol = ({ children, rolPermitido }: PuertaRolProps) => {
 	return (
 		<>
 			{children}
-		</>);
+		</>
+	);
 };

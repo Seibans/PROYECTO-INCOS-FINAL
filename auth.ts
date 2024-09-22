@@ -8,8 +8,6 @@ import { getCuentaById } from "@/data/cuenta"
 import {actualizarNombres} from "@/lib/formatearNombreAuth"
 
 // CORRECION DE NUEVOS ATRIBUTOS EN EL TOKEN minuto 3:10
-
-
 export const {
   handlers,
   auth,
@@ -37,9 +35,7 @@ export const {
          },
       })
     },
-    async createUser({ user}) {
-
-      console.log(user, "USUARIO EN CREATE USER");
+    async createUser({ user }) {
       try {
         const usuarioId = parseInt(user.id as string, 10);
         const {name, apellidoPat, apellidoMat} = actualizarNombres(user.name as string)
@@ -52,15 +48,12 @@ export const {
             idUsuario: usuarioId
           }
         });
-        console.log(`Usuario creado y actualizado: ${user.id}`);
       } catch (error) {
         console.error("Error al actualizar idUsuario:", error);
       }
-      console.log(user, "USUARIO EN CREATE USER");
     },
   },
-  // Investigar acerca de los eventos de nextauth
-  //video 3:33
+  // Investigar acerca de los eventos de nextauth video 3:33
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       // Permitir OAuth sin verificación de correo electrónico
@@ -75,26 +68,24 @@ export const {
 
       const usuarioExistente = await getUserById(Number(user.id));
 
-
       // Previene que inicie session un usuario sin verificacion de email
       // if (!usuarioExistente?.emailVerified) return false;
 
       //Previene que inicie session un usuario inhabilitado
       if (usuarioExistente?.estado === 0) return false;
 
-
       //ESTA ES LA AUTENTICACION DE DOBLE FACTOR
-      // if (usuarioExistente.authDobleFactor) {
-      //     const dobleFactorConfirmacion = await getTwoFactorConfirmationByUserId(usuarioExistente.id);
-      //     if (!dobleFactorConfirmacion) return false;
+      if (usuarioExistente?.authDobleFactor) {
+          const dobleFactorConfirmacion = await getTwoFactorConfirmationByUserId(usuarioExistente.id);
+          if (!dobleFactorConfirmacion) return false;
 
-      //     // Eliminar la confirmación de dos factores para el próximo inicio de sesión
-      //     await db.confirmacionDobleFactor.delete({
-      //         where: {
-      //             id: dobleFactorConfirmacion.id,
-      //         }
-      //     })
-      // }
+          // Eliminar la confirmación de dos factores para el próximo inicio de sesión
+          await db.confirmacionDobleFactor.delete({
+              where: {
+                  id: dobleFactorConfirmacion.id,
+              }
+          })
+      }
       return true;
     },
     // Al parecer user y profile siempre estan como undefined asi que no los uses
@@ -113,10 +104,8 @@ export const {
 
       if(!usuarioExistente) return token; 
 
-
       // Controlando con que cuenta inicio session si con OAuth o no
       const cuentaExistente = await getCuentaById(usuarioExistente.id);
-
 
       // token.isOAuth = cuentaExistente ? true : false;
       token.isOAuth = !!cuentaExistente;  
@@ -149,7 +138,6 @@ export const {
       //   session.user.campoCustom = token.campoCustom;
       // }
 
-
       if(token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -175,13 +163,11 @@ export const {
         session.user.direccion = token.direccion as string | null;
         session.user.estado = token.estado as number;
         session.user.idUsuario = token.idUsuario as number | null;
-        // session.user.email = token.email || session.user.email;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
         session.user.celular = token.celular as string | null;
       }
       // console.log("SESION: ", session);
-
       // console.log({session, token, user}, "USUARIO EN SESSION FINAL");
       return session;
     },
