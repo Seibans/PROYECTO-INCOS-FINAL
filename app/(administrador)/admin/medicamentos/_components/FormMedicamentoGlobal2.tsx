@@ -22,7 +22,6 @@ import { Dispatch, SetStateAction } from "react";
 import { useRouter } from 'next/navigation';
 import { registrarMedicamento, editarMedicamento } from '@/actions/medicamentos';
 import { toast } from 'sonner';
-import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field';
 import { Medicamento, TipoMedicamento } from '@prisma/client';
 import { Trash2Icon, EyeIcon, XIcon } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -33,9 +32,6 @@ type FormMedicamentoProps = {
 	setabrirModal?: Dispatch<SetStateAction<boolean>>;
 };
 
-
-
-// Definir el formulario utilizando React Hook Form
 export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 	const { medicamento, setabrirModal } = props;
 	const [isPending, startTransition] = useTransition();
@@ -281,14 +277,14 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 													src={preview}
 													alt="Preview"
 													className="w-full h-full object-contain cursor-pointer"
-												// onClick={() => setShowLightbox(true)}
+													onClick={() => setShowLightbox(true)}
 												/>
-												{/* <div
+												<div
 													className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
 													onClick={() => setShowLightbox(true)}
 												>
 													<EyeIcon className="h-10 w-10 text-white" />
-												</div> */}
+												</div>
 											</div>
 										) : (
 											<div className="flex flex-col items-center justify-center h-full">

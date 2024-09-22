@@ -13,6 +13,7 @@ export interface MedicamentoT {
     actualizadoEn: Date | null;
     idUsuario: number;
 }
+
 export interface UsuarioT {
     id: number;
     name: string;

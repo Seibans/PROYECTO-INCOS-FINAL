@@ -12,7 +12,7 @@ import { FormMedicamentoGlobal } from "./FormMedicamentoGlobal2";
 export const HeaderMedicamentos = () => {
 	const [abrirModal, setabrirModal] = useState(false);
 	return (
-		<div className="flex justify-between items-center">
+		<div className="flex flex-col sm:flex-row justify-between items-center">
 			<h2 className="text-2xl">Lista de Medicamentos</h2>
 			<Dialog open={abrirModal} onOpenChange={setabrirModal}>
 				<DialogTrigger asChild>

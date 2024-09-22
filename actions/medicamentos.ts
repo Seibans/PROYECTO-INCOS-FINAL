@@ -26,6 +26,7 @@ export const obtenerMedicamentos = async (): Promise<MedicamentoT[]> => {
             ...medicamento,
             precio: new Decimal(medicamento.precio).toNumber().toFixed(2),
         }));
+        console.log(pablo);
         return pablo;
     } catch (error) {
         console.error("Error al obtener medicamentos:", error);
