@@ -4,6 +4,7 @@ import { Header } from './_components/Header';
 import { InformacionMedicamento } from './_components/InformacionMedicamento';
 import { FooterMedicamento } from './_components/FooterMedicamento';
 import { obtenerMedicamento } from '@/actions/medicamentos';
+import { Medicamento } from '@prisma/client';
 //TODO: Revisar que es esto
 // import { de } from 'date-fns/locale';
 
@@ -17,7 +18,7 @@ export default async function MedicamentoIdPage({ params }: { params: { medicame
 		return null;
 	}
 
-	const medicamento = await obtenerMedicamento(parseInt(params.medicamentoId));
+	const medicamento: any = await obtenerMedicamento(parseInt(params.medicamentoId));
 
 	if (!medicamento) {
 		redirect("/admin/medicamentos");

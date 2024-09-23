@@ -89,6 +89,7 @@ export const perfil = async (values: z.infer<typeof ConfiguracionSchema>) => {
         },
         data: {
             ...values,
+            idUsuario: dbUsuario.id
         }
     });
 
@@ -103,7 +104,8 @@ export const perfil = async (values: z.infer<typeof ConfiguracionSchema>) => {
             email: usuarioActualizado.email,
             authDobleFactor: usuarioActualizado.authDobleFactor,
             rol: usuarioActualizado.rol,
-            celular: usuarioActualizado.celular
+            celular: usuarioActualizado.celular,
+            idUsuario: usuarioActualizado.idUsuario
         }
     });
 

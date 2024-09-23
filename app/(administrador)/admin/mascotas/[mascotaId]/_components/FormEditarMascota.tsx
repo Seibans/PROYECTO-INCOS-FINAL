@@ -91,7 +91,7 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 			sexo: mascota.sexo || undefined,
 			detalles: mascota?.detalles || undefined,
 			imagen: mascota?.imagen || undefined,
-			// estado: mascota.estado || undefined
+			// estado: mascota.estado || undefined	
 		},
 	})
 
@@ -108,7 +108,6 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 
 	const handleEspecieChange = (value: TipoMascota) => {
 		form.setValue("raza", "Sin Raza (Especial)");
-
 		if (value === TipoMascota.Perro) {
 			form.setValue("especie", TipoMascota.Perro);
 			setRazaOptions(razasPerros);
@@ -119,9 +118,8 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 			form.setValue("especie", TipoMascota.Otro);
 			setRazaOptions(["Sin Raza (Especial)"]);
 		}
+		form.trigger("raza"); // Validar el campo de raza
 	}
-
-	// Definir el manejador de envío del formulario
 	function onSubmit(values: z.infer<typeof MascotaSchema>) {
 		startTransition(() => {
 			toast.promise(editarMascota(values, mascota.id), {
@@ -299,8 +297,6 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 						)}
 					/>
 				</div>
-				{/* <div className="grid grid-cols-2 gap-3">
-					</div> */}
 				<FormField
 					disabled={isPending}
 					control={form.control}
@@ -323,53 +319,6 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 						</FormItem>
 					)}
 				/>
-
-				<FormField
-					disabled={isPending}
-					control={form.control}
-					name="imagen"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Detalles y Color de la mascota</FormLabel>
-							<FormControl>{
-								subirImagen ? (
-									<p className='text-sm'>Imagen Subida!</p>
-								) : (
-									<UploadButton
-										{...field}
-										className='bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-3'
-										endpoint='imagenMascota'
-										content={{
-											button({ ready }) {
-												if (ready) return <div>Upload stuff</div>;
-
-												return "Getting ready...";
-											},
-											allowedContent({ ready, fileTypes, isUploading }) {
-												if (!ready) return "Checking what you allow";
-												if (isUploading) return "Seems like stuff is uploading";
-												return `Stuff you can upload: ${fileTypes.join(", ")}`;
-											},
-										}}
-										onClientUploadComplete={(res) => {
-											form.setValue("imagen", res?.[0].url);
-											setsubirImagen(true);
-											toast.success("Imagen Subida!");
-
-										}}
-										onUploadError={(err) => {
-											toast.error(err.message);
-										}}
-									/>
-								)}
-							</FormControl>
-							<FormDescription>
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
 				<div className="flex justify-center">
 					<Button
 						disabled={isPending}
@@ -382,3 +331,49 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 		</Form>
 	)
 }
+
+// <FormField
+// disabled={isPending}
+// control={form.control}
+// name="imagen"
+// render={({ field }) => (
+// 	<FormItem>
+// 		<FormLabel>Detalles y Color de la mascota</FormLabel>
+// 		<FormControl>{
+// 			subirImagen ? (
+// 				<p className='text-sm'>Imagen Subida!</p>
+// 			) : (
+// 				<UploadButton
+// 					{...field}
+// 					className='bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-3'
+// 					endpoint='imagenMascota'
+// 					content={{
+// 						button({ ready }) {
+// 							if (ready) return <div>Upload stuff</div>;
+
+// 							return "Getting ready...";
+// 						},
+// 						allowedContent({ ready, fileTypes, isUploading }) {
+// 							if (!ready) return "Checking what you allow";
+// 							if (isUploading) return "Seems like stuff is uploading";
+// 							return `Stuff you can upload: ${fileTypes.join(", ")}`;
+// 						},
+// 					}}
+// 					onClientUploadComplete={(res) => {
+// 						form.setValue("imagen", res?.[0].url);
+// 						setsubirImagen(true);
+// 						toast.success("Imagen Subida!");
+
+// 					}}
+// 					onUploadError={(err) => {
+// 						toast.error(err.message);
+// 					}}
+// 				/>
+// 			)}
+// 		</FormControl>
+// 		<FormDescription>
+// 		</FormDescription>
+// 		<FormMessage />
+// 	</FormItem>
+// )}
+// />

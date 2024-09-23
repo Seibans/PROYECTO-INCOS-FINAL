@@ -6,10 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-// Asume que tienes un Server Action definido en otro archivo
-import { submitForm } from './actions'
-
-export default function Component() {
+export default function CustomImageUpload() {
   const [image, setImage] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -46,14 +43,14 @@ export default function Component() {
   }
 
   const handleSubmit = async (formData: FormData) => {
-    if (image) {
-      formData.append('image', image)
-    }
-    // Aquí puedes ver el contenido del FormData en la consola
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value)
-    }
-    await submitForm(formData)
+    // if (image) {
+    //   formData.append('image', image)
+    // }
+    // // Aquí puedes ver el contenido del FormData en la consola
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(key, value)
+    // }
+    // await submitForm(formData)
   }
 
   return (

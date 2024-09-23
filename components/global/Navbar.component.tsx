@@ -50,7 +50,7 @@ const NavBar: React.FC<NavBarProps> = ({ profileRoute }) => {
 				},
 			}}
 			transition={{ duration: 0.2 }}
-			className="sticky top-0 z-50 flex justify-center"
+			className="sticky top-0 z-50 flex justify-center bg-transparent"
 		>
 			<div className={cn('flex items-center px-2 gap-x-4 md:px-6 justify-end bg-background border-b h-16 rounded-b-3xl', {
 				"w-11/12 md:w-11/12": esAdmin,

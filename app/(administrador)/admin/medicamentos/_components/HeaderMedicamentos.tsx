@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FormMedicamento } from "./FormMedicamento";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import CurrencyForm from "./InputBs";
-import { FormMedicamentoGlobal } from "./FormMedicamentoGlobal2";
+import { FormMedicamentoGlobal } from "./FormMedicamentoGlobalChat";
 
 
 // <DialogContent className="sm:max-w-[625px]">

@@ -17,20 +17,25 @@ export default function VantaBackground() {
 	useEffect(() => {
 		const loadVanta = () => {
 			if (window.VANTA) {
-				vantaEffect.current = window.VANTA.CELLS({
+				vantaEffect.current = window.VANTA.BIRDS({
 					el: vantaRef.current,
 					mouseControls: true,
 					touchControls: true,
 					gyroControls: false,
-					minHeight: 200.0,
-					minWidth: 200.0,
-					scale: 1.0,
-					// scaleMobile: 1.0,
-					// birdSize: 1.7,
-					// quantity: 4.0,
-					// backgroundColor: 0x000000,
-					// color1: 0xff00ff,
-					// color2: 0xff69b4,
+					minHeight: 200.00,
+					minWidth: 200.00,
+					scale: 1.00,
+					scaleMobile: 1.00,
+					color1: 0xfca828,
+					color2: 0x53ffd9,
+					birdSize: 1.50,
+					wingSpan: 21.00,
+					speedLimit: 3.00,
+					separation: 91.00,
+					alignment: 1.00,
+					cohesion: 74.00,
+					quantity: 4.00,
+					backgroundAlpha: 0.00
 				});
 			}
 		};

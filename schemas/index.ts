@@ -222,6 +222,27 @@ export const MascotaSchema = z.object({
     ),
 });
 
+// export const MedicamentoSchema = z.object({
+//     nombre: z.string()
+//         .min(1, { message: "El nombre es obligatorio" })
+//         .max(100, { message: "El nombre no puede tener más de 100 caracteres" }),
+//     descripcion: z.string()
+//         .max(255, { message: "La descripción no puede tener más de 255 caracteres" })
+//         .optional(),
+//     stock: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El stock debe ser un número positivo" })),
+//     // precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
+//     precio: z.string().min(1, "El precio es requerido"),
+//     imagen: z.instanceof(File, { message: "La imagen es requerida" }),
+//     // stock: z.number()
+//     //     .int({ message: "El stock debe ser un número entero" })
+//     //     .positive({ message: "El stock debe ser un número positivo" }),
+//     // precio: z.number()
+//     //     .positive({ message: "El precio debe ser un número positivo" }),
+//     tipo: z.enum([TipoMedicamento.Pastilla, TipoMedicamento.Vacuna, TipoMedicamento.Inyeccion, TipoMedicamento.Crema, TipoMedicamento.Suero, TipoMedicamento.Polvo, TipoMedicamento.Gel, TipoMedicamento.Otro], {
+//         errorMap: () => ({ message: "El tipo de medicamento es inválido" })
+//     }),
+//     archivo: z.optional(z.instanceof(File, { message: "El archivo es requerido" })),
+// });
 export const MedicamentoSchema = z.object({
     nombre: z.string()
         .min(1, { message: "El nombre es obligatorio" })
@@ -232,16 +253,14 @@ export const MedicamentoSchema = z.object({
     stock: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El stock debe ser un número positivo" })),
     // precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
     precio: z.string().min(1, "El precio es requerido"),
-    imagen: z.instanceof(File, { message: "La imagen es requerida" }),
-    // stock: z.number()
-    //     .int({ message: "El stock debe ser un número entero" })
-    //     .positive({ message: "El stock debe ser un número positivo" }),
-    // precio: z.number()
-    //     .positive({ message: "El precio debe ser un número positivo" }),
-    tipo: z.enum([TipoMedicamento.Pastilla, TipoMedicamento.Vacuna, TipoMedicamento.Inyeccion, TipoMedicamento.Crema, TipoMedicamento.Suero, TipoMedicamento.Polvo, TipoMedicamento.Gel, TipoMedicamento.Otro], {
+    imagen: z.string().min(1, "Debe subir una Imagen del Medicamento"),
+    // tipo: z.enum([TipoMedicamento.Pastilla, TipoMedicamento.Vacuna, TipoMedicamento.Inyeccion, TipoMedicamento.Crema, TipoMedicamento.Suero, TipoMedicamento.Polvo, TipoMedicamento.Gel, TipoMedicamento.Otro], {
+    //     errorMap: () => ({ message: "El tipo de medicamento es inválido" })
+    // }),
+    tipo: z.nativeEnum(TipoMedicamento,{
         errorMap: () => ({ message: "El tipo de medicamento es inválido" })
     }),
-    archivo: z.optional(z.instanceof(File, { message: "El archivo es requerido" })),
+    archivo: z.instanceof(File).optional(),
 });
 
 export const PagoSchema = z.object({
@@ -279,3 +298,12 @@ export const formSchema = z.object({
     detalles: z.string().min(1, "Por favor ingrese los detalles de la cita."),
     servicio: z.string().min(1, "Por favor seleccione un servicio."),
 })
+
+
+export const SubirImagenSquema = z.object({
+    archivo: z
+    .instanceof(File)
+    .refine((file) => file instanceof File, {
+      message: "El archivo es obligatorio y debe ser de tipo File",
+    }),
+});

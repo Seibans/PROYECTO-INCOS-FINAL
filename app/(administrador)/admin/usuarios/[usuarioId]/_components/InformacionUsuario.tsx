@@ -3,6 +3,7 @@ import { User } from '@prisma/client'
 import Image from 'next/image';
 import { Dog } from 'lucide-react';
 import { FormEditarUsuario } from './FormEditarUsuario';
+import CambiarImagen from '@/components/admin/CambiarImagen.component';
 
 type InformacionUsuarioProps = {
     usuario: User;
@@ -19,8 +20,15 @@ export const InformacionUsuario = (props: InformacionUsuarioProps) => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 gap-y-4">
             <div className="rounded-lg bg-background shadow-md hover:shadow-lg p-4">
+                <h1 className="text-2xl font-bold">Información del Usuario</h1>
+                <p>Imagen del usuario:</p>
                 <div className="flex justify-center">
-                    <DefaultImage src={usuario.image} alt="Imagen del Usuario" />
+                    {/* <DefaultImage src={usuario.image} alt="Imagen del Usuario" /> */}
+                    <CambiarImagen
+                        id={usuario.id}
+                        imagenPrevia={usuario.image}
+                        componente='usuario'
+                    />
                 </div>
                 <FormEditarUsuario usuario={usuario} />
             </div>

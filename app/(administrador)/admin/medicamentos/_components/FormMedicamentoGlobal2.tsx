@@ -31,12 +31,10 @@ type FormMedicamentoProps = {
 	medicamento?: Medicamento;
 	setabrirModal?: Dispatch<SetStateAction<boolean>>;
 };
-
 export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 	const { medicamento, setabrirModal } = props;
 	const [isPending, startTransition] = useTransition();
 	const [preview, setPreview] = useState<string | null>(null);
-	const [showLightbox, setShowLightbox] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const router = useRouter();
 
@@ -46,106 +44,109 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 		stock: medicamento.stock,
 		precio: medicamento.precio.toString(),
 		tipo: medicamento.tipo as TipoMedicamento,
+		imagen: medicamento.imagen || '',
 	} : {
 		nombre: "",
 		descripcion: "",
 		stock: 0,
 		precio: "",
 		tipo: TipoMedicamento.Otro,
+		imagen: "",
 	};
 
-	// Definir el formulario utilizando React Hook Form
 	const form = useForm<z.infer<typeof MedicamentoSchema>>({
 		resolver: zodResolver(MedicamentoSchema),
 		defaultValues,
 	});
 
 	useEffect(() => {
-		if (medicamento && medicamento.imagen) {
+		if (medicamento && medicamento?.imagen) {
 			setPreview(medicamento.imagen);
 		}
 	}, [medicamento]);
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
+		console.log("HANDLE IMAGE CHANGE ANTES", file);
 		handleFile(file);
+		console.log("HANDLE IMAGE CHANGE DESPUES", file);
 	};
 
 	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
 		const file = e.dataTransfer.files[0];
+		console.log("HANDLE DROP ANTES", file);
 		handleFile(file);
+		console.log("HANDLE DROP DESPUES", file);
 	};
 
 	const handleFile = (file?: File) => {
 		console.log('Valores del formulario:', file);
+		console.log("HANDLE FILE ANTES", file);
 		if (file && file.type.startsWith('image/')) {
-			form.setValue('imagen', file);
+			form.setValue('imagen', file.name);
+			form.setValue('archivo', file);
 			const reader = new FileReader();
 			reader.onloadend = () => {
 				setPreview(reader.result as string);
 			};
 			reader.readAsDataURL(file);
 		}
+		console.log("HANDLE FILE DESPUES", file);
 	};
 
 
 	const removeImage = () => {
-		// form.setValue('imagen', undefined);
+		console.log("REMOVE IMAGE ANTES", fileInputRef.current, form.getValues());
+		form.setValue('imagen', "");
+		form.setValue('archivo', undefined);
 		setPreview(null);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = '';
 		}
+		console.log("REMOVE IMAGE ANTES", fileInputRef.current, form.getValues());
 	};
 
-
 	const onSubmit = async (values: z.infer<typeof MedicamentoSchema>) => {
-		startTransition(async () => {
+		const archivo = fileInputRef.current?.files?.[0];
+		console.log(archivo)
 
-
-			const formData = new FormData();
-			// Object.entries(values).forEach(([key, value]) => {
-			// 	if (value !== undefined) {
-			// 		formData.append(key, value instanceof File ? value : value.toString());
-			// 	}
-			// });
-
-			Object.entries(values).forEach(([key, value]) => {
-				if (value !== undefined) {
-					if (key === 'imagen' && value instanceof File) {
-						formData.append(key, value);
-					} else {
-						formData.append(key, value.toString());
-					}
+		console.log(values)
+		const formData = new FormData();
+		Object.entries(values).forEach(([key, value]) => {
+			if (value !== undefined) {
+				if (key === 'archivo' && value instanceof File) {
+					formData.append(key, value);
+				} else {
+					formData.append(key, value.toString());
 				}
-			});
-
-			// Imprimir los valores del formulario en la consola
-			// console.log('Valores del formulario:', Object.fromEntries(formData.entries()));
-			// console.log('Valores del formulario:', formData.get('imagen'));
-
-			// Aquí debes llamar a la acción del servidor para registrar el medicamento
-			// const action = medicamento 
-			// 	? editarMedicamento(formData, medicamento.id) 
-			// 	: registrarMedicamento(formData);
-			const action = medicamento ? registrarMedicamento(formData) : registrarMedicamento(formData);
-
-			toast.promise(action, {
-				loading: "Cargando...",
-				success: (data) => {
-					if (data.error) {
-						throw new Error(data.error);
-					} else {
-						router.refresh();
-						if (setabrirModal) {
-							setabrirModal(false);
-						}
-						return `${data.success}`;
-					}
-				},
-				error: (error) => error.message,
-			});
+			}
 		});
+
+		// Imprimir los valores del formulario en la consola
+		console.log('Valores del Form:', Object.fromEntries(formData.entries()));
+		console.log('Valor del campo imagen:', formData.get('imagen'));
+		console.log('Valor del archivo:', formData.get('archivo'));
+		console.log('Valor del archivo:', formData);
+		const action = medicamento ? editarMedicamento(medicamento.id, values) : registrarMedicamento(formData);
+
+		toast.promise(action, {
+			loading: "Cargando...",
+			success: (data) => {
+				if (data.error) {
+					throw new Error(data.error);
+				} else {
+					router.refresh();
+					if (setabrirModal) {
+						setabrirModal(false);
+					}
+					return `${data.success}`;
+				}
+			},
+			error: (error) => error.message,
+		});
+
+
 	};
 
 	return (
@@ -277,11 +278,9 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 													src={preview}
 													alt="Preview"
 													className="w-full h-full object-contain cursor-pointer"
-													onClick={() => setShowLightbox(true)}
 												/>
 												<div
 													className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-													onClick={() => setShowLightbox(true)}
 												>
 													<EyeIcon className="h-10 w-10 text-white" />
 												</div>
@@ -331,3 +330,59 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 		</TooltipProvider>
 	);
 };
+
+
+
+
+
+
+
+
+// const onSubmit = async (values: z.infer<typeof MedicamentoSchema>) => {
+// 	startTransition(async () => {
+
+
+// 		const formData = new FormData();
+// 		// Object.entries(values).forEach(([key, value]) => {
+// 		// 	if (value !== undefined) {
+// 		// 		formData.append(key, value instanceof File ? value : value.toString());
+// 		// 	}
+// 		// });
+
+// 		Object.entries(values).forEach(([key, value]) => {
+// 			if (value !== undefined) {
+// 				if (key === 'imagen' && value instanceof File) {
+// 					formData.append(key, value);
+// 				} else {
+// 					formData.append(key, value.toString());
+// 				}
+// 			}
+// 		});
+
+// 		// Imprimir los valores del formulario en la consola
+// 		// console.log('Valores del formulario:', Object.fromEntries(formData.entries()));
+// 		// console.log('Valores del formulario:', formData.get('imagen'));
+
+// 		// Aquí debes llamar a la acción del servidor para registrar el medicamento
+// 		// const action = medicamento
+// 		// 	? editarMedicamento(formData, medicamento.id)
+// 		// 	: registrarMedicamento(formData);
+// 		const action = medicamento ? registrarMedicamento(formData) : registrarMedicamento(formData);
+
+// 		toast.promise(action, {
+// 			loading: "Cargando...",
+// 			success: (data) => {
+// 				if (data.error) {
+// 					throw new Error(data.error);
+// 				} else {
+// 					router.refresh();
+// 					if (setabrirModal) {
+// 						setabrirModal(false);
+// 					}
+// 					return `${data.success}`;
+// 				}
+// 			},
+// 			error: (error) => error.message,
+// 		});
+// 	});
+// };

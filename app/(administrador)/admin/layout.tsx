@@ -30,15 +30,15 @@ export default async function LayoutDashboard({ children }: { children: React.Re
 		// 		<SideBar />
 		// 	</div>
 		// </div>
-		<div className='flex'>
-			<div className='w-screen xl:w-10/12'>
+		<div className='flex bg-secondary'>
+			<div className='w-screen xl:w-10/12 bg-secondary'>
 				<NavBar profileRoute="/admin/perfil" />
 				{/* <div className="p-6 bg-[#fafbfc] dark:bg-secondary"> */}
 				<div className="p-6 dark:bg-secondary">
 					{children}
 				</div>
 			</div>
-			<div className='hidden xl:block xl:w-2/12 h-full'>
+			<div className='hidden xl:block xl:w-2/12  h-screen sticky top-0'>
 				<SideBar />
 			</div>
 		</div>

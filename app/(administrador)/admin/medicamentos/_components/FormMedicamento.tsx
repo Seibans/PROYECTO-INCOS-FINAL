@@ -53,7 +53,7 @@ const FormCurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
 FormCurrencyInput.displayName = "FormCurrencyInput"
 
 type FormMedicamentoProps = {
-	setabrirModal: Dispatch<SetStateAction<boolean>>;
+	// setabrirModal: Dispatch<SetStateAction<boolean>>;
 };
 // Definir el formulario utilizando React Hook Form
 export const FormMedicamento = (props: FormMedicamentoProps) => {
@@ -76,20 +76,20 @@ export const FormMedicamento = (props: FormMedicamentoProps) => {
 	const onSubmit = (values: z.infer<typeof MedicamentoSchema>) => {
 		startTransition(() => {
 			console.log(values);
-			// Aquí puedes llamar a tu acción para registrar el medicamento
-			toast.promise(registrarMedicamento(values), {
-				loading: "Cargando...",
-				success: (data) => {
-					if (data.error) {
-						throw new Error(data.error);
-					} else {
-						router.refresh();
-						props.setabrirModal(false);
-						return `${data.success}`;
-					}
-				},
-				error: (error) => error.message,
-			});
+			// // Aquí puedes llamar a tu acción para registrar el medicamento
+			// toast.promise(registrarMedicamento(values), {
+			// 	loading: "Cargando...",
+			// 	success: (data) => {
+			// 		if (data.error) {
+			// 			throw new Error(data.error);
+			// 		} else {
+			// 			router.refresh();
+			// 			props.setabrirModal(false);
+			// 			return `${data.success}`;
+			// 		}
+			// 	},
+			// 	error: (error) => error.message,
+			// });
 		});
 	};
 

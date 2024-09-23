@@ -92,7 +92,7 @@ const datosSoporteSidebar = [
 export const SideBar = () => {
 	const router = useRouter();
 	return (
-		<>
+		<div className='rounded-l-3xl bg-lime-200 dark:bg-[#020817]'>
 			<Logo />
 			<Separator />
 			<ScrollArea className='h-[90dvh]'>
@@ -132,6 +132,6 @@ export const SideBar = () => {
 					2024. Todos los derechos reservados
 				</div>
 			</ScrollArea>
-		</>
+		</div>
 	)
 }

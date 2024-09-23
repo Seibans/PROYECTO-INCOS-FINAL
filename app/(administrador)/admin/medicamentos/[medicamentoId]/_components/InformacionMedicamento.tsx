@@ -3,11 +3,13 @@ import { Medicamento } from '@prisma/client'
 import Image from 'next/image';
 import { Dog } from 'lucide-react';
 import { FormEditarMedicamento } from './FormEditarMedicamento';
-import { FormMedicamentoGlobal } from '../../_components/FormMedicamentoGlobal2';
+import { FormMedicamentoGlobal } from '../../_components/FormMedicamentoGlobalChat';
 import { MedicamentoT } from '@/types';
+import FormSubirImagen from './File';
+import CambiarImagen from '@/components/admin/CambiarImagen.component';
 
 type InformacionMedicamentoProps = {
-    medicamento: MedicamentoT;
+    medicamento: Medicamento;
 };
 
 const DefaultImage: React.FC<{ src: string | null, alt: string }> = ({ src, alt }) => {
@@ -19,28 +21,16 @@ export const InformacionMedicamento = (props: InformacionMedicamentoProps) => {
     const { medicamento } = props;
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 gap-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-1 lg:gap-x-10 gap-y-4">
             <div className="rounded-lg bg-background shadow-md hover:shadow-lg p-4">
                 <div>
-                    {/* <DefaultImage src={medicamento.nombre} alt="Imagen del Medicamento" /> */}
+                    <CambiarImagen
+                        id={medicamento.id}
+                        imagenPrevia={medicamento.imagen}
+                        componente="medicamento"
+                    />
                     <FormMedicamentoGlobal medicamento={medicamento} />
                 </div>
-            </div>
-
-            <div className="p-4 rounded-lg shadow-md bg-background hover:shadow-lg h-min">
-                <div className="flex items-center justify-between gap-x-2">
-                    <div className="flex items-center gap-x-2">
-                        <Dog className='w-5 h-5' />
-                        RELACION
-                    </div>
-
-                    <div>
-                        <p>Nueva Agregado</p>
-                    </div>
-
-                </div>
-
-                <p>Lista</p>
             </div>
         </div>
     )

@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/table"
 
 import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"; // Usar el helper cn de shadcn
+import { cn } from "@/lib/utils";
 
 import Link from "next/link"
 import Image from "next/image"
@@ -47,9 +47,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 import { UsuarioT } from "@/types"
 import { formatearFechaYHora } from "@/lib/formatearFecha"
 import { useQuery } from "@tanstack/react-query"
-import {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 
-// Define una función de filtro global
 const globalFilterFn: FilterFn<UsuarioT> = (row, columnId, filterValue) => {
   return row.getAllCells().some((cell) => {
     if (columnId === "name") {
@@ -143,16 +142,16 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
       header: "Estado",
       cell: ({ row }) => {
         const estado = row.getValue("estado");
-  
+
         const estadoTexto =
           estado === 0 ? "Eliminado" : estado === 1 ? "Activo" : "Desconocido";
-  
+
         const badgeClass = cn({
           "bg-red-500": estado === 0,
           "bg-green-500": estado === 1,
           "bg-gray-500": estado === 2,
         });
-  
+
         return (
           <div>
             <Badge className={badgeClass}>{estadoTexto}</Badge>
@@ -233,7 +232,7 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
                 <Eye className="w-4 h-4 mr-2" /> Ver detalles del Usuario
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigator.clipboard.writeText(`${id}`)}>
-              <CopyIcon className="w-4 h-4 mr-2" /> Copiar Id del Usuario
+                <CopyIcon className="w-4 h-4 mr-2" /> Copiar Id del Usuario
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -241,7 +240,7 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
       },
     }
   ]
-  
+
 
   const table = useReactTable<UsuarioT>({
     data,
@@ -364,8 +363,8 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
       {/* Aquí va el diálogo para ver los detalles del usuario */}
       <Dialog open={!!usuarioSeleccionado} onOpenChange={() => setUsuarioSeleccionado(null)}>
         <DialogContent className="sm:max-w-[425px]">
+          <DialogTitle>{usuarioSeleccionado?.name} {usuarioSeleccionado?.apellidoPat}</DialogTitle>
           <DialogHeader>
-            <DialogTitle>{usuarioSeleccionado?.name} {usuarioSeleccionado?.apellidoPat}</DialogTitle>
             <DialogDescription>
               <p>Email: {usuarioSeleccionado?.email}</p>
               <p>Rol: {usuarioSeleccionado?.rol}</p>

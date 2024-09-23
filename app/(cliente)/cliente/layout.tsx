@@ -35,10 +35,10 @@ export default async function LayoutCliente({ children }: { children: React.Reac
 		// 	{/* <FooterDrawer /> */}
 		// </div>
 
-		<div className='flex'>
+		<div className='flex bg-secondary'>
 			<div className='w-screen'>
 				<NavBar profileRoute="/cliente/perfil" />
-				<div className="p-6 dark:bg-secondary">
+				<div className="dark:bg-secondary">
 					{children}
 				</div>
 			</div>

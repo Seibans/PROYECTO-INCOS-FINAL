@@ -29,7 +29,6 @@ import { perfil, perfilPassword } from "@/actions/settings";
 
 import PhoneInput from "react-phone-number-input";
 
-
 import {
   Form,
   FormField,
@@ -52,6 +51,8 @@ import { useSession } from "next-auth/react"
 import { Textarea } from '@/components/ui/textarea';
 import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge"
+import CambiarImagen from "../admin/CambiarImagen.component";
 
 
 export function FormPerfilAdmin() {
@@ -68,8 +69,6 @@ export function FormPerfilAdmin() {
       apellidoMat: usuario?.apellidoMat || undefined,
       ci: usuario?.ci || undefined,
       sexo: usuario?.sexo || undefined,
-      // password: undefined,
-      // nuevoPassword: undefined,
       email: usuario?.email || undefined,
       celular: usuario?.celular || undefined,
       rol: usuario?.rol || undefined,
@@ -135,9 +134,9 @@ export function FormPerfilAdmin() {
     <>
       <h2 className="text-2xl">Mi Perfil</h2>
       <Tabs defaultValue="cuenta" className="w-4/5 bg-background p-4 rounded-lg">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="cuenta">Datos de la Cuenta</TabsTrigger>
-          <TabsTrigger value="contrasena">Contraseña</TabsTrigger>
+        <TabsList className="flex flex-col h-full w-full md:flex-row">
+          <TabsTrigger value="cuenta" className="w-full">Datos de la Cuenta</TabsTrigger>
+          <TabsTrigger value="contrasena"  className="w-full">Contraseña</TabsTrigger>
         </TabsList>
         <TabsContent value="cuenta">
           <Card>
@@ -147,14 +146,17 @@ export function FormPerfilAdmin() {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-          <p className="text-sm font-medium">
-            Nombre
-          </p>
-          <p className="truncate text-xs max-w-[200px] font-mono p-1 bg-slate-100 rounded-md ">
-            {usuario?.name}
-          </p>
-          </div> */}
+              <CambiarImagen id={0} imagenPrevia={usuario?.image ?? null} componente="perfil" />
+              {/* <div className="flex items-center justify-center w-2/4">
+                <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <p className="text-sm font-medium">
+                    Estado
+                  </p>
+                  <p className="truncate text-xs max-w-[200px] font-mono p-1 rounded-md ">
+                    <Badge>{usuario?.estado}</Badge>
+                  </p>
+                </div>
+              </div> */}
               <Form {...form}>
                 <form
                   className="space-y-6"
@@ -268,7 +270,7 @@ export function FormPerfilAdmin() {
                                   type="email"
                                   placeholder="Email"
                                   {...field}
-                                  disabled={true}
+                                  readOnly={true}
                                 />
                               </FormControl>
                               <FormMessage />

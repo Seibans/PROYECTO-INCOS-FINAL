@@ -85,24 +85,24 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
     });
 
     const onSubmit = (values: z.infer<typeof MedicamentoSchema>) => {
-        startTransition(() => {
-            const action = medicamento ? editarMedicamento(values, medicamento.id) : registrarMedicamento(values);
-            toast.promise(action, {
-                loading: "Cargando...",
-                success: (data) => {
-                    if (data.error) {
-                        throw new Error(data.error);
-                    } else {
-                        router.refresh();
-                        if (setabrirModal) {
-                            setabrirModal(false);
-                        }
-                        return `${data.success}`;
-                    }
-                },
-                error: (error) => error.message,
-            });
-        });
+        // startTransition(() => {
+        //     const action = medicamento ? editarMedicamento(values, medicamento.id) : registrarMedicamento(values);
+        //     toast.promise(action, {
+        //         loading: "Cargando...",
+        //         success: (data) => {
+        //             if (data.error) {
+        //                 throw new Error(data.error);
+        //             } else {
+        //                 router.refresh();
+        //                 if (setabrirModal) {
+        //                     setabrirModal(false);
+        //                 }
+        //                 return `${data.success}`;
+        //             }
+        //         },
+        //         error: (error) => error.message,
+        //     });
+        // });
     };
 
     return (

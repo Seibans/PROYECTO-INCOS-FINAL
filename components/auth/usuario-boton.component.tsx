@@ -22,6 +22,7 @@ interface BotonUsuarioProps {
 
 export const BotonUsuario: React.FC<BotonUsuarioProps> = ({ profileRoute }) => {
 	const user = useUsuarioActual();
+	console.log(user);
 
 	return (
 		<DropdownMenu>

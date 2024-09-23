@@ -3,6 +3,7 @@ import { Mascota } from '@prisma/client'
 import Image from 'next/image';
 import { Dog } from 'lucide-react';
 import { FormEditarMascota } from './FormEditarMascota';
+import CambiarImagen from '@/components/admin/CambiarImagen.component';
 
 type InformacionMascotaProps = {
     mascota: Mascota;
@@ -19,27 +20,32 @@ export const InformacionMascota = (props: InformacionMascotaProps) => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 gap-y-4">
             <div className="rounded-lg bg-background shadow-md hover:shadow-lg p-4">
+                <h1 className="text-2xl font-bold">Información de la Mascota</h1>
+                <p>Imagen de la mascota:</p>
                 <div>
-                    <DefaultImage src={mascota.imagen} alt="Imagen de la Mascota" />
-                    <FormEditarMascota mascota={mascota}/>
+                    <CambiarImagen
+                        id={mascota.id}
+                        imagenPrevia={mascota.imagen}
+                        componente="mascota"
+                    />
+                    <FormEditarMascota mascota={mascota} />
                 </div>
             </div>
+            {/* <div className="p-4 rounded-lg shadow-md bg-background hover:shadow-lg h-min">
+                <div className="flex items-center justify-between gap-x-2">
+                    <div className="flex items-center gap-x-2">
+                        <Dog className='w-5 h-5' />
+                        RELACION
+                    </div>
 
-			 <div className="p-4 rounded-lg shadow-md bg-background hover:shadow-lg h-min">
-				<div className="flex items-center justify-between gap-x-2">
-					<div className="flex items-center gap-x-2">
-						<Dog className='w-5 h-5'/>
-						RELACION
-					</div>
+                    <div>
+                        <p>Nueva Agregado</p>
+                    </div>
 
-					<div>
-						<p>Nueva Agregado</p>
-					</div>
+                </div>
 
-				</div>
-
-<p>Lista</p>
-			 </div>
+                <p>Lista</p>
+            </div> */}
         </div>
     )
 }

@@ -13,6 +13,7 @@ export type UsuarioExtendido = DefaultSession["user"] & {
 	ci: string | null;
 	estado: number;
 	idUsuario: number | null;
+	image: string | null;
 }
 
 declare module "next-auth" {
@@ -31,5 +32,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     /** OpenID ID Token */
     rol?: "Administrador" | "Usuario"
+	image?: string | null;
   }
 }

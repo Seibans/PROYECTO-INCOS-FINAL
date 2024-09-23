@@ -70,10 +70,6 @@ export default function Home() {
       </div>
       <div className="space-y-6 text-center z-10 mt-10 h-[1000px]">
         <FloatingNav navItems={navItems} />
-
-
-
-
         <h1 className={cn("text-6xl font-semibold drop-shadow-md")}>
           Veterinaria Gamaliel
         </h1>

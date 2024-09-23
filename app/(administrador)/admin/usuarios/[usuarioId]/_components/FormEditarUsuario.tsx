@@ -54,8 +54,6 @@ import { set } from 'date-fns';
 
 import PhoneInput from "react-phone-number-input";
 
-
-
 //TODO:ARREGLAR
 import { useRouter } from 'next/navigation';
 import { UsuarioT } from "@/types";
@@ -187,7 +185,7 @@ export const FormEditarUsuario = (props: FormEditarUsuarioProps) => {
 									type="email"
 									placeholder="Email"
 									{...field}
-									disabled={true}
+									readOnly={true}
 								/>
 							</FormControl>
 							<FormMessage />

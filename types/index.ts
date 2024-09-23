@@ -1,16 +1,17 @@
 import { TipoMedicamento } from "@prisma/client";
+import Decimal from "decimal.js";
 
 export interface MedicamentoT {
     id: number;
+    imagen: string | null;
     nombre: string;
-    descripcion: string | null;
-    precio: any;
+    descripcion?: string | null;
     stock: number;
     estado: number;
+    precio: string;
     tipo: TipoMedicamento;
-    imagen: string | null;
     creadoEn: Date;
-    actualizadoEn: Date | null;
+    actualizadoEn?: Date | null;
     idUsuario: number;
 }
 
