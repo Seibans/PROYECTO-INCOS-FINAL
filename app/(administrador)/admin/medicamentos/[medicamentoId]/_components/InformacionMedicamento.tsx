@@ -1,20 +1,10 @@
 import React from 'react'
 import { Medicamento } from '@prisma/client'
-import Image from 'next/image';
-import { Dog } from 'lucide-react';
-import { FormEditarMedicamento } from './FormEditarMedicamento';
-import { FormMedicamentoGlobal } from '../../_components/FormMedicamentoGlobalChat';
-import { MedicamentoT } from '@/types';
-import FormSubirImagen from './File';
+import { FormMedicamentoGlobal } from '../../_components/FormMedicamentoGlobal';
 import CambiarImagen from '@/components/admin/CambiarImagen.component';
 
 type InformacionMedicamentoProps = {
     medicamento: Medicamento;
-};
-
-const DefaultImage: React.FC<{ src: string | null, alt: string }> = ({ src, alt }) => {
-    const imageSrc = src ?? '/images/imagen-gato.png';
-    return <Image src={imageSrc} alt={alt} width={200} height={200} />;
 };
 
 export const InformacionMedicamento = (props: InformacionMedicamentoProps) => {

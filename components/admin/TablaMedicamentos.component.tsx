@@ -1,6 +1,4 @@
 "use client";
-
-import dynamic from "next/dynamic";
 import * as React from "react";
 import {
   ColumnDef,
@@ -14,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Pencil } from "lucide-react";
+import { ArrowUpDown, ChevronDown, Eye, MoreHorizontal, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,6 +23,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -35,27 +36,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-
-
-import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/counter.css";
-import "yet-another-react-lightbox/plugins/thumbnails.css";
-import "yet-another-react-lightbox/plugins/captions.css";
-const Lightbox = dynamic(() => import("yet-another-react-lightbox"), { ssr: false });
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
-import Download from "yet-another-react-lightbox/plugins/download";
-import Share from "yet-another-react-lightbox/plugins/share";
-import Captions from "yet-another-react-lightbox/plugins/captions";
-import Counter from "yet-another-react-lightbox/plugins/counter";
-import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
-import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
-
 import Image from "next/image";
 
-import { formatearFecha } from "@/lib/formatearFecha"
+import { formatearFecha, formatearFechaYHora } from "@/lib/formatearFecha"
 import { MedicamentoT } from "@/types";
 import { formatearPrecio } from "@/lib/formatearPrecio";
+import { LightboxComponent } from '@/components/global/CustomLightbox';
 
 interface DataTableProps {
   data: MedicamentoT[];
@@ -68,7 +54,8 @@ export function TablaMedicamentos({ data }: DataTableProps) {
 
   const [isMounted, setIsMounted] = React.useState(false);
 
-  // Estado del Lightbox
+  const [medicamentoSeleccionado, setMedicamentoSeleccionado] = React.useState<MedicamentoT | null>(null);
+
   const [openLightbox, setOpenLightbox] = React.useState(false);
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
 
@@ -171,7 +158,9 @@ export function TablaMedicamentos({ data }: DataTableProps) {
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Ver detalles del Medicamento</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setMedicamentoSeleccionado(row.original)}>
+                <Eye className="w-4 h-4 mr-2" /> Ver detalles del Medicamento
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigator.clipboard.writeText(`${id}`)}>
                 Copiar Id del Medicamento
               </DropdownMenuItem>
@@ -274,22 +263,9 @@ export function TablaMedicamentos({ data }: DataTableProps) {
             )}
           </TableBody>
         </Table>
-        <Lightbox
+        <LightboxComponent
           open={openLightbox}
           close={() => setOpenLightbox(false)}
-          styles={{
-            container: {
-              backgroundColor: "rgba(0, 0, 0, .7)"
-            },
-            toolbar: {
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              gap: '10px',
-            }
-          }}
-          counter={{ container: { style: { top: 35 } } }}
-          plugins={[Zoom, Fullscreen, Download, Share, Counter, Slideshow, Thumbnails, Captions]}
           slides={data.map(medicamento => ({
             src: medicamento.imagen || "/images/imagen-gato.png",
             title: medicamento.nombre,
@@ -300,29 +276,8 @@ export function TablaMedicamentos({ data }: DataTableProps) {
             }
           }))}
           index={currentImageIndex}
-          controller={{ closeOnBackdropClick: true }}
-          zoom={{
-            maxZoomPixelRatio: 10,
-            zoomInMultiplier: 5,
-            doubleTapDelay: 1000,
-            doubleClickDelay: 1000,
-            doubleClickMaxStops: 5,
-            keyboardMoveDistance: 200,
-            wheelZoomDistanceFactor: 200,
-            pinchZoomDistanceFactor: 200,
-            scrollToZoom: true,
-          }}
-          captions={{
-            // ref:,
-            showToggle: true,
-            hidden: false,
-            descriptionTextAlign: 'center',
-            descriptionMaxLines: 5,
-          }}
         />
       </div>
-
-      {/* Navegación entre páginas */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
           <Button
@@ -343,6 +298,27 @@ export function TablaMedicamentos({ data }: DataTableProps) {
           </Button>
         </div>
       </div>
+
+      <Dialog open={!!medicamentoSeleccionado} onOpenChange={() => setMedicamentoSeleccionado(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogTitle>{medicamentoSeleccionado?.nombre} {medicamentoSeleccionado?.precio}</DialogTitle>
+          <DialogHeader>
+            <DialogDescription>
+              <p>Precio: {medicamentoSeleccionado?.precio}</p>
+              <p>Stock: {medicamentoSeleccionado?.stock}</p>
+              <p>Estado: {medicamentoSeleccionado?.estado === 1 ? "Activo" : "Eliminado"}</p>
+              <p>Tipo: {medicamentoSeleccionado?.tipo}</p>
+              <div>
+                <div className="">Creado en:</div>
+                <div className="">{formatearFechaYHora(medicamentoSeleccionado?.creadoEn)}</div>
+                <div className="">Actualizado en:</div>
+                <div className="">{formatearFechaYHora(medicamentoSeleccionado?.actualizadoEn)}</div>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
     </>
   );
 }

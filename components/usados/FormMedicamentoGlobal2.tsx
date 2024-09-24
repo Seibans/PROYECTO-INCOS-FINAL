@@ -128,23 +128,23 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 		console.log('Valor del campo imagen:', formData.get('imagen'));
 		console.log('Valor del archivo:', formData.get('archivo'));
 		console.log('Valor del archivo:', formData);
-		const action = medicamento ? editarMedicamento(medicamento.id, values) : registrarMedicamento(formData);
+		// const action = medicamento ? editarMedicamento(medicamento.id, values) : registrarMedicamento(formData);
 
-		toast.promise(action, {
-			loading: "Cargando...",
-			success: (data) => {
-				if (data.error) {
-					throw new Error(data.error);
-				} else {
-					router.refresh();
-					if (setabrirModal) {
-						setabrirModal(false);
-					}
-					return `${data.success}`;
-				}
-			},
-			error: (error) => error.message,
-		});
+		// toast.promise(action, {
+		// 	loading: "Cargando...",
+		// 	success: (data) => {
+		// 		if (data.error) {
+		// 			throw new Error(data.error);
+		// 		} else {
+		// 			router.refresh();
+		// 			if (setabrirModal) {
+		// 				setabrirModal(false);
+		// 			}
+		// 			return `${data.success}`;
+		// 		}
+		// 	},
+		// 	error: (error) => error.message,
+		// });
 
 
 	};

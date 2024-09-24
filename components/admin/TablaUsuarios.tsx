@@ -1,8 +1,8 @@
 "use client"
-
 import * as React from "react"
 import {
   ColumnDef,
+  ColumnFiltersState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -47,7 +47,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 import { UsuarioT } from "@/types"
 import { formatearFechaYHora } from "@/lib/formatearFecha"
 import { useQuery } from "@tanstack/react-query"
-import { useState, useEffect } from "react"
+import { LightboxComponent } from '@/components/global/CustomLightbox';
+
 
 const globalFilterFn: FilterFn<UsuarioT> = (row, columnId, filterValue) => {
   return row.getAllCells().some((cell) => {
@@ -66,17 +67,26 @@ interface DataTableProps<TData> {
 }
 
 export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = useState<string>("")
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [isMounted, setIsMounted] = useState(false)
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = React.useState<string>("")
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [isMounted, setIsMounted] = React.useState(false)
 
   // Estado para controlar el usuario seleccionado y el diálogo
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<UsuarioT | null>(null);
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = React.useState<UsuarioT | null>(null);
 
-  useEffect(() => {
+  const [openLightbox, setOpenLightbox] = React.useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+
+  React.useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index);
+    setOpenLightbox(true);
+  };
 
 
   const columns: ColumnDef<UsuarioT>[] = [
@@ -101,8 +111,10 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
             <Image
               src={typeof imagen === "string" ? imagen : "/images/usuario.png"}
               alt="Imagen del usuario"
-              width={30}
-              height={30}
+              onClick={() => handleImageClick(row.index)}
+              width={60}
+              height={60}
+              className="cursor-pointer"
             />
           </div>
         )
@@ -247,10 +259,11 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    getPaginationRowModel: getPaginationRowModel(),
     state: {
       sorting,
       globalFilter,
@@ -262,124 +275,140 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
   if (!isMounted) return null
 
   return (
-    <div className="p-4 bg-background shadow-md rounded-lg mt-4 w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filtrar Usuarios"
-          value={table.getState().globalFilter || ""}
-          onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columnas<ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+    <>
+      <div className="p-4 bg-background shadow-md rounded-lg mt-4 w-full">
+        <div className="flex items-center py-4">
+          <Input
+            placeholder="Filtrar Usuarios"
+            value={table.getState().globalFilter || ""}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="max-w-sm"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columnas<ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
                   return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
                   )
                 })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No se encontraron resultados.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Siguiente
-          </Button>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </div>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No se encontraron resultados.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <LightboxComponent
+            open={openLightbox}
+            close={() => setOpenLightbox(false)}
+            slides={data.map(usuario => ({
+              src: usuario.image || "/images/usuario.png",
+              title: usuario.name,
+              description: usuario.rol || "",
+              share: {
+                title: usuario.name,
+                url: usuario.image || "/images/usuario.png",
+              }
+            }))}
+            index={currentImageIndex}
+          />
+        </div>
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Anterior
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Siguiente
+            </Button>
+          </div>
+        </div>
 
-      {/* Aquí va el diálogo para ver los detalles del usuario */}
-      <Dialog open={!!usuarioSeleccionado} onOpenChange={() => setUsuarioSeleccionado(null)}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogTitle>{usuarioSeleccionado?.name} {usuarioSeleccionado?.apellidoPat}</DialogTitle>
-          <DialogHeader>
-            <DialogDescription>
-              <p>Email: {usuarioSeleccionado?.email}</p>
-              <p>Rol: {usuarioSeleccionado?.rol}</p>
-              <p>Estado: {usuarioSeleccionado?.estado === 1 ? "Activo" : "Eliminado"}</p>
-              <p>Celular: {usuarioSeleccionado?.celular}</p>
-              <div>
-                <div className="">Creado en:</div>
-                <div className="">{formatearFechaYHora(usuarioSeleccionado?.createdAt)}</div>
-                <div className="">Actualizado en:</div>
-                <div className="">{formatearFechaYHora(usuarioSeleccionado?.updatedAt)}</div>
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </div>
+        {/* Aquí va el diálogo para ver los detalles del usuario */}
+        <Dialog open={!!usuarioSeleccionado} onOpenChange={() => setUsuarioSeleccionado(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogTitle>{usuarioSeleccionado?.name} {usuarioSeleccionado?.apellidoPat}</DialogTitle>
+            <DialogHeader>
+              <DialogDescription>
+                <p>Email: {usuarioSeleccionado?.email}</p>
+                <p>Rol: {usuarioSeleccionado?.rol}</p>
+                <p>Estado: {usuarioSeleccionado?.estado === 1 ? "Activo" : "Eliminado"}</p>
+                <p>Celular: {usuarioSeleccionado?.celular}</p>
+                <div>
+                  <div className="">Creado en:</div>
+                  <div className="">{formatearFechaYHora(usuarioSeleccionado?.createdAt)}</div>
+                  <div className="">Actualizado en:</div>
+                  <div className="">{formatearFechaYHora(usuarioSeleccionado?.updatedAt)}</div>
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </>
   )
 }

@@ -1,13 +1,11 @@
 import { redirect } from 'next/navigation';
 import { auth } from "@/auth";
-import { Header } from './_components/Header';
+import { HeaderMedicamentos } from './_components/HeaderMedicamentos';
 import { InformacionMedicamento } from './_components/InformacionMedicamento';
 import { FooterMedicamento } from './_components/FooterMedicamento';
 import { obtenerMedicamento } from '@/actions/medicamentos';
-import { Medicamento } from '@prisma/client';
 //TODO: Revisar que es esto
 // import { de } from 'date-fns/locale';
-
 
 // Ten mucho cuidado porque cambiar aca debes tomar el parametro de la ruta
 export default async function MedicamentoIdPage({ params }: { params: { medicamentoId: string } }) {
@@ -27,7 +25,7 @@ export default async function MedicamentoIdPage({ params }: { params: { medicame
 
 	return (
 		<div>
-			<Header/>
+			<HeaderMedicamentos/>
 			<InformacionMedicamento medicamento={medicamento}/>
 			<FooterMedicamento medicamentoId={medicamento.id}/>
 		</div>

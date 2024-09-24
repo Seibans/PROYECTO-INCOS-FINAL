@@ -14,7 +14,7 @@ export interface ImageUploaderRef {
   removeImage: () => void;
 }
 
-const ImageUploader = forwardRef<ImageUploaderRef, ImageUploaderProps>(({ initialPreview, onImageChange }, ref) => {
+const InputImagen = forwardRef<ImageUploaderRef, ImageUploaderProps>(({ initialPreview, onImageChange }, ref) => {
   const [preview, setPreview] = useState<string | null>(initialPreview || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -117,6 +117,6 @@ const ImageUploader = forwardRef<ImageUploaderRef, ImageUploaderProps>(({ initia
   );
 });
 
-ImageUploader.displayName = 'ImageUploader';
+InputImagen.displayName = 'InputImagen';
 
-export default ImageUploader;
+export default InputImagen;

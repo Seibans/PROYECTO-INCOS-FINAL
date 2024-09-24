@@ -2,8 +2,6 @@
 //Video dashboard 3:21
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import SubirImagen from "@/components/global/SubirImagen.component";
-import SubirImagen2 from "@/components/admin/SubirImagen2.component";
 import { TablaMascotas } from "@/components/admin/TablaMascotas.component";
 import { obtenerMascotas } from "@/actions/mascotas";
 import { Mascota } from "@prisma/client"
@@ -13,14 +11,6 @@ export const ListaMascotas = async () => {
   return (
     <>
       <TablaMascotas data={mascotas} />
-      {/* <div className="grid grid-cols-2 bg-background">
-        <div className="flex justify-center items-center">
-          <SubirImagen />
-        </div>
-        <div className="flex justify-center items-center">
-          <SubirImagen2 />
-        </div>
-      </div> */}
     </>
   )
 }

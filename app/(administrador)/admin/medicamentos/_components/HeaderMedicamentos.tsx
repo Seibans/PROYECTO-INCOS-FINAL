@@ -1,14 +1,9 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
-import { FormMedicamento } from "./FormMedicamento";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import CurrencyForm from "./InputBs";
-import { FormMedicamentoGlobal } from "./FormMedicamentoGlobalChat";
+import { FormMedicamentoGlobal } from "./FormMedicamentoGlobal";
 
-
-// <DialogContent className="sm:max-w-[625px]">
-// </DialogContent>
 export const HeaderMedicamentos = () => {
 	const [abrirModal, setabrirModal] = useState(false);
 	return (
@@ -28,10 +23,8 @@ export const HeaderMedicamentos = () => {
 						</DialogDescription>
 					</DialogHeader>
 					<FormMedicamentoGlobal setabrirModal={setabrirModal} />
-					{/* <CurrencyForm/> */}
 				</DialogContent>
 			</Dialog>
-
 		</div>
 	)
 }

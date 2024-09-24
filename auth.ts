@@ -91,7 +91,7 @@ export const {
     // Al parecer user y profile siempre estan como undefined asi que no los uses
     // en cambio para obtener el usuario usamos ek getuser si no devuelve el token original
     async jwt({ token, user, account, profile}) {
-      console.log({token, user, profile}, "USUARIO EN JWT");
+      // console.log({token, user, profile}, "USUARIO EN JWT");
       // //este es un campo agregado al token
       // token.campoCustom = 'Nuevo Campo';
 
@@ -123,7 +123,7 @@ export const {
       token.authDobleFactor = usuarioExistente.authDobleFactor;
       token.image = usuarioExistente.image;
 
-      console.log("TOKEN  ",token);
+      // console.log("TOKEN  ",token);
       return token;
     },
     // ESTOS SON LOS DATOS DEL USUARIO GUARDADOS EN EL TOKEN

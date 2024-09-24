@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 
-export function Header() {
+export function HeaderMedicamentos() {
 	const router = useRouter();
 	return (
 		<div className='flex justify-between items-center mb-2'>
