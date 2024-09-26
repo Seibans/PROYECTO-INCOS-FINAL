@@ -9,7 +9,6 @@ import {
 } from "@/routes";
 
 import { NextResponse } from "next/server";
-
 import { RolUsuario } from "@prisma/client";
 
 const { auth } = NextAuth(authConfig);
@@ -23,8 +22,7 @@ export default auth(async (req) => {
   // console.log("Request URL:", nextUrl.pathname);
   // console.log("User logged in:", isLoggedIn);
 
-  // const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isApiAuthRoute = apiAuthPrefix.includes(nextUrl.pathname);
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 

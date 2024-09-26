@@ -29,10 +29,7 @@ export const authRoutes = [
  * Las rutas que comienzan con este prefijo se utilizan para la autenticación de la API.
  * @type {string}	
  */
-export const apiAuthPrefix = [
-	"/api/auth",
-	"/api/generar-reporte",
-];
+export const apiAuthPrefix = "/api/auth";
 
 /**
  * La ruta de redirección por defecto después de iniciar sesión

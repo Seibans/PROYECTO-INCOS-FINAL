@@ -56,7 +56,7 @@ enum TipoMedicamento {
 model User {
   id                      Int                      @id @default(autoincrement()) @db.UnsignedInt
   name                    String                   @map("nombre") @db.VarChar(100)
-  username                String?                   @unique @map("usuario") @db.VarChar(100)
+  username                String?                  @unique @map("usuario") @db.VarChar(100)
   apellidoPat             String?                  @db.VarChar(40)
   apellidoMat             String?                  @db.VarChar(40)
   ci                      String?                  @db.VarChar(18)

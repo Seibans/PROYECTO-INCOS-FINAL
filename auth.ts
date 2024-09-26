@@ -8,6 +8,7 @@ import { getCuentaById } from "@/data/cuenta"
 import {actualizarNombres} from "@/lib/formatearNombreAuth"
 
 // CORRECION DE NUEVOS ATRIBUTOS EN EL TOKEN minuto 3:10
+// RUTA COMPLETA DE VERIFICACION DE CREDENCIALES http://localhost:3000/api/auth/providers
 export const {
   handlers,
   auth,
@@ -62,6 +63,8 @@ export const {
       if (account?.provider === 'credentials') {
         // console.log('Credenciales de inicio de sesión');
       };
+      console.log("USUARIO EN SIGN IN");
+      console.log("USUARIO EN SIGN IN", {user, account, profile, email, credentials});
 
       //aca sigue la autenticacion por correo normal
       if (account?.provider !== 'credentials') return true;
