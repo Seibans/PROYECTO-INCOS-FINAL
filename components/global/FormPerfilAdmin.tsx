@@ -70,6 +70,7 @@ export function FormPerfilAdmin() {
       ci: usuario?.ci || undefined,
       sexo: usuario?.sexo || undefined,
       email: usuario?.email || undefined,
+      direccion: usuario?.direccion || undefined,
       celular: usuario?.celular || undefined,
       rol: usuario?.rol || undefined,
       authDobleFactor: usuario?.authDobleFactor || undefined,
@@ -132,8 +133,8 @@ export function FormPerfilAdmin() {
 
   return (
     <>
-      <h2 className="text-2xl">Mi Perfil</h2>
-      <Tabs defaultValue="cuenta" className="w-4/5 bg-background p-4 rounded-lg">
+      <h2 className="text-2xl z-10">Mi Perfil</h2>
+      <Tabs defaultValue="cuenta" className="w-4/5 bg-background p-4 rounded-lg shadow-[44px_44px_88px_#777777,-44px_-44px_88px_#ffffff] dark:shadow-[44px_44px_88px_#1c1c1c,-44px_-44px_88px_#3c3c3c]">
         <TabsList className="flex flex-col h-full w-full md:flex-row">
           <TabsTrigger value="cuenta" className="w-full">Datos de la Cuenta</TabsTrigger>
           <TabsTrigger value="contrasena"  className="w-full">Contraseña</TabsTrigger>

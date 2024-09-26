@@ -86,11 +86,11 @@ export const editarUsuario = async (values: z.infer<typeof ConfiguracionSchema>,
   if (!validatedFields.success) {
       return { error: "Campos Inválidos!" };
   }
-  console.log(validatedFields)
-  console.log(idUsuario)
+  // console.log(validatedFields)
+  // console.log(idUsuario)
   const { name, apellidoPat, apellidoMat, ci, email, rol, celular, direccion, estado, authDobleFactor } = validatedFields.data;
-  console.log(name, apellidoPat, apellidoMat, ci, email, rol, celular, direccion, estado, authDobleFactor)
-  console.log(usuarioActualId)
+  // console.log(name, apellidoPat, apellidoMat, ci, email, rol, celular, direccion, estado, authDobleFactor)
+  // console.log(usuarioActualId)
 
   try {
     

@@ -14,25 +14,7 @@ export const obtenerMascotas = async (): Promise<Mascota[]> => {
         },
         orderBy: {
             creadoEn: 'desc',
-        },
-        // select: {
-        //     id: true,
-        //     nombre: true,
-        //     especie: true,
-        //     raza: true,
-        //     sexo: true,
-        //     fechaNacimiento: true,
-        //     detalles: true,
-        //     imagen: true,
-        //     estado: true,
-        //     creadoEn: true,
-        //     actualizadoEn: true,
-        //     idUsuario: true,
-        //     idPropietario: true,
-        //     esterilizado: true,
-        //     alergias: true,
-        //     observaciones: true,
-        // },
+        }
     });
     const mascotasConFechaAjustada = mascotas.map(mascota => ({
         ...mascota,

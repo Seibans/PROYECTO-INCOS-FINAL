@@ -7,6 +7,7 @@ import { UltimosUsuarios } from "./_components/UltimosUsuarios";
 import { Distribuidores } from "./_components/Distribuidores";
 import { TotalUsuarios } from "./_components/TotalUsuarios";
 import { TablaIntegraciones } from "./_components/TablaIntegraciones";
+import { Charts } from "@/components/otros/componente-date-time";
 
 export const data = [
   {
@@ -57,18 +58,20 @@ export default function Home() {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-x-20">
+
+
         {/* {data.map(({ icon, total, average, titulo, tooltipTexto }) => (
           <CardEstadistica
-            key={titulo}
-            icon={icon}
-            total={total}
-            average={average}
-            titulo={titulo}
-            tooltipTexto={tooltipTexto}
+          key={titulo}
+          icon={icon}
+          total={total}
+          average={average}
+          titulo={titulo}
+          tooltipTexto={tooltipTexto}
           />
-        ))} */}
-
+          ))} */}
       </div>
+          <Charts/>
       <div className="flex flex-col gap-y-4 mt-4">
         {/* <Grafico /> */}
         {/* <Grafico2 /> */}

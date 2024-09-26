@@ -6,14 +6,13 @@ import ModernClientProfile from "@/components/otros/modern-client-profile";
 import { TimePicker } from "@/components/otros/timePicker";
 
 export default function TratamientosPage() {
-  return (
-	<div className="w-full">
-		<ApointmentScheduler/>
-		<Charts/>
-		<DigitalTransformationScheduler/>
-		<FooterNav/>
-		{/* <ModernClientProfile/> */}
-		<TimePicker/>
-  </div>
-  )
+	return (
+		<div className="w-full">
+			<ApointmentScheduler />
+			<DigitalTransformationScheduler />
+			{/* <FooterNav/> */}
+			{/* <ModernClientProfile /> */}
+			<TimePicker />
+		</div>
+	)
 }

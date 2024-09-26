@@ -107,7 +107,7 @@ export const FormUsuario = () => {
 	});
 
 	const onSubmit = (values: z.infer<typeof RegistroSchema>) => {
-		console.log(values);
+		// console.log(values);
 		startTransition(() => {
 			toast.promise(registro(values), {
 				loading: "Cargando...",

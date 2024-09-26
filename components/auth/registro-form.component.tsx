@@ -210,7 +210,7 @@ export const RegistroForm = () => {
                           className="input-phone"
                           countries={['PE', 'BO', 'AR', 'CL', 'CO', 'EC', 'MX', 'PY', 'UY', 'VE']}
                           countrySelectProps={{
-                            className: 'bg-white text-black dark:bg-gray-800 dark:text-white !w-[10rem]',
+                            className: 'bg-white text-black dark:bg-gray-800 dark:text-white',
                           }}
                         />
                       </FormControl>

@@ -40,7 +40,7 @@ export default function FormCitaMedica() {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     startTransition(() => {
-      console.log(values);
+      // console.log(values);
       // Aquí puedes llamar a tu acción o API para registrar la cita
       toast.success("Cita creada exitosamente");
       form.reset(); // Reinicia el formulario después de enviar los datos

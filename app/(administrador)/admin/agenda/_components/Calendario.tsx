@@ -32,7 +32,7 @@ export const Calendario = () => {
   }
 
   const handleEventClick = () => {
-    console.log("evento")
+    // console.log("evento")
   }
   return (
     <div>

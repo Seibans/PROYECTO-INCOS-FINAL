@@ -2,6 +2,7 @@
 CREATE TABLE `Usuario` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(100) NOT NULL,
+    `usuario` VARCHAR(100) NULL,
     `apellidoPat` VARCHAR(40) NULL,
     `apellidoMat` VARCHAR(40) NULL,
     `ci` VARCHAR(18) NULL,
@@ -10,7 +11,7 @@ CREATE TABLE `Usuario` (
     `correoVerificado` DATETIME(3) NULL,
     `imagen` VARCHAR(255) NULL,
     `contrasena` VARCHAR(200) NULL,
-    `rol` ENUM('Administrador', 'Usuario') NOT NULL DEFAULT 'Usuario',
+    `rol` ENUM('Administrador', 'Usuario', 'Veterinario') NOT NULL DEFAULT 'Usuario',
     `celular` VARCHAR(17) NULL,
     `direccion` VARCHAR(100) NULL,
     `estado` TINYINT NOT NULL DEFAULT 1,
@@ -19,6 +20,7 @@ CREATE TABLE `Usuario` (
     `actualizadoEn` TIMESTAMP(3) NULL,
     `idUsuario` INTEGER UNSIGNED NULL,
 
+    UNIQUE INDEX `Usuario_usuario_key`(`usuario`),
     UNIQUE INDEX `Usuario_correo_key`(`correo`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -102,8 +104,10 @@ CREATE TABLE `Mascota` (
     `sexo` ENUM('Macho', 'Hembra') NOT NULL,
     `detalles` VARCHAR(255) NULL,
     `imagen` VARCHAR(255) NULL,
+    `peso` FLOAT NULL,
+    `vacunas` JSON NULL,
     `estado` TINYINT NOT NULL DEFAULT 1,
-    `idPropietario` INTEGER UNSIGNED NULL DEFAULT 0,
+    `idPropietario` INTEGER UNSIGNED NULL DEFAULT 1,
     `esterilizado` BOOLEAN NULL DEFAULT false,
     `alergias` VARCHAR(255) NULL,
     `observaciones` VARCHAR(255) NULL,
@@ -118,6 +122,9 @@ CREATE TABLE `Mascota` (
 CREATE TABLE `HistorialMedico` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `mascotaId` INTEGER UNSIGNED NOT NULL,
+    `tratamientosPrevios` TEXT NULL,
+    `descripcionTratamientos` TEXT NULL,
+    `antecedentes` TEXT NULL,
     `estado` TINYINT NOT NULL DEFAULT 1,
     `creadoEn` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoEn` TIMESTAMP(3) NULL,
@@ -130,15 +137,17 @@ CREATE TABLE `HistorialMedico` (
 -- CreateTable
 CREATE TABLE `Tratamiento` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(100) NOT NULL,
-    `descripcion` TEXT NULL,
+    `descripcion` VARCHAR(255) NOT NULL,
     `precio` DECIMAL(10, 2) NOT NULL,
     `estado` TINYINT NOT NULL DEFAULT 1,
     `historialMedicoId` INTEGER UNSIGNED NOT NULL,
+    `diagnostico` VARCHAR(255) NULL,
+    `pagoId` INTEGER UNSIGNED NULL,
     `creadoEn` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoEn` TIMESTAMP(3) NULL,
     `idUsuario` INTEGER UNSIGNED NOT NULL,
 
+    UNIQUE INDEX `Tratamiento_pagoId_key`(`pagoId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -162,12 +171,9 @@ CREATE TABLE `Medicamento` (
 -- CreateTable
 CREATE TABLE `TratamientoMedicamento` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    `cantidad` INTEGER UNSIGNED NOT NULL DEFAULT 1,
     `tratamientoId` INTEGER UNSIGNED NOT NULL,
     `medicamentoId` INTEGER UNSIGNED NOT NULL,
-    `cantidad` INTEGER UNSIGNED NOT NULL DEFAULT 1,
-    `creadoEn` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `actualizadoEn` TIMESTAMP(3) NULL,
-    `idUsuario` INTEGER UNSIGNED NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -176,12 +182,10 @@ CREATE TABLE `TratamientoMedicamento` (
 CREATE TABLE `Pago` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `total` DECIMAL(18, 2) NOT NULL,
-    `cuotas` INTEGER NOT NULL,
-    `montoCuota` DECIMAL(18, 2) NOT NULL,
-    `fechaPago` DATETIME(3) NULL,
+    `fechaPago` DATETIME(3) NOT NULL,
     `detalle` VARCHAR(100) NULL,
     `estado` TINYINT NOT NULL DEFAULT 1,
-    `usuarioId` INTEGER UNSIGNED NOT NULL,
+    `esAyudaVoluntaria` BOOLEAN NOT NULL DEFAULT false,
     `creadoEn` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoEn` TIMESTAMP(3) NULL,
     `idUsuario` INTEGER UNSIGNED NOT NULL,
@@ -220,13 +224,13 @@ ALTER TABLE `HistorialMedico` ADD CONSTRAINT `HistorialMedico_mascotaId_fkey` FO
 ALTER TABLE `Tratamiento` ADD CONSTRAINT `Tratamiento_historialMedicoId_fkey` FOREIGN KEY (`historialMedicoId`) REFERENCES `HistorialMedico`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Tratamiento` ADD CONSTRAINT `Tratamiento_pagoId_fkey` FOREIGN KEY (`pagoId`) REFERENCES `Pago`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `TratamientoMedicamento` ADD CONSTRAINT `TratamientoMedicamento_tratamientoId_fkey` FOREIGN KEY (`tratamientoId`) REFERENCES `Tratamiento`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `TratamientoMedicamento` ADD CONSTRAINT `TratamientoMedicamento_medicamentoId_fkey` FOREIGN KEY (`medicamentoId`) REFERENCES `Medicamento`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Pago` ADD CONSTRAINT `Pago_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ReservaMedica` ADD CONSTRAINT `ReservaMedica_usuarioId_fkey` FOREIGN KEY (`usuarioId`) REFERENCES `Usuario`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

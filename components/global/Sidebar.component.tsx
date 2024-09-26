@@ -64,7 +64,7 @@ const datosGeneralesSidebar = [
 	{
 		icon: HeartPulse,
 		label: 'Tratamientos',
-		href: '/estado'
+		href: '/admin/tratamientos'
 	}
 ]
 

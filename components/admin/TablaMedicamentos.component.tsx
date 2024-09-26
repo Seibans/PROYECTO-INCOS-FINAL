@@ -42,6 +42,7 @@ import { formatearFecha, formatearFechaYHora } from "@/lib/formatearFecha"
 import { MedicamentoT } from "@/types";
 import { formatearPrecio } from "@/lib/formatearPrecio";
 import { LightboxComponent } from '@/components/global/CustomLightbox';
+import { Textarea } from "../ui/textarea";
 
 interface DataTableProps {
   data: MedicamentoT[];
@@ -111,7 +112,11 @@ export function TablaMedicamentos({ data }: DataTableProps) {
       accessorKey: "descripcion",
       header: () => <div className="text-center">Descripción</div>,
       cell: ({ row }) => (
-        <div className="text-center font-medium">{row.getValue("descripcion")}</div>
+        <div className="text-center font-medium h-auto w-56 whitespace-normal overflow-hidden text-ellipsis">
+          {/* <Textarea> */}
+            {row.getValue("descripcion")}
+          {/* </Textarea> */}
+        </div>
       ),
     },
     {
