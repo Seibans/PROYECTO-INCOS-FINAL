@@ -1,119 +1,142 @@
 <!-- REPORTE ANTERIOR -->
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Reporte de Mascotas</title>
     <style>
-        body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f4f8;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            padding: 30px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .logo {
-            width: 100px;
-            height: auto;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: #2c3e50;
-            font-size: 28px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-bottom: 30px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        th {
-            background-color: #3498db;
-            color: #ffffff;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 14px;
-        }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        td {
-            font-size: 14px;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #7f8c8d;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="45" fill="#3498db"/>
-                <path d="M30,40 Q50,20 70,40 T70,60 Q50,80 30,60 T30,40" fill="#ffffff"/>
-                <circle cx="40" cy="40" r="5" fill="#2c3e50"/>
-                <circle cx="60" cy="40" r="5" fill="#2c3e50"/>
-            </svg>
-            <h1>Reporte de Mascotas</h1>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Especie</th>
-                    <th>Raza</th>
-                    <th>Sexo</th>
-                    <th>Fecha de Nacimiento</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${mascotas.map(mascota => `
-                <tr>
-                    <td>${mascota.nombre}</td>
-                    <td>${mascota.especie}</td>
-                    <td>${mascota.raza || 'N/A'}</td>
-                    <td>${mascota.sexo}</td>
-                    <td>${mascota.fechaNacimiento
-                        ? new Date(mascota.fechaNacimiento).toLocaleDateString()
-                        : 'N/A'}</td>
-                </tr>
-                `).join('')}
-            </tbody>
-        </table>
-        <div class="footer">
-            <p>Generado el ${new Date().toLocaleDateString()} | Clínica Veterinaria Patitas Felices</p>
-        </div>
-    </div>
-</body>
-</html>
+      body {
+        font-family: "Helvetica", "Arial", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f4f8;
+      }
 
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .logo {
+        width: 100px;
+        height: auto;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        color: #2c3e50;
+        font-size: 28px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 30px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      th {
+        background-color: #3498db;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 14px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f8f9fa;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      td {
+        font-size: 14px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 12px;
+        color: #7f8c8d;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <svg
+          class="logo"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="50" cy="50" r="45" fill="#3498db" />
+          <path
+            d="M30,40 Q50,20 70,40 T70,60 Q50,80 30,60 T30,40"
+            fill="#ffffff"
+          />
+          <circle cx="40" cy="40" r="5" fill="#2c3e50" />
+          <circle cx="60" cy="40" r="5" fill="#2c3e50" />
+        </svg>
+        <h1>Reporte de Mascotas</h1>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Sexo</th>
+            <th>Fecha de Nacimiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${mascotas.map(mascota => `
+          <tr>
+            <td>${mascota.nombre}</td>
+            <td>${mascota.especie}</td>
+            <td>${mascota.raza || 'N/A'}</td>
+            <td>${mascota.sexo}</td>
+            <td>
+              ${mascota.fechaNacimiento ? new
+              Date(mascota.fechaNacimiento).toLocaleDateString() : 'N/A'}
+            </td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <div class="footer">
+        <p>
+          Generado el ${new Date().toLocaleDateString()} | Clínica Veterinaria
+          Patitas Felices
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
 
 <!-- <!DOCTYPE html>
 <html lang="es">
@@ -334,12 +357,6 @@
 </body>
 
 </html> -->
-
-
-
-
-
-
 
 <!-- <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="50" cy="50" r="45" fill="#3498db"/>

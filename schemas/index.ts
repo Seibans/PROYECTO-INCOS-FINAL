@@ -172,7 +172,10 @@ export const ConfiguracionSchema = z.object({
         z.optional(z.enum(["M", "F"]))
     ),
     email: z.optional(z.string().email()),
-    rol: z.enum([RolUsuario.Administrador, RolUsuario.Usuario]),
+    rol: z.nativeEnum(RolUsuario, {
+        errorMap: () => ({ message: "El tipo de usuario es inválido" })
+    }),
+
     celular: z.optional(z.string().refine((celular) => /^\+\d{10,15}$/.test(celular), "Numero de Celular Invalido")),
     direccion: z.optional(z.string()
         .max(255, { message: "La dirección no debe tener más de 255 caracteres." }),
@@ -185,20 +188,13 @@ export const MascotaSchema = z.object({
     nombre: z.string()
         .min(1, "El nombre es obligatorio")
         .max(50, "El nombre no puede tener más de 50 caracteres"),
-    especie: z.enum([TipoMascota.Perro, TipoMascota.Gato, TipoMascota.Otro],
-        { message: "Por favor selecciona la especie" }),
+    especie: z.nativeEnum(TipoMascota, {
+        errorMap: () => ({ message: "Por favor selecciona la especie" })
+    }),
     raza: z.string()
         .min(1, "La raza es obligatoria")
         .max(40, "La raza no puede tener más de 40 caracteres"),
-    // fechaNacimiento: z.date().refine(value => value !== undefined, {
-    //     message: "La fecha de nacimiento es obligatoria",
-    //     path: ['fechaNacimiento']
-    // }),
-    fechaNacimiento: z.optional(z.date(
-        // {
-        //     required_error: "La fecha de nacimiento es requerida",
-        // }
-    ).refine(date => date < new Date(), {
+    fechaNacimiento: z.optional(z.date().refine(date => date < new Date(), {
         message: "La fecha de nacimiento no puede ser futura",
     })),
     sexo: z.enum([Sexo.Macho, Sexo.Hembra], {
@@ -210,17 +206,36 @@ export const MascotaSchema = z.object({
             .max(255, { message: "La descripción no debe tener más de 255 caracteres." })
     ),
     imagen: z.string().optional(),
-    // estado: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El estado debe ser un número positivo" })),
+    // idPropietario: z.preprocess(
+    //     (val) => val === "" ? undefined : Number(val),
+    //     z.number().positive().optional()
+    // ),
+    idPropietario: z.union([
+        z.literal(""),
+        z.number().positive()
+    ]).optional().transform(val => val === "" ? undefined : Number(val)),
+    peso: z.string({
+        required_error: "El peso es obligatorio",
+      }).min(1, "El peso es obligatorio")
+        .regex(/^\d{1,3}(\.\d{1,2})?$/, "Usa el formato correcto: hasta 3 dígitos enteros y 2 decimales")
+        .refine((val) => {
+          const num = parseFloat(val);
+          return !isNaN(num) && num > 0 && num <= 999.99;
+        }, "El peso debe ser mayor que 0 y no exceder 999.99 kg"),
     esterilizado: z.boolean().optional(),
-    alergias: z.optional(
-        z.string()
-            .max(255, { message: "Las alergias no deben tener más de 255 caracteres." })
-    ),
-    observaciones: z.optional(
-        z.string()
-            .max(255, { message: "Las observaciones no deben tener más de 255 caracteres." })
-    ),
+    // estado: z.optional(z.string().min(1, "El estado es obligatorio")),
+    estado: z.string(),
+    archivo: z.instanceof(File).optional(),
 });
+
+// fechaNacimiento: z.date().refine(value => value !== undefined, {
+//     message: "La fecha de nacimiento es obligatoria",
+//     path: ['fechaNacimiento']
+// }),
+
+
+
+
 
 // export const MedicamentoSchema = z.object({
 //     nombre: z.string()
@@ -254,10 +269,7 @@ export const MedicamentoSchema = z.object({
     // precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
     precio: z.string().min(1, "El precio es requerido"),
     imagen: z.string().min(1, "Debe subir una Imagen del Medicamento"),
-    // tipo: z.enum([TipoMedicamento.Pastilla, TipoMedicamento.Vacuna, TipoMedicamento.Inyeccion, TipoMedicamento.Crema, TipoMedicamento.Suero, TipoMedicamento.Polvo, TipoMedicamento.Gel, TipoMedicamento.Otro], {
-    //     errorMap: () => ({ message: "El tipo de medicamento es inválido" })
-    // }),
-    tipo: z.nativeEnum(TipoMedicamento,{
+    tipo: z.nativeEnum(TipoMedicamento, {
         errorMap: () => ({ message: "El tipo de medicamento es inválido" })
     }),
     archivo: z.instanceof(File).optional(),
@@ -302,8 +314,8 @@ export const formSchema = z.object({
 
 export const SubirImagenSquema = z.object({
     archivo: z
-    .instanceof(File)
-    .refine((file) => file instanceof File, {
-      message: "El archivo es obligatorio y debe ser de tipo File",
-    }),
+        .instanceof(File)
+        .refine((file) => file instanceof File, {
+            message: "El archivo es obligatorio y debe ser de tipo File",
+        }),
 });

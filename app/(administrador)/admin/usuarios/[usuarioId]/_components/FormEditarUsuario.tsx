@@ -314,6 +314,8 @@ export const FormEditarUsuario = (props: FormEditarUsuarioProps) => {
 									<SelectItem
 										value={RolUsuario.Usuario}>Usuario</SelectItem>
 									<SelectItem
+										value={RolUsuario.Veterinario}>Veterinario</SelectItem>
+									<SelectItem
 										value={RolUsuario.Administrador}>Administrador</SelectItem>
 								</SelectContent>
 							</Select>

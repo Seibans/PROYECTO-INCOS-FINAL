@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from 'zod'
 
 //Librerias para el Form
-import React, { useEffect, useState, useTransition } from 'react';
+import React from 'react';
 import { es } from "date-fns/locale";
 
 //Libs
@@ -45,14 +45,9 @@ import {
 } from "@/components/ui/select"
 import { Calendar } from "@/components/ui/calendar"
 import { Textarea } from '@/components/ui/textarea';
-
-// enums de Prisma
 import { TipoMascota, Sexo } from "@prisma/client";
 
 import { MascotaSchema } from "@/schemas";
-import { UploadButton } from '@/utils/uploadthing';
-import { set } from 'date-fns';
-
 import { razasGatos, razasPerros } from "@/utils/constantes";
 
 
@@ -69,12 +64,11 @@ type FormEditarMascotaProps = {
 export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 
 	const { mascota } = props;
-	const [isPending, startTransition] = useTransition();
+	const [isPending, startTransition] = React.useTransition();
 
-	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
-	const [subirImagen, setsubirImagen] = useState<boolean>(false);
+	const [razaOptions, setRazaOptions] = React.useState<string[]>(["Sin Raza (Especial)"]);
 	const router = useRouter();
-	// console.log(mascota);
+	console.log(mascota);
 
 	if (mascota.estado == 0) {
 		router.push("/admin/mascotas")
@@ -95,7 +89,7 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 		},
 	})
 
-	useEffect(() => {
+	React.useEffect(() => {
 		// Actualizar las opciones de raza cuando el componente se monta
 		if (form.getValues("especie") === TipoMascota.Perro) {
 			setRazaOptions(razasPerros);
@@ -120,6 +114,7 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 		}
 		form.trigger("raza"); // Validar el campo de raza
 	}
+
 	function onSubmit(values: z.infer<typeof MascotaSchema>) {
 		startTransition(() => {
 			toast.promise(editarMascota(values, mascota.id), {

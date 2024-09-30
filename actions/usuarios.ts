@@ -1,32 +1,11 @@
-// "use server";
-// //Esto es un server action
-// import * as z from "zod";
-// import { RegistroSchema } from "@/schemas";
-// import bcrypt from "bcryptjs";
-// import { db } from "@/lib/db";
-// import { getUserByEmail } from "@/data/user";
-// import { generateVerificationToken } from "@/lib/tokens";
-// import { enviarCorreodeVerificacion } from "@/lib/mail";
-// import { formatName } from "@/lib/formatearNombre";
-// import {User} from "@prisma/client"
-
-// export const obtenerUsuarios = async ():Promise<User[]> => {
-// 	const usuarios = await db.$queryRaw<User[]>`
-// 		SELECT id, nombre, correo, correoVerificado, imagen, rol, celular, autenticacionDobleFactor, creadoEn, actualizadoEn FROM usuario ORDER BY creadoEn DESC
-// 	`;
-// 	return usuarios;
-// };
-
 "use server";
 import * as z from "zod";
-
 import { db } from "@/lib/db";
 import { usuarioIdActual } from "@/lib/auth";
 import { UsuarioT } from "@/types";
 import { ConfiguracionSchema } from "@/schemas";
 
 export const obtenerUsuarios = async (): Promise<UsuarioT[]> => {
-
   const usuarioActualId = await usuarioIdActual();
   if (!usuarioActualId) {
     throw new Error('ID del usuario autenticado no está definido');
@@ -69,6 +48,44 @@ export const obtenerUsuarios = async (): Promise<UsuarioT[]> => {
   return usuarios;
 };
 
+export const usuariosMascota = async (): Promise<any[]> => {
+  const usuarioActualId = await usuarioIdActual();
+  if (!usuarioActualId) {
+    throw new Error('ID del usuario autenticado no está definido');
+  }
+
+  if (isNaN(usuarioActualId)) {
+    throw new Error('ID del usuario autenticado no es un número válido');
+  }
+
+  const usuarios = await db.user.findMany({
+    where: {
+      id: {
+        not: usuarioActualId,
+      },
+      estado: 1,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    select: {
+      id: true,
+      name: true,
+      apellidoPat: true,
+      apellidoMat: true,
+      ci: true,
+      email: true,
+      image: true,
+      rol: true,
+      celular: true,
+    },
+  });
+
+  return usuarios.map(usuario => ({
+    ...usuario,
+    nombreCompleto: `${usuario.name} ${usuario.apellidoPat} ${usuario.apellidoMat}`.trim()
+  }));
+};
 
 export const editarUsuario = async (values: z.infer<typeof ConfiguracionSchema>, idUsuario: number) => {
   const validatedFields = ConfiguracionSchema.safeParse(values);

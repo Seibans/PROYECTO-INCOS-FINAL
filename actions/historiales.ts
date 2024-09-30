@@ -19,7 +19,6 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
         tratamientos: {
           select: {
             id: true,
-            nombre: true,
             descripcion: true,
             precio: true,
             creadoEn: true,
@@ -43,9 +42,8 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
       sexoMascota: historial.mascota.sexo,
       tratamientos: historial.tratamientos.map(tratamiento => ({
         id: tratamiento.id,
-        nombre: tratamiento.nombre,
         descripcion: tratamiento.descripcion,
-        precio: Number(tratamiento.precio), // Convertir Decimal a number
+        precio: Number(tratamiento.precio),
         creadoEn: tratamiento.creadoEn,
         actualizadoEn: tratamiento.actualizadoEn,
         idUsuario: tratamiento.idUsuario,

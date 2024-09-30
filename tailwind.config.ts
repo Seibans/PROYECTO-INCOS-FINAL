@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss"
 import flowbite from "flowbite-react/tailwind";
 const { fontFamily } = require("tailwindcss/defaultTheme");
-
+import {nextui} from "@nextui-org/react";
 // import { withUt } from "uploadthing/tw";
 
 // export default withUt({
@@ -9,12 +9,14 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 //   content: ["./src/**/*.{ts,tsx,mdx}"],
 //   ...
 // });
+// tailwind.config.js
+
 
 const {
 	default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
-
+/** @type {import('tailwindcss').Config} */
 const config = {
 	darkMode: ["class"],
 	content: [
@@ -23,7 +25,8 @@ const config = {
 		'./app/**/*.{ts,tsx}',
 		'./src/**/*.{ts,tsx}',
 		"./node_modules/tailwind-datepicker-react/dist/**/*.js",
-		"./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}"
+		"./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+		"./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
 	],
 	prefix: "",
 	theme: {
@@ -132,7 +135,7 @@ const config = {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate"), addVariablesForColors, flowbite.plugin()],
+	plugins: [require("tailwindcss-animate"), addVariablesForColors, flowbite.plugin(), nextui()],
 } satisfies Config
 
 export default config

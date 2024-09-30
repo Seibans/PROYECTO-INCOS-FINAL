@@ -37,7 +37,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import Image from "next/image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import { Mascota } from "@prisma/client";
 import { formatearFecha, formatearFechaYHora } from "@/lib/formatearFecha"
@@ -54,7 +54,6 @@ export function TablaMascotas({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [isMounted, setIsMounted] = React.useState(false);
-  // const [rowSelection, setRowSelection] = React.useState({}) //para el select de cada uno o muchos
 
   const [mascotaSeleccionada, setMascotaSeleccionada] = React.useState<Mascota | null>(null);
 
@@ -69,6 +68,17 @@ export function TablaMascotas({
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
     setOpenLightbox(true);
+  };
+
+  const getImagenMascota = (especie: string) => {
+    switch (especie.toLowerCase()) {
+      case 'perro':
+        return "/images/perrito.png";
+      case 'gato':
+        return "/images/gatito.png";
+      default:
+        return "/images/corazon.png";
+    }
   };
 
   const columns: ColumnDef<Mascota>[] = [
@@ -87,18 +97,19 @@ export function TablaMascotas({
       accessorKey: "imagen",
       header: "Foto",
       cell: ({ row }) => {
-        const imagen = row.getValue("imagen");
-
+        // const imagen = row.getValue("imagen");
+        const imagen = row.getValue("imagen") as string || getImagenMascota(row.getValue("especie") as string);
         return (
-          <div className="px-3">
-            <Image
-              src={typeof imagen === 'string' ? imagen : "/images/imagen-gato.png"}
-              alt="Imagen de la mascota"
-              onClick={() => handleImageClick(row.index)}
-              width={60}
-              height={60}
-              className="cursor-pointer"
-            />
+          <div className="w-16 h-16">
+            <AspectRatio ratio={1 / 1}>
+              <img
+                // src={typeof imagen === 'string' ? imagen : "/images/gatito.png"}
+                src={imagen}
+                alt="Imagen de la mascota"
+                onClick={() => handleImageClick(row.index)}
+                className="rounded-md object-cover w-full h-full cursor-pointer"
+              />
+            </AspectRatio>
           </div>
         );
       },
@@ -306,22 +317,18 @@ export function TablaMascotas({
           open={openLightbox}
           close={() => setOpenLightbox(false)}
           slides={data.map(mascota => ({
-            src: mascota.imagen || "/images/imagen-gato.png",
+            src: mascota.imagen || getImagenMascota(mascota.especie),
             title: mascota.nombre,
-            description: mascota.observaciones || "",
+            description: mascota.detalles || "",
             share: {
               title: mascota.nombre,
-              url: mascota.imagen || "/images/imagen-gato.png",
+              url: mascota.imagen || getImagenMascota(mascota.especie),
             }
           }))}
           index={currentImageIndex}
         />
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        {/* <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div> */}
+      {/* <div className="flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
           <Button
             variant="outline"
@@ -340,8 +347,7 @@ export function TablaMascotas({
             Siguiente
           </Button>
         </div>
-      </div>
-
+      </div> */}
       <Dialog open={!!mascotaSeleccionada} onOpenChange={() => setMascotaSeleccionada(null)}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogTitle>{mascotaSeleccionada?.nombre} {mascotaSeleccionada?.idUsuario}</DialogTitle>
@@ -350,7 +356,6 @@ export function TablaMascotas({
               <p>Raza: {mascotaSeleccionada?.raza}</p>
               <p>Sexo: {mascotaSeleccionada?.sexo}</p>
               <p>Estado: {mascotaSeleccionada?.estado === 1 ? "Activo" : "Eliminado"}</p>
-              <p>Alergias: {mascotaSeleccionada?.alergias}</p>
               <div>
                 <div className="">Creado en:</div>
                 <div className="">{formatearFechaYHora(mascotaSeleccionada?.creadoEn)}</div>
@@ -361,8 +366,6 @@ export function TablaMascotas({
           </DialogHeader>
         </DialogContent>
       </Dialog>
-
-
     </>
   );
 }

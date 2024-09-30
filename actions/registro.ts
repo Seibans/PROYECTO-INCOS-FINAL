@@ -35,7 +35,7 @@ export const registro = async (values: z.infer<typeof RegistroSchema>) => {
 
     const usuarioExistente = await getUserByEmail(email);
     if (usuarioExistente) {
-        return { error: "El usuario ya existe!" };
+        return { error: "El correo ya se encuentra Registrado!" };
     }
 
     const passwordEncriptado = await bcrypt.hash(password, 10);

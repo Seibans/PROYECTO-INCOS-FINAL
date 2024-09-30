@@ -3,9 +3,12 @@
 import * as z from "zod";
 import { MascotaSchema } from "@/schemas";
 import { db } from "@/lib/db";
-import { Mascota } from "@prisma/client";
+import { Mascota, Sexo, TipoMascota } from "@prisma/client";
 import { usuarioIdActual } from "@/lib/auth";
 import { addHours } from "date-fns"; 
+import fs from 'fs-extra';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 export const obtenerMascotas = async (): Promise<Mascota[]> => {
     const mascotas = await db.mascota.findMany({
@@ -26,13 +29,10 @@ export const obtenerMascotas = async (): Promise<Mascota[]> => {
 
 export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSchema>) => {
     const validatedMascota = MascotaSchema.safeParse(mascotaValues);
-
     if (!validatedMascota.success) {
         return { error: "Campos Inválidos!" };
     }
-
-    const { nombre, especie, raza, fechaNacimiento, sexo, detalles } = validatedMascota.data;
-
+    const { nombre, especie, raza, fechaNacimiento, sexo, detalles, idPropietario, peso, esterilizado, estado } = validatedMascota.data;
     try {
         const idUActual = await usuarioIdActual();
         const mascota = await db.$transaction(async (tx) => {
@@ -44,8 +44,11 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
                     fechaNacimiento,
                     sexo,
                     detalles,
-                    idUsuario: idUActual,
-                    idPropietario: idUActual
+                    idPropietario,
+                    peso: parseFloat(peso as string),
+                    esterilizado,
+                    estado: parseInt(estado as string, 10),
+                    idUsuario: idUActual
                 },
             });
 
@@ -59,13 +62,78 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
 
             return createdMascota;
         });
-
         return { success: "Mascota y Historial Médico Registrados Correctamente!" };
     } catch (error) {
         console.error("Error al registrar mascota y historial médico:", error);
         return { error: "Ocurrió un error al registrar la mascota y su historial médico." };
     }
 };
+
+export const registrarMascotaConImagen = async (formMascota: FormData) => {
+    try {
+      const archivo = formMascota.get("archivo") as File | null;
+      const nombre = formMascota.get('nombre') as string;
+      const especie = formMascota.get('especie') as TipoMascota;
+      const raza = formMascota.get('raza') as string;
+      const fechaNacimiento = new Date(formMascota.get('fechaNacimiento') as string);
+      const sexo = formMascota.get('sexo') as Sexo;
+      const detalles = formMascota.get('detalles') as string;
+      const idPropietario = formMascota.get('idPropietario') ? parseInt(formMascota.get('idPropietario') as string, 10) : undefined;
+      const peso = parseFloat(formMascota.get('peso') as string);
+      const esterilizado = formMascota.get('esterilizado') === 'true';
+      const estado = parseInt(formMascota.get('estado') as string, 10);
+  
+      let rutaImagen: string | null = null;
+  
+      if (archivo) {
+        const nombreUnico = `${uuidv4()}_${archivo.name}`;
+        const rutadeAlmacenamiento = path.join(process.cwd(), 'public', 'uploads', 'mascotas', nombreUnico);
+        await fs.ensureDir(path.dirname(rutadeAlmacenamiento));
+  
+        const buffer = Buffer.from(await archivo.arrayBuffer());
+        await fs.writeFile(rutadeAlmacenamiento, buffer);
+        rutaImagen = `${process.env.NEXT_PUBLIC_APP_URL}/uploads/mascotas/${nombreUnico}`;
+      }
+  
+      const idUActual = await usuarioIdActual();
+      const mascota = await db.$transaction(async (tx) => {
+        const createdMascota = await tx.mascota.create({
+          data: {
+            nombre,
+            especie,
+            raza,
+            fechaNacimiento,
+            sexo,
+            detalles,
+            idPropietario,
+            peso,
+            esterilizado,
+            estado,
+            imagen: rutaImagen,
+            idUsuario: idUActual
+          },
+        });
+  
+        await tx.historialMedico.create({
+          data: {
+            mascotaId: createdMascota.id,
+            estado: 1,
+            idUsuario: idUActual,
+          },
+        });
+  
+        return createdMascota;
+      });
+  
+      return { success: "Mascota y Historial Médico Registrados Correctamente!" };
+    } catch (error) {
+      console.error("Error al registrar mascota y historial médico:", error);
+      return { error: "Ocurrió un error al registrar la mascota y su historial médico." };
+    }
+  };
+
+
+
 
 export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMascota: number) => {
     const validatedFields = MascotaSchema.safeParse(values);
@@ -88,23 +156,23 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
     //         detalles,
     //     },
     // });
-    try {
-        const idUActual = await usuarioIdActual();
-        const mascotaActualizada = await db.mascota.update({
-            where: {
-                id: idMascota,
-            },
-            data: {
-                ...values,
-                idUsuario: idUActual,
-            },
-        });
+    // try {
+    //     const idUActual = await usuarioIdActual();
+    //     const mascotaActualizada = await db.mascota.update({
+    //         where: {
+    //             id: idMascota,
+    //         },
+    //         data: {
+    //             ...values,
+    //             idUsuario: idUActual,
+    //         },
+    //     });
 
-        return { success: "Mascota Editada Correctamente!" };
-    } catch (error) {
-        console.error("Error al actualizar la mascota:", error);
-        return { error: "Ocurrió un error al actualizar la mascota." };
-    }
+    //     return { success: "Mascota Editada Correctamente!" };
+    // } catch (error) {
+    //     console.error("Error al actualizar la mascota:", error);
+    //     return { error: "Ocurrió un error al actualizar la mascota." };
+    // }
 };
 
 export const obtenerMascota = async (id: number) => {

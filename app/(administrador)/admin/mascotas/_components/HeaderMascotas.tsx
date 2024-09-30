@@ -1,18 +1,9 @@
 "use client"
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/PJJ6K17hsY6
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { FormMascota } from "./FormMascota";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-
-// <DialogContent className="sm:max-w-[625px]">
-// </DialogContent>
 export const HeaderMascotas = () => {
 	const [abrirModal, setabrirModal] = useState(false);
 	return (
@@ -22,7 +13,7 @@ export const HeaderMascotas = () => {
 				<DialogTrigger asChild>
 					<Button variant="outline" className="bg-gradient">Registrar Mascota</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-auto">
+				<DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-auto">
 					<DialogHeader>
 						<DialogTitle>
 							Registrar Mascota
@@ -34,7 +25,6 @@ export const HeaderMascotas = () => {
 					<FormMascota setabrirModal={setabrirModal} />
 				</DialogContent>
 			</Dialog>
-
 		</div>
 	)
 }

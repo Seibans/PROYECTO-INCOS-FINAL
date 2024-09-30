@@ -1,26 +1,9 @@
 "use client"
-
-//Librerias para el Form
-import React, { useEffect, useState, useTransition } from 'react';
+import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { es } from "date-fns/locale";
-
-//Libs
-import { cn } from "@/lib/utils"
-import { formatearFecha } from "@/lib/formatearFecha"
-
-
-//Iconos
-import { CalendarIcon } from "lucide-react"
-
-//Componentes de UI
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -41,59 +24,31 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
 import { Textarea } from '@/components/ui/textarea';
-
-
-// enums de Prisma
 import { TipoMascota, Sexo } from "@prisma/client";
-
 import { MascotaSchema } from "@/schemas";
-import { registrarMascota } from "@/actions/mascotas";
-import { UploadButton } from '@/utils/uploadthing';
-import { set } from 'date-fns';
+import { registrarMascota, registrarMascotaConImagen } from "@/actions/mascotas";
+
+import { usuariosMascota } from "@/actions/usuarios";
+
+import { Switch } from "@/components/ui/switch"
 
 import { razasGatos, razasPerros } from "@/utils/constantes";
+import { Dispatch, SetStateAction } from "react";
 
+import { UserSelect } from './SelectUsuario'
 
-//De esta forma se cierra el modal al cerrar el formulario o al registrar exitosamente
-import {Dispatch, SetStateAction} from "react";
-
-
-//TODO:ARREGLAR
 import { useRouter } from 'next/navigation';
+
+import { DatePicker } from "@/components/global/InputDatePicker";
+import InputImagen, { ImageUploaderRef } from '@/components/admin/FormInputImagen';
+import { EstadoSelect } from './SelectEstadoInput';
+import { PesoMascotaInput } from '@/components/global/InputPesoMascota';
+
 
 type FormMascotaProps = {
 	setabrirModal: Dispatch<SetStateAction<boolean>>;
 };
-
-type Usuario = {
-	value: number
-	label: string
-}
-
-const usuarios: Usuario[] = [
-	{ value: 1, label: "Juan Pérez" },
-	{ value: 2, label: "María García" },
-	{ value: 3, label: "Carlos Fernández" },
-	{ value: 4, label: "Carlos Fernández" },
-	{ value: 5, label: "Carlos Fernández" },
-	{ value: 6, label: "Carlos Fernández" },
-	{ value: 7, label: "Carlos Fernández" },
-	{ value: 8, label: "Carlos Fernández" },
-	{ value: 9, label: "Carlos Fernández" },
-	{ value: 10, label: "Carlos Fernández" },
-	{ value: 11, label: "Carlos Fernández" },
-	{ value: 12, label: "Carlos Fernández" },
-	{ value: 13, label: "Carlos Fernández" },
-	{ value: 14, label: "Carlos Fernández" },
-	{ value: 15, label: "Carlos Fernández" },
-	{ value: 16, label: "Carlos Fernández" },
-	{ value: 17, label: "Carlos Fernández" },
-	{ value: 18, label: "Carlos Fernández" },
-	{ value: 19, label: "Carlos Fernández" },
-	{ value: 20, label: "Carlos Fernández" },
-]
 
 type Estado = {
 	value: number
@@ -111,40 +66,14 @@ const estados: Estado[] = [
 ]
 
 export const FormMascota = (props: FormMascotaProps) => {
-	const [isPending, startTransition] = useTransition();
-
-	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
-	const [subirImagen, setsubirImagen] = useState<boolean>(false);
+	const [isPending, startTransition] = React.useTransition();
+	const [razaOptions, setRazaOptions] = React.useState<string[]>(["Sin Raza (Especial)"]);
+	const [usuarios, setUsuarios] = React.useState<any[]>([]);
+	const [selectedUsuario, setSelectedUsuario] = React.useState<any>(null);
 	const router = useRouter();
 
+	const imageUploaderRef = React.useRef<ImageUploaderRef>(null);
 
-
-	// Buscador y select de Usuario
-	const [selectedUsuario, setSelectedUsuario] = useState<Usuario | null>(null);
-	const [searchTermUsuario, setSearchTermUsuario] = useState("");
-	const [openUsuario, setOpenUsuario] = useState(false);
-
-	// Buscador y select de Estado
-	const [selectedEstado, setSelectedEstado] = useState<Estado | null>(null);
-	const [searchTermEstado, setSearchTermEstado] = useState("");
-	const [openEstado, setOpenEstado] = useState(false);
-
-	const filteredUsuarios = React.useMemo(() =>
-		usuarios.filter((usuario) =>
-			usuario.label.toLowerCase().includes(searchTermUsuario.toLowerCase())
-		),
-		[searchTermUsuario]
-	);
-
-	const filteredEstados = React.useMemo(() =>
-		estados.filter((estado) =>
-			estado.label.toLowerCase().includes(searchTermEstado.toLowerCase())
-		),
-		[searchTermEstado]
-	);
-
-
-	// Definir el formulario utilizando React Hook Form
 	const form = useForm<z.infer<typeof MascotaSchema>>({
 		resolver: zodResolver(MascotaSchema),
 		defaultValues: {
@@ -155,51 +84,78 @@ export const FormMascota = (props: FormMascotaProps) => {
 			sexo: undefined,
 			detalles: undefined,
 			imagen: "",
+			idPropietario: undefined,
+			peso: undefined,
+			esterilizado: false,
+			estado: "1",
 		},
 	})
-	useEffect(() => {
-		// Actualizar las opciones de raza cuando el componente se monta
+
+	React.useEffect(() => {
+		const loadUsuarios = async () => {
+			const usuariosData = await usuariosMascota();
+			setUsuarios(usuariosData);
+		};
+		loadUsuarios();
+	}, []);
+
+	React.useEffect(() => {
 		if (form.getValues("especie") === TipoMascota.Perro) {
 			setRazaOptions(razasPerros);
 		} else if (form.getValues("especie") === TipoMascota.Gato) {
 			setRazaOptions(razasGatos);
 		}
-	}, []); // [] asegura que solo se ejecute una vez al montar el componente
+	}, []);
 
 	const handleEspecieChange = (value: TipoMascota) => {
 		form.setValue("raza", "Sin Raza (Especial)");
-		
 		if (value === TipoMascota.Perro) {
 			form.setValue("especie", TipoMascota.Perro);
 			setRazaOptions(razasPerros);
+			form.setValue("raza", razasPerros[1])
 		} else if (value === TipoMascota.Gato) {
 			form.setValue("especie", TipoMascota.Gato);
 			setRazaOptions(razasGatos);
+			form.setValue("raza", razasGatos[1])
 		} else {
 			form.setValue("especie", TipoMascota.Otro);
 			setRazaOptions(["Sin Raza (Especial)"]);
+			form.setValue("raza", "Sin Raza (Especial)")
 		}
+		form.trigger("especie")
 	}
 
-	// Definir el manejador de envío del formulario
 	function onSubmit(values: z.infer<typeof MascotaSchema>) {
 		console.log(values)
-		startTransition(() => {
-			toast.promise(registrarMascota(values), {
-				loading: "Cargando...",
-				success: (data) => {
-					if (data.error) {
-						throw new Error(data.error);
-					} else {
-						router.refresh();
-						//Extraerlo de props
-						props.setabrirModal(false);
-						return `${data.success}`;
-					}
-				},
-				error: (error) => error.message,
-			});
-		});
+
+		// const formData = new FormData();
+		// Object.entries(values).forEach(([key, value]) => {
+		// 	if (value !== undefined) {
+		// 		if (key === 'archivo' && value instanceof File) {
+		// 			formData.append(key, value);
+		// 		} else if (key === 'fechaNacimiento' && value instanceof Date) {
+		// 			formData.append(key, value.toISOString());
+		// 		} else {
+		// 			formData.append(key, value.toString());
+		// 		}
+		// 	}
+		// });
+		// startTransition(() => {
+		// 	const action = formData.get('archivo') ? registrarMascotaConImagen(formData) : registrarMascota(values);
+		// 	toast.promise(action, {
+		// 		loading: "Cargando...",
+		// 		success: (data) => {
+		// 			if (data.error) {
+		// 				throw new Error(data.error);
+		// 			} else {
+		// 				router.refresh();
+		// 				props.setabrirModal(false);
+		// 				return `${data.success}`;
+		// 			}
+		// 		},
+		// 		error: (error) => error.message,
+		// 	});
+		// });
 	}
 
 	return (
@@ -212,7 +168,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 						name="nombre"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Nombre</FormLabel>
+								<FormLabel>Nombre:</FormLabel>
 								<FormControl>
 									<Input placeholder="Nombre de la mascota" {...field} />
 								</FormControl>
@@ -226,7 +182,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 						name="especie"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Especie</FormLabel>
+								<FormLabel>Especie:</FormLabel>
 								<Select
 									onValueChange={handleEspecieChange}
 									defaultValue={field.value}
@@ -253,7 +209,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 					name="raza"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Raza</FormLabel>
+							<FormLabel>Raza:</FormLabel>
 							<Select
 								onValueChange={field.onChange}
 								defaultValue={field.value}
@@ -277,81 +233,53 @@ export const FormMascota = (props: FormMascotaProps) => {
 					<FormField
 						disabled={isPending}
 						control={form.control}
-						name="sexo"
+						name="fechaNacimiento"
 						render={({ field }) => (
-						<FormItem>
-							<FormLabel>Sexo de la Mascota:</FormLabel>
-							<FormControl>
-							<RadioGroup
-								onValueChange={field.onChange}
-								defaultValue={field.value}
-								className="flex gap-6 xl-justify-between"
-							>
-								<FormItem>
-								<FormLabel className="radio-group">
-									<FormControl>
-									<RadioGroupItem value={Sexo.Macho} />
-									</FormControl>
-									Macho
-								</FormLabel>
-								</FormItem>
-								<FormItem>
-								<FormLabel className="radio-group">
-									<FormControl>
-									<RadioGroupItem value={Sexo.Hembra} />
-									</FormControl>
-									Hembra
-								</FormLabel>
-								</FormItem>
-							</RadioGroup>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
+							<FormItem>
+								<FormLabel>Fecha de Nacimiento:</FormLabel>
+								<FormControl>
+									<DatePicker
+										onChange={(date) => field.onChange(date)}
+										value={field.value}
+										maxDate={new Date()}
+										minDate={new Date("2000-01-01")}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
 						)}
 					/>
 					<FormField
 						disabled={isPending}
 						control={form.control}
-						name="fechaNacimiento"
+						name="sexo"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Fecha de Nacimiento</FormLabel>
-								<Popover>
-									<PopoverTrigger asChild>
-										<FormControl>
-											<Button
-												variant={"outline"}
-												className={cn(
-													"w-full pl-3 text-left",
-													!field.value && "text-muted-foreground"
-												)}
-											>
-												{field.value ? (
-													formatearFecha(field.value, "PPP")
-												) : (
-													<span>Selecciona una Fecha</span>
-												)}
-												<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-											</Button>
-										</FormControl>
-									</PopoverTrigger>
-									<PopoverContent className="w-auto p-0" align="start">
-										<Calendar
-											mode="single"
-											locale={es}
-											captionLayout="buttons"
-											// captionLayout="dropdown-buttons"
-											// fromYear={2010}
-											// toYear={2024}
-											selected={field.value}
-											onSelect={field.onChange}
-											disabled={(date) =>
-												date > new Date() || date < new Date("2000-01-01")
-											}
-											initialFocus
-										/>
-									</PopoverContent>
-								</Popover>
+								<FormLabel>Sexo de la Mascota:</FormLabel>
+								<FormControl>
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+										className="flex gap-6 justify-center"
+									>
+										<FormItem>
+											<FormLabel className="radio-group">
+												<FormControl>
+													<RadioGroupItem value={Sexo.Macho} />
+												</FormControl>
+												Macho
+											</FormLabel>
+										</FormItem>
+										<FormItem>
+											<FormLabel className="radio-group">
+												<FormControl>
+													<RadioGroupItem value={Sexo.Hembra} />
+												</FormControl>
+												Hembra
+											</FormLabel>
+										</FormItem>
+									</RadioGroup>
+								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -360,10 +288,102 @@ export const FormMascota = (props: FormMascotaProps) => {
 				<FormField
 					disabled={isPending}
 					control={form.control}
+					name="imagen"
+					render={({ field }) => (
+						<FormItem>
+						</FormItem>
+					)}
+				/>
+
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+					<FormField
+						control={form.control}
+						name="peso"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Peso (kg):</FormLabel>
+								<FormControl>
+									<PesoMascotaInput {...field} />
+								</FormControl>
+								<FormDescription>
+									Usa el punto (.) para separar los decimales.
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="esterilizado"
+						render={({ field }) => (
+							<FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+								<div className="space-y-0.5">
+									<FormLabel className="text-base">Esterilizado?:</FormLabel>
+								</div>
+								<FormControl>
+									<div className="flex items-center">
+										<span className="mr-2">NO</span>
+										<Switch
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+										<span className="ml-2">SI</span>
+									</div>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+				</div>
+					<FormField
+						control={form.control}
+						name="estado"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Estado:</FormLabel>
+								<FormControl>
+									<EstadoSelect
+										estados={estados}
+										onSelect={(value) => field.onChange(value)}
+										value={field.value || ""}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				<FormField
+					control={form.control}
+					name="idPropietario"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Propietario (Opcional):</FormLabel>
+							<FormControl>
+								<UserSelect
+									users={usuarios}
+									onSelect={(userId) => {
+										field.onChange(userId)
+										setSelectedUsuario(usuarios.find(u => u.id === userId))
+									}}
+									value={field.value}
+								/>
+							</FormControl>
+							<FormDescription>
+								Si no se selecciona un propietario, se asignará al administrador por defecto.
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					disabled={isPending}
+					control={form.control}
 					name="detalles"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Detalles y Color de la mascota</FormLabel>
+							<FormLabel>Detalles, Alergias y Observaciones de la Mascota:</FormLabel>
 							<FormControl>
 								<Textarea
 									placeholder="Detalles de la mascota"
@@ -380,145 +400,41 @@ export const FormMascota = (props: FormMascotaProps) => {
 				/>
 
 				<FormField
-					disabled={isPending}
 					control={form.control}
 					name="imagen"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Detalles y Color de la mascota</FormLabel>
-							<FormControl>{
-								subirImagen ? (
-									<p className='text-sm'>Imagen Subida!</p>
-								) : (
-									<p className='text-sm'>Imagen Subida!</p>
-								)}
+							<FormLabel>Imagen de la Mascota (Opcional):</FormLabel>
+							<FormControl>
+								<InputImagen
+									ref={imageUploaderRef}
+									onImageChange={(file) => {
+										if (file) {
+											field.onChange(file.name);
+											form.setValue('archivo', file);
+										} else {
+											field.onChange('');
+											form.setValue('archivo', undefined);
+										}
+										form.trigger('imagen');
+									}}
+								/>
 							</FormControl>
-							<FormDescription>
-							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-
-
-				{/* Select Usuario */}
-				<div className="mb-4">
-					<Select
-						open={openUsuario}
-						onOpenChange={setOpenUsuario}
-						value={selectedUsuario?.value.toString() || ""}
-						onValueChange={(value) => {
-							const usuarioSeleccionado = usuarios.find(u => u.value.toString() === value);
-							setSelectedUsuario(usuarioSeleccionado || null);
-						}}
-					>
-						<SelectTrigger className="w-full">
-							<SelectValue placeholder="Selecciona el Usuario Propietario" />
-						</SelectTrigger>
-						<SelectContent>
-							<div className="mb-2 px-2">
-								<Input
-									placeholder="Buscar Usuario..."
-									value={searchTermUsuario}
-									onChange={(e) => setSearchTermUsuario(e.target.value)}
-									className="h-8"
-								/>
-							</div>
-							{filteredUsuarios.length === 0 ? (
-								<div className="py-2 px-2 text-sm text-gray-500">
-									No se encontraron resultados.
-								</div>
-							) : (
-								filteredUsuarios.map((usuario) => (
-									<SelectItem key={usuario.value.toString()} value={usuario.value.toString()}>
-										{usuario.label}
-									</SelectItem>
-								))
-							)}
-						</SelectContent>
-					</Select>
-				</div>
-
-				{/* Select Estado */}
-				<div className="mb-4">
-					<Select
-						open={openEstado}
-						onOpenChange={setOpenEstado}
-						value={selectedEstado?.value.toString() || ""}
-						onValueChange={(value) => {
-							const estadoSeleccionado = estados.find(e => e.value.toString() === value);
-							setSelectedEstado(estadoSeleccionado || null);
-						}}
-					>
-						<SelectTrigger className="w-full">
-							<SelectValue placeholder="Selecciona el Estado" />
-						</SelectTrigger>
-						<SelectContent>
-							<div className="mb-2 px-2">
-								<Input
-									placeholder="Buscar Estado..."
-									value={searchTermEstado}
-									onChange={(e) => setSearchTermEstado(e.target.value)}
-									className="h-8"
-								/>
-							</div>
-							{filteredEstados.length === 0 ? (
-								<div className="py-2 px-2 text-sm text-gray-500">
-									No se encontraron resultados.
-								</div>
-							) : (
-								filteredEstados.map((estado) => (
-									<SelectItem key={estado.value.toString()} value={estado.value.toString()}>
-										{estado.label}
-									</SelectItem>
-								))
-							)}
-						</SelectContent>
-					</Select>
-				</div>
-
-
-
-					
-
 				<div className="flex justify-center">
 					<Button
 						disabled={isPending}
 						type="submit"
-						className="">
-							Registrar Mascota
+						className="bg-gradient"
+						variant={"outline"}>
+						Registrar Mascota
 					</Button>
 				</div>
 			</form>
 		</Form>
 	)
 }
-
-
-
-// <UploadButton
-// 	{...field}
-// 	className='bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-3'
-// 	endpoint='imagenMascota'
-// 	content={{
-// 		button({ ready }) {
-// 		  if (ready) return <div>Upload stuff</div>;
-		
-// 		  return "Getting ready...";
-// 		},
-// 		allowedContent({ ready, fileTypes, isUploading }) {
-// 		  if (!ready) return "Checking what you allow";
-// 		  if (isUploading) return "Seems like stuff is uploading";
-// 		  return `Stuff you can upload: ${fileTypes.join(", ")}`;
-// 		},
-// 	  }}
-// 	onClientUploadComplete={(res) => {
-// 		form.setValue("imagen", res?.[0].url);
-// 		setsubirImagen(true);
-// 		toast.success("Imagen Subida!");
-
-// 	}}
-// 	onUploadError={(err) => {
-// 		toast.error(err.message);
-// 	}}
-// />
+// import { set } from 'date-fns';

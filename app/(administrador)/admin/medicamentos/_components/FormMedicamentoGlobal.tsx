@@ -24,7 +24,7 @@ import { registrarMedicamento, editarMedicamento } from '@/actions/medicamentos'
 import { toast } from 'sonner';
 import { Medicamento, TipoMedicamento } from '@prisma/client';
 import { TooltipProvider } from "@/components/ui/tooltip"
-import FormPrecioInput from "@/components/ui/form-precio-input";
+import FormPrecioInput from "@/components/global/InputFormPrecio";
 import InputImagen, { ImageUploaderRef } from '@/components/admin/FormInputImagen';
 
 type FormMedicamentoProps = {

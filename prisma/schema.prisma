@@ -155,8 +155,6 @@ model Mascota {
   usuario         User?            @relation(fields: [idPropietario], references: [id])
   historial       HistorialMedico?
   esterilizado    Boolean?         @default(false)
-  alergias        String?          @db.VarChar(255)
-  observaciones   String?          @db.VarChar(255)
   creadoEn        DateTime         @default(now()) @db.Timestamp(3)
   actualizadoEn   DateTime?        @updatedAt @db.Timestamp(3)
   idUsuario       Int              @db.UnsignedInt
@@ -166,9 +164,7 @@ model HistorialMedico {
   id                      Int           @id @default(autoincrement()) @db.UnsignedInt
   mascotaId               Int           @unique @db.UnsignedInt
   mascota                 Mascota       @relation(fields: [mascotaId], references: [id])
-  tratamientosPrevios     String?       @db.Text
   descripcionTratamientos String?       @db.Text
-  antecedentes            String?       @db.Text
   tratamientos            Tratamiento[]
   estado                  Int           @default(1) @db.TinyInt
   creadoEn                DateTime      @default(now()) @db.Timestamp(3)

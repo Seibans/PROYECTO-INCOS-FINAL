@@ -115,6 +115,10 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
               width={60}
               height={60}
               className="cursor-pointer"
+              style={{
+                minWidth: "200px",
+                minHeight: "200px",
+              }}
             />
           </div>
         )

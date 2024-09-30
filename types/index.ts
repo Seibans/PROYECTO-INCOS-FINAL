@@ -36,7 +36,6 @@ export interface UsuarioT {
 }
 export interface TratamientoT {
     id: number;
-    nombre: string;
     descripcion: string | null;
     precio: number;
     creadoEn: Date;
