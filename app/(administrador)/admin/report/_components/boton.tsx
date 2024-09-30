@@ -1,5 +1,12 @@
 "use client";
-import { generatePDFFromURL } from '@/actions/pdf';
+import {generatePDFFromURL} from '@/actions/pdf';
+
+
+async function generatePDF() {
+	const pdfPath = await generatePDFFromURL(`https://casabonitamuebles.com.bo/product-category/living/sofa/?v=ad7532d5b386`);
+	return pdfPath;
+}
+
 // Manejo del evento para generar el PDF LA RUTA API ESTA MAL
 // async function handleGeneratePDF() {
 //   const response = await fetch('http://localhost:3000/api/auth', {
@@ -13,15 +20,12 @@ import { generatePDFFromURL } from '@/actions/pdf';
 //     console.error('Error al generar el PDF');
 //   }
 // }
-
+  
 
 export default function GeneratePDFButton() {
-
-
   const handleClick = async () => {
     // const pdfPath = await handleGeneratePDF();
-    const pdfPath = await generatePDFFromURL(`http://localhost:3000`);
-    console.log(pdfPath);
+    const pdfPath = await generatePDF();
     window.open(pdfPath);
   };
 

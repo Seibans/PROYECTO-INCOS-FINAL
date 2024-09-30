@@ -25,8 +25,6 @@ import { toast } from 'sonner';
 import { Medicamento, TipoMedicamento } from '@prisma/client';
 import { Trash2Icon, EyeIcon, XIcon } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import FormPrecioInput from "@/components/ui/form-precio-input";
-
 type FormMedicamentoProps = {
 	medicamento?: Medicamento;
 	setabrirModal?: Dispatch<SetStateAction<boolean>>;
@@ -194,32 +192,6 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
 									<FormControl>
 										<Input type="number" placeholder="Stock disponible" {...field} min={0} />
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="precio"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Precio</FormLabel>
-									<FormControl>
-										<Controller
-											name="precio"
-											control={form.control}
-											render={({ field: { onChange, value, ...restField } }) => (
-												<FormPrecioInput
-													{...restField}
-													value={value}
-													onValueChange={(value: string | undefined) => onChange(value)}
-												/>
-											)}
-										/>
-									</FormControl>
-									<FormDescription>
-										Ingrese el precio en bolivianos (Bs.) usando el punto (.) como separador decimal.
-									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
