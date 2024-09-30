@@ -4,6 +4,7 @@ import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Button } from "@/components/ui/button"
 import { Trash2Icon, EyeIcon } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import Image from 'next/image';
 
 interface ImageUploaderProps {
   initialPreview?: string;
@@ -66,10 +67,17 @@ const InputImagen = forwardRef<ImageUploaderRef, ImageUploaderProps>(({ initialP
         />
         {preview ? (
           <div className="relative w-full h-full group">
-            <img
+            {/* <img
               src={preview}
               alt="Preview"
               className="w-full h-full object-contain cursor-pointer"
+            /> */}
+            <Image
+              src={preview}
+              alt="Preview"
+              width={60}
+              height={60}
+              className="w-full h-full object-contain cursor-pointer rounded-xl"
             />
             <div
               className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"

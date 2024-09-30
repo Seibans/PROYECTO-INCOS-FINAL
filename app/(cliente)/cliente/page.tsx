@@ -4,7 +4,7 @@ import { useUsuarioActual } from "@/hooks/use-usuario-actual";
 import Image from "next/image";
 
 
-export default async function ClientPage() {
+export default function ClientPage() {
 	const usuario = useUsuarioActual();
 	return (
 		<>

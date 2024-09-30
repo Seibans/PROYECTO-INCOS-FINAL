@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Image from 'next/image'
 
 interface ImageUploaderProps {
   id: number
@@ -142,11 +143,17 @@ export default function CambiarImagen({
                     onDrop={handleDrop}
                   >
                     {previewImage ? (
-                      <img
+                      // <img
+                      //   src={previewImage}
+                      //   alt="Vista previa de la imagen"
+                      //   className="max-w-full max-h-full object-contain"
+                      // />
+                      <Image
                         src={previewImage}
                         alt="Vista previa de la imagen"
-                        className="max-w-full max-h-full object-contain"
-                      />
+                        width={60}
+                        height={60}
+                        className="max-w-full max-h-full object-contain rounded-xl"/>
                     ) : (
                       <>
                         <p className="text-muted-foreground mb-2">Arrastre o seleccione una imagen</p>

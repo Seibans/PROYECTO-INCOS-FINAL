@@ -42,6 +42,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Mascota } from "@prisma/client";
 import { formatearFecha, formatearFechaYHora } from "@/lib/formatearFecha"
 import { LightboxComponent } from '@/components/global/CustomLightbox';
+import Image from "next/image";
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -102,11 +103,13 @@ export function TablaMascotas({
         return (
           <div className="w-16 h-16">
             <AspectRatio ratio={1 / 1}>
-              <img
+              <Image
                 // src={typeof imagen === 'string' ? imagen : "/images/gatito.png"}
                 src={imagen}
                 alt="Imagen de la mascota"
                 onClick={() => handleImageClick(row.index)}
+                width={50}
+                height={50}
                 className="rounded-md object-cover w-full h-full cursor-pointer"
               />
             </AspectRatio>

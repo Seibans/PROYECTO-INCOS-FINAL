@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from 'zod'
 
 //Librerias para el Form
-import React from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import { es } from "date-fns/locale";
 
 //Libs
