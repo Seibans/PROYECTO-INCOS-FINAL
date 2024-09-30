@@ -16,9 +16,12 @@ import { generatePDFFromURL } from '@/actions/pdf';
 
 
 export default function GeneratePDFButton() {
+
+
   const handleClick = async () => {
     // const pdfPath = await handleGeneratePDF();
     const pdfPath = await generatePDFFromURL(`http://localhost:3000`);
+    console.log(pdfPath);
     window.open(pdfPath);
   };
 
