@@ -109,8 +109,6 @@ CREATE TABLE `Mascota` (
     `estado` TINYINT NOT NULL DEFAULT 1,
     `idPropietario` INTEGER UNSIGNED NULL DEFAULT 1,
     `esterilizado` BOOLEAN NULL DEFAULT false,
-    `alergias` VARCHAR(255) NULL,
-    `observaciones` VARCHAR(255) NULL,
     `creadoEn` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoEn` TIMESTAMP(3) NULL,
     `idUsuario` INTEGER UNSIGNED NOT NULL,
@@ -122,9 +120,7 @@ CREATE TABLE `Mascota` (
 CREATE TABLE `HistorialMedico` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `mascotaId` INTEGER UNSIGNED NOT NULL,
-    `tratamientosPrevios` TEXT NULL,
     `descripcionTratamientos` TEXT NULL,
-    `antecedentes` TEXT NULL,
     `estado` TINYINT NOT NULL DEFAULT 1,
     `creadoEn` TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `actualizadoEn` TIMESTAMP(3) NULL,

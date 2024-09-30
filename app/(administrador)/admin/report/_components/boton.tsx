@@ -1,12 +1,5 @@
 "use client";
-import {generatePDFFromURL} from '@/actions/pdf';
-
-
-async function generatePDF() {
-	const pdfPath = await generatePDFFromURL(`http://localhost:3000/bento`);
-	return pdfPath;
-}
-
+import { generatePDFFromURL } from '@/actions/pdf';
 // Manejo del evento para generar el PDF LA RUTA API ESTA MAL
 // async function handleGeneratePDF() {
 //   const response = await fetch('http://localhost:3000/api/auth', {
@@ -20,12 +13,12 @@ async function generatePDF() {
 //     console.error('Error al generar el PDF');
 //   }
 // }
-  
+
 
 export default function GeneratePDFButton() {
   const handleClick = async () => {
     // const pdfPath = await handleGeneratePDF();
-    const pdfPath = await generatePDF();
+    const pdfPath = await generatePDFFromURL(`http://localhost:3000`);
     window.open(pdfPath);
   };
 
