@@ -1,3 +1,43 @@
+import { BookOpenCheck, UsersRound, Waypoints, Dog, ClipboardPlus } from "lucide-react";
+
+export const data = [
+    {
+      icon: UsersRound,
+      total: "14%",
+      average: 9,
+      titulo: "Total Usuarios",
+      tooltipTexto: "Ver todo el contenido"
+    },
+    {
+      icon: Waypoints,
+      total: "14%",
+      average: 50,
+      titulo: "Total Compañias",
+      tooltipTexto: "Ver todo el contenido"
+    },
+    {
+      icon: BookOpenCheck,
+      total: "14%",
+      average: 80,
+      titulo: "Total Datos",
+      tooltipTexto: "Ver todo el contenido"
+    },
+    {
+      icon: Dog,
+      total: "50%",
+      average: 90,
+      titulo: "Total Datos",
+      tooltipTexto: "Ver todo el contenido"
+    },
+    {
+      icon: ClipboardPlus,
+      total: "50%",
+      average: 90,
+      titulo: "Total Historiales",
+      tooltipTexto: "Ver todo el contenido"
+    }
+  ];
+
 export const razasPerros: string[] = [
 	"Sin Raza (Especial)",
     "Affenpinscher",
