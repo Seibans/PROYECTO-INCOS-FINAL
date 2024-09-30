@@ -128,34 +128,34 @@ export const FormMascota = (props: FormMascotaProps) => {
 	function onSubmit(values: z.infer<typeof MascotaSchema>) {
 		console.log(values)
 
-		// const formData = new FormData();
-		// Object.entries(values).forEach(([key, value]) => {
-		// 	if (value !== undefined) {
-		// 		if (key === 'archivo' && value instanceof File) {
-		// 			formData.append(key, value);
-		// 		} else if (key === 'fechaNacimiento' && value instanceof Date) {
-		// 			formData.append(key, value.toISOString());
-		// 		} else {
-		// 			formData.append(key, value.toString());
-		// 		}
-		// 	}
-		// });
-		// startTransition(() => {
-		// 	const action = formData.get('archivo') ? registrarMascotaConImagen(formData) : registrarMascota(values);
-		// 	toast.promise(action, {
-		// 		loading: "Cargando...",
-		// 		success: (data) => {
-		// 			if (data.error) {
-		// 				throw new Error(data.error);
-		// 			} else {
-		// 				router.refresh();
-		// 				props.setabrirModal(false);
-		// 				return `${data.success}`;
-		// 			}
-		// 		},
-		// 		error: (error) => error.message,
-		// 	});
-		// });
+		const formData = new FormData();
+		Object.entries(values).forEach(([key, value]) => {
+			if (value !== undefined) {
+				if (key === 'archivo' && value instanceof File) {
+					formData.append(key, value);
+				} else if (key === 'fechaNacimiento' && value instanceof Date) {
+					formData.append(key, value.toISOString());
+				} else {
+					formData.append(key, value.toString());
+				}
+			}
+		});
+		startTransition(() => {
+			const action = formData.get('archivo') ? registrarMascotaConImagen(formData) : registrarMascota(values);
+			toast.promise(action, {
+				loading: "Cargando...",
+				success: (data) => {
+					if (data.error) {
+						throw new Error(data.error);
+					} else {
+						router.refresh();
+						props.setabrirModal(false);
+						return `${data.success}`;
+					}
+				},
+				error: (error) => error.message,
+			});
+		});
 	}
 
 	return (

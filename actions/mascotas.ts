@@ -156,23 +156,23 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
     //         detalles,
     //     },
     // });
-    // try {
-    //     const idUActual = await usuarioIdActual();
-    //     const mascotaActualizada = await db.mascota.update({
-    //         where: {
-    //             id: idMascota,
-    //         },
-    //         data: {
-    //             ...values,
-    //             idUsuario: idUActual,
-    //         },
-    //     });
+    try {
+        // const idUActual = await usuarioIdActual();
+        // const mascotaActualizada = await db.mascota.update({
+        //     where: {
+        //         id: idMascota,
+        //     },
+        //     data: {
+        //         ...values,
+        //         idUsuario: idUActual,
+        //     },
+        // });
 
-    //     return { success: "Mascota Editada Correctamente!" };
-    // } catch (error) {
-    //     console.error("Error al actualizar la mascota:", error);
-    //     return { error: "Ocurrió un error al actualizar la mascota." };
-    // }
+        return { success: "Mascota Editada Correctamente!" };
+    } catch (error) {
+        console.error("Error al actualizar la mascota:", error);
+        return { error: "Ocurrió un error al actualizar la mascota." };
+    }
 };
 
 export const obtenerMascota = async (id: number) => {
