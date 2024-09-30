@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import {useState, useTransition, useRef, useEffect} from 'react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -66,13 +66,13 @@ const estados: Estado[] = [
 ]
 
 export const FormMascota = (props: FormMascotaProps) => {
-	const [isPending, startTransition] = React.useTransition();
-	const [razaOptions, setRazaOptions] = React.useState<string[]>(["Sin Raza (Especial)"]);
-	const [usuarios, setUsuarios] = React.useState<any[]>([]);
-	const [selectedUsuario, setSelectedUsuario] = React.useState<any>(null);
+	const [isPending, startTransition] = useTransition();
+	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
+	const [usuarios, setUsuarios] = useState<any[]>([]);
+	const [selectedUsuario, setSelectedUsuario] = useState<any>(null);
 	const router = useRouter();
 
-	const imageUploaderRef = React.useRef<ImageUploaderRef>(null);
+	const imageUploaderRef = useRef<ImageUploaderRef>(null);
 
 	const form = useForm<z.infer<typeof MascotaSchema>>({
 		resolver: zodResolver(MascotaSchema),
@@ -91,7 +91,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 		},
 	})
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const loadUsuarios = async () => {
 			const usuariosData = await usuariosMascota();
 			setUsuarios(usuariosData);
@@ -99,7 +99,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 		loadUsuarios();
 	}, []);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (form.getValues("especie") === TipoMascota.Perro) {
 			setRazaOptions(razasPerros);
 		} else if (form.getValues("especie") === TipoMascota.Gato) {

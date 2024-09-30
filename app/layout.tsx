@@ -11,8 +11,6 @@ import { auth } from "@/auth";
 
 import { Toaster } from '@/components/ui/sonner';
 
-import { Providers } from "@/components/ProviderNextui"
-
 //UPLOADTHING
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
@@ -80,9 +78,7 @@ export default async function RootLayout({
               defaultTheme="system"
               enableSystem
               disableTransitionOnChange>
-              <Providers>
                 {children}
-              </Providers>
               <Toaster richColors position="bottom-right" />
             </ThemeProvider>
           </ReactQueryClientProvider>

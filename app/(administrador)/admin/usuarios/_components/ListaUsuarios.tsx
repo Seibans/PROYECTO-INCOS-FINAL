@@ -10,7 +10,7 @@ export const ListaUsuarios = async () => {
   const usuarios: UsuarioT[] = await obtenerUsuarios();
   return (
     <>
-      <TablaUsuarios data={usuarios} />
+      {/* <TablaUsuarios data={usuarios} /> */}
     </>
   )
 }

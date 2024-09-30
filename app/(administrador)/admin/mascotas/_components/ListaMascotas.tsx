@@ -10,7 +10,7 @@ export const ListaMascotas = async () => {
   const mascotas: Mascota[] = await obtenerMascotas();
   return (
     <>
-      <TablaMascotas data={mascotas} />
+      {/* <TablaMascotas data={mascotas} /> */}
     </>
   )
 }

@@ -1,7 +1,5 @@
 import type { Config } from "tailwindcss"
-import flowbite from "flowbite-react/tailwind";
 const { fontFamily } = require("tailwindcss/defaultTheme");
-import {nextui} from "@nextui-org/react";
 // import { withUt } from "uploadthing/tw";
 
 // export default withUt({
@@ -25,8 +23,6 @@ const config = {
 		'./app/**/*.{ts,tsx}',
 		'./src/**/*.{ts,tsx}',
 		"./node_modules/tailwind-datepicker-react/dist/**/*.js",
-		"./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
-		"./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
 	],
 	prefix: "",
 	theme: {
@@ -135,7 +131,7 @@ const config = {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate"), addVariablesForColors, flowbite.plugin(), nextui()],
+	plugins: [require("tailwindcss-animate"), addVariablesForColors],
 } satisfies Config
 
 export default config

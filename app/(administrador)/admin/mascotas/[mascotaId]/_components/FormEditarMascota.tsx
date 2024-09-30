@@ -64,9 +64,9 @@ type FormEditarMascotaProps = {
 export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 
 	const { mascota } = props;
-	const [isPending, startTransition] = React.useTransition();
+	const [isPending, startTransition] = useTransition();
 
-	const [razaOptions, setRazaOptions] = React.useState<string[]>(["Sin Raza (Especial)"]);
+	const [razaOptions, setRazaOptions] = useState<string[]>(["Sin Raza (Especial)"]);
 	const router = useRouter();
 	console.log(mascota);
 
@@ -89,7 +89,7 @@ export const FormEditarMascota = (props: FormEditarMascotaProps) => {
 		},
 	})
 
-	React.useEffect(() => {
+	useEffect(() => {
 		// Actualizar las opciones de raza cuando el componente se monta
 		if (form.getValues("especie") === TipoMascota.Perro) {
 			setRazaOptions(razasPerros);
