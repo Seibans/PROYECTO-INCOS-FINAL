@@ -32,7 +32,7 @@ export const ListaHistoriales = async () => {
   return (
     <>
       {/* Renderiza el componente TablaHistoriales pasando los historiales */}
-      {/* <TablaHistoriales data={historiales} /> */}
+      <TablaHistoriales data={historiales} />
     </>
   );
 }

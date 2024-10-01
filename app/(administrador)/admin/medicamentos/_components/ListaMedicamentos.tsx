@@ -10,7 +10,7 @@ export const ListaMedicamentos = async () => {
   const medicamentos: MedicamentoT[] = await obtenerMedicamentos();
   return (
     <>
-      {/* <TablaMedicamentos data={medicamentos} /> */}
+      <TablaMedicamentos data={medicamentos} />
     </>
   )
 }
