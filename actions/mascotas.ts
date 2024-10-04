@@ -13,7 +13,9 @@ import { v4 as uuidv4 } from 'uuid';
 export const obtenerMascotas = async (): Promise<Mascota[]> => {
     const mascotas = await db.mascota.findMany({
         where: {
-            estado: 1,
+            estado: {
+                not: 0
+            },
         },
         orderBy: {
             creadoEn: 'desc',

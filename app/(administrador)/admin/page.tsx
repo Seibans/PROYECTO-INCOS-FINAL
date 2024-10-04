@@ -7,6 +7,8 @@ import { Distribuidores } from "./_components/Distribuidores";
 import { TotalUsuarios } from "./_components/TotalUsuarios";
 import { TablaIntegraciones } from "./_components/TablaIntegraciones";
 import { data } from "@/utils/constantes";
+import HexagonGrid from "@/components/otros/hexagon-grid";
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
@@ -26,6 +28,7 @@ export default function Home() {
           />
           ))}
       </div>
+      <HexagonGrid />
       <div className="flex flex-col gap-y-4 mt-4">
         <Grafico />
         <Grafico2 />

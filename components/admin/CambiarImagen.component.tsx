@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils"
 import { Plus, Upload, LucideIcon,BriefcaseMedical, PawPrint, Contact, Aperture } from 'lucide-react'
 import { editarEsquema } from "@/actions/uploads"
-import { SubirImagenSquema } from '@/schemas'
+import { SubirImagenSquema } from "@/schemas"
 import { toast } from "sonner"
 import * as z from "zod"
 import { useSession } from "next-auth/react"
@@ -151,9 +151,12 @@ export default function CambiarImagen({
                       <Image
                         src={previewImage}
                         alt="Vista previa de la imagen"
-                        width={60}
-                        height={60}
-                        className="max-w-full max-h-full object-contain rounded-xl"/>
+                        layout="fill"
+                        className="max-w-full max-h-full object-contain rounded-xl"
+                        style={{
+                          objectFit: 'cover',
+
+                        }}/>
                     ) : (
                       <>
                         <p className="text-muted-foreground mb-2">Arrastre o seleccione una imagen</p>

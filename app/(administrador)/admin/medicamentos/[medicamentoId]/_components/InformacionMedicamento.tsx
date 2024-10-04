@@ -9,6 +9,7 @@ type InformacionMedicamentoProps = {
 
 export const InformacionMedicamento = (props: InformacionMedicamentoProps) => {
     const { medicamento } = props;
+    console.log(medicamento);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-1 lg:gap-x-10 gap-y-4">

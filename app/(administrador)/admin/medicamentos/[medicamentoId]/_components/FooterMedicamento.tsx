@@ -1,5 +1,5 @@
 "use client"
-import { eliminarMedicamento } from '@/actions/medicamentos'
+import { deshabilitarMedicamento } from '@/actions/medicamentos'
 import { Button } from '@/components/ui/button'
 import { Toast } from '@/components/ui/toast'
 import { Trash } from 'lucide-react'
@@ -20,7 +20,7 @@ export const FooterMedicamento = (props: FooterMedicamentoProps) => {
 	const onDeleteMedicamento = async () => {
 		try {
 			startTransition(() => {
-				toast.promise(eliminarMedicamento(medicamentoId), {
+				toast.promise(deshabilitarMedicamento(medicamentoId), {
 					loading: "Cargando...",
 					success: (data) => {
 						if (data.error) {

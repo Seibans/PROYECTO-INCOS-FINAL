@@ -3,7 +3,7 @@ import { E164Number } from "libphonenumber-js/core";
 import 'react-phone-number-input/style.css';
 
 import * as z from "zod";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -23,99 +23,64 @@ import { Button } from "@/components/ui/button";
 import PhoneInput from "react-phone-number-input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from '@/components/ui/textarea';
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importa los íconos
-
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command"
-//Mi components
-import { CardWrapper } from "@/components/auth/card-wrapper.component";
-
 // ServerComponent
-import { registro } from "@/actions/registro";
+import { registrarUsuarioByAdmin, registrarUsuarioConImagen } from "@/actions/registro";
 // Schema
-import { RegistroSchema } from "@/schemas";
-
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover"
+import { RegistroAdminSchema } from "@/schemas";
 import { RolUsuario } from "@prisma/client";
 
-import { generarPassword } from '@/lib/generarPassword';
+import InputImagen, { ImageUploaderRef } from '@/components/admin/FormInputImagen';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dispatch, SetStateAction } from "react";
 
 
+type FormUsuarioProps = {
+	setabrirModal: Dispatch<SetStateAction<boolean>>;
+};
 
-type Rol = {
-	value: RolUsuario
-	label: string
-}
-
-const roles: Rol[] = [
-	{
-		value: RolUsuario.Usuario,
-		label: "Usuario (Cliente)",
-	},
-	{
-		value: RolUsuario.Administrador,
-		label: "Veterinario",
-	},
-	{
-		value: RolUsuario.Administrador,
-		label: "Administrador",
-	}
-]
-
-
-export const FormUsuario = () => {
+export const FormUsuario = (props: FormUsuarioProps) => {
 	const [isPending, startTransition] = useTransition();
 	const router = useRouter();
-	const [showPassword, setShowPassword] = useState(false);
 	const [open, setOpen] = useState(false)
-	const [selectedStatus, setSelectedStatus] = useState<Rol | null>(
-		null
-	)
+	const imageUploaderRef = useRef<ImageUploaderRef>(null);
 
-
-	const [password, setPassword] = useState<string>('');
-
-	const handleGeneratePassword = () => {
-		const newPassword = generarPassword();
-		setPassword(newPassword);
-	};
-
-
-	const form = useForm<z.infer<typeof RegistroSchema>>({
-		resolver: zodResolver(RegistroSchema),
+	const form = useForm<z.infer<typeof RegistroAdminSchema>>({
+		resolver: zodResolver(RegistroAdminSchema),
 		defaultValues: {
 			name: "",
 			apellidoPat: "",
 			apellidoMat: undefined,
 			ci: undefined,
 			sexo: undefined,
-			celular: undefined,
+			image: "",
 			email: "",
-			password: "",
-			direccion: undefined
+			celular: undefined,
+			direccion: undefined,
+			rol: RolUsuario.Usuario
 		},
 	});
 
-	const onSubmit = (values: z.infer<typeof RegistroSchema>) => {
-		// console.log(values);
+	const onSubmit = (values: z.infer<typeof RegistroAdminSchema>) => {
+		const formData = new FormData();
+		Object.entries(values).forEach(([key, value]) => {
+			if (value !== undefined) {
+				if (key === 'archivo' && value instanceof File) {
+					formData.append(key, value);
+				} else {
+					formData.append(key, value.toString());
+				}
+			}
+		});
 		startTransition(() => {
-			toast.promise(registro(values), {
+			const action = formData.get('archivo') ? registrarUsuarioConImagen(formData) : registrarUsuarioByAdmin(values);
+			toast.promise(action, {
 				loading: "Cargando...",
 				success: (data) => {
 					if (data.error) {
 						throw new Error(data.error);
 					} else {
-						router.push("/auth/login");
+						router.refresh();
+						props.setabrirModal(false);
 						return `${data.success}`;
 					}
 				},
@@ -127,7 +92,6 @@ export const FormUsuario = () => {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-				<div className="space-y-4">
 					<FormField
 						control={form.control}
 						name="name"
@@ -257,7 +221,7 @@ export const FormUsuario = () => {
 												className="input-phone"
 												countries={['PE', 'BO', 'AR', 'CL', 'CO', 'EC', 'MX', 'PY', 'UY', 'VE']}
 												countrySelectProps={{
-													className: 'bg-white text-black dark:bg-gray-800 dark:text-white !w-[10rem]',
+													className: 'bg-white text-black dark:bg-gray-800 dark:text-white',
 												}}
 											/>
 										</FormControl>
@@ -305,92 +269,57 @@ export const FormUsuario = () => {
 						)}
 					/>
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-						{/* 
-						<FormField
+					<FormField
+						control={form.control}
+						name="rol"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Rol del Usuario *:</FormLabel>
+								<Select onValueChange={field.onChange} defaultValue={field.value}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="Seleccione un rol" />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										<SelectItem value={RolUsuario.Usuario}>Usuario (Cliente)</SelectItem>
+										<SelectItem value={RolUsuario.Veterinario}>Veterinario</SelectItem>
+										<SelectItem value={RolUsuario.Administrador}>Administrador</SelectItem>
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
 							control={form.control}
-							name="password"
+							name="image"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Contraseña *:</FormLabel>
-
-
-									<div className="relative">
-										<FormControl>
-											<Input
-												{...field}
-												disabled={isPending}
-												placeholder="******"
-												type={showPassword ? "text" : "password"}
-												className="pr-10" // Add padding to make room for the icon
-											/>
-										</FormControl>
-										<div
-											className="absolute inset-y-0 right-0 flex items-center px-3 cursor-pointer"
-											onClick={() => setShowPassword(!showPassword)}
-										>
-											{showPassword ? <FaEye /> : <FaEyeSlash />}
-										</div>
-									</div>
+									<FormLabel>Imagen de Perfil del Usuario (Opcional):</FormLabel>
+									<FormControl>
+										<InputImagen
+											ref={imageUploaderRef}
+											onImageChange={(file) => {
+												if (file) {
+													field.onChange(file.name);
+													form.setValue('archivo', file);
+												} else {
+													field.onChange('');
+													form.setValue('archivo', undefined);
+												}
+												form.trigger('image');
+											}}
+										/>
+									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
-						/> */}
-
-						<Input
-							disabled={isPending}
-							placeholder="******"
-							type={showPassword ? "text" : "password"}
-							className="pr-10" // Add padding to make room for the icon
-							value={password}
-							readOnly={true}
 						/>
-						<Button
-							type="button"
-							onClick={handleGeneratePassword}
-							className="p-2 ml-2 bg-blue-500 text-white rounded"
-						>
-							Generar Contraseña
-						</Button>
-
-					</div>
-					<p className="text-sm text-muted-foreground">Rol del Usuario</p>
-					<Popover open={open} onOpenChange={setOpen}>
-						<PopoverTrigger asChild>
-							<Button variant="outline" className="w-[12rem] sm:w-[15rem] justify-start">
-								{selectedStatus ? <>{selectedStatus.label}</> : <>Cambiar Rol del Usuario</>}
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent className="p-0" side="top" align="start">
-							<Command>
-								<CommandInput placeholder="Cambiar Rol..." />
-								<CommandList>
-									<CommandEmpty>Sin Resultados.</CommandEmpty>
-									<CommandGroup>
-										{roles.map((status) => (
-											<CommandItem
-												key={status.value}
-												value={status.value}
-												onSelect={(value) => {
-													setSelectedStatus(
-														roles.find((priority) => priority.value === value) ||
-														null
-													)
-													setOpen(false)
-												}}
-											>
-												{status.label}
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</CommandList>
-							</Command>
-						</PopoverContent>
-					</Popover>
-				</div>
-				<Button disabled={isPending} type="submit" className="w-full bg-gradient">
-					Registrar Usuario
-				</Button>
+					<Button disabled={isPending} type="submit" className="w-full bg-gradient">
+						Registrar Usuario
+					</Button>
 			</form>
 		</Form>
 	);

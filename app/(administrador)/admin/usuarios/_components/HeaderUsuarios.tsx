@@ -1,18 +1,9 @@
 "use client"
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/PJJ6K17hsY6
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { FormUsuario } from "./FormUsuario";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-
-// <DialogContent className="sm:max-w-[625px]">
-// </DialogContent>
 export const HeaderUsuarios = () => {
 	const [abrirModal, setabrirModal] = useState(false);
 	return (
@@ -22,7 +13,7 @@ export const HeaderUsuarios = () => {
 				<DialogTrigger asChild>
 					<Button variant="outline" className="bg-gradient">Registrar Usuario</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-auto">
+				<DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-auto">
 					<DialogHeader>
 						<DialogTitle>
 							Registrar Usuario
@@ -31,7 +22,7 @@ export const HeaderUsuarios = () => {
 							Registra un Nuevo Usuario
 						</DialogDescription>
 					</DialogHeader>
-					<FormUsuario />
+					<FormUsuario setabrirModal={setabrirModal} />
 				</DialogContent>
 			</Dialog>
 

@@ -110,7 +110,12 @@ const config = {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'caret-blink': 'caret-blink 1.25s ease-out infinite',
+			},
+			width: {
+				'1.8/12': '15%',
+				'10.2/12': '85%'
 			}
+
 		}
 	},
 	plugins: [require("tailwindcss-animate"), addVariablesForColors],

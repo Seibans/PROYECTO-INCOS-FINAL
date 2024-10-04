@@ -13,7 +13,7 @@ export const HeaderMedicamentos = () => {
 				<DialogTrigger asChild>
 					<Button variant="outline" className="bg-gradient">Registrar Medicamento</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-auto">
+				<DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-auto">
 					<DialogHeader>
 						<DialogTitle>
 							Registrar Medicamento

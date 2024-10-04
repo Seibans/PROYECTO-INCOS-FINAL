@@ -66,6 +66,68 @@ export const RegistroSchema = z.object({
     path: ["repetirPassword"],
 });
 
+
+
+export const RegistroAdminSchema = z.object({
+    name: z.string()
+        .min(2, {
+            message: "* El o los Nombres son requeridos"
+        }).max(50, {
+            message: "* El nombre no puede tener más de 50 caracteres"
+        }).refine((value) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value), {
+            message: "* El nombre solo puede contener letras y espacios"
+        }),
+    apellidoPat: z.string()
+        .min(2, {
+            message: "* El apellido paterno es requerido"
+        })
+        .max(40, {
+            message: "* El apellido paterno no puede tener más de 40 caracteres"
+        })
+        .refine((value) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value), {
+            message: "* El apellido paterno solo puede contener letras y espacios"
+        }),
+    apellidoMat: z.preprocess((value) => value === "" ? undefined : value, z.optional(
+        z.string().max(40, {
+            message: "* El apellido materno no puede tener más de 40 caracteres"
+        }).refine((value) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value), {
+            message: "* El apellido materno solo puede contener letras y espacios"
+        })
+    )),
+    ci: z.preprocess((value) => value === "" ? undefined : value, z.optional(
+        z.string().max(18, {
+            message: "* El C.I. no puede tener más de 18 caracteres"
+        }).refine((value) => /^\d{7,8}(-[A-Z]{2})?$/.test(value), {
+            message: "* Ingrese Un C.I. válido"
+        })
+    )),
+    sexo: z.optional(z.enum(["M", "F"])),
+    email: z.string({
+        invalid_type_error: "Ingrese Caracteres válidos"
+    }).email({
+        message: "* El Email es requerido"
+    }).max(150, {
+        message: "* El Email no puede tener más de 150 caracteres"
+    }),
+    celular: z.optional(
+        z.string()
+            .max(17, {
+                message: "* El Celular no puede tener más de 17 caracteres"
+            })
+            .refine((celular) => /^\+\d{10,15}$/.test(celular),
+                "Numero de Celular Invalido")
+    ),
+    direccion: z.optional(
+        z.string()
+            .max(255, { message: "La dirección no debe tener más de 255 caracteres." })
+    ),
+    image: z.string().optional(),
+    archivo: z.instanceof(File).optional(),
+    rol: z.nativeEnum(RolUsuario, {
+        errorMap: () => ({ message: "El tipo de usuario es inválido" })
+    }),
+});
+
 export const LoginSchema = z.object({
     email: z.string({
         invalid_type_error: "Ingrese Caracteres válidos"
@@ -216,11 +278,11 @@ export const MascotaSchema = z.object({
     ]).optional().transform(val => val === "" ? undefined : Number(val)),
     peso: z.string({
         required_error: "El peso es obligatorio",
-      }).min(1, "El peso es obligatorio")
+    }).min(1, "El peso es obligatorio")
         .regex(/^\d{1,3}(\.\d{1,2})?$/, "Usa el formato correcto: hasta 3 dígitos enteros y 2 decimales")
         .refine((val) => {
-          const num = parseFloat(val);
-          return !isNaN(num) && num > 0 && num <= 999.99;
+            const num = parseFloat(val);
+            return !isNaN(num) && num > 0 && num <= 999.99;
         }, "El peso debe ser mayor que 0 y no exceder 999.99 kg"),
     esterilizado: z.boolean().optional(),
     // estado: z.optional(z.string().min(1, "El estado es obligatorio")),
@@ -233,47 +295,91 @@ export const MascotaSchema = z.object({
 //     path: ['fechaNacimiento']
 // }),
 
-
-
-
-
-// export const MedicamentoSchema = z.object({
-//     nombre: z.string()
-//         .min(1, { message: "El nombre es obligatorio" })
-//         .max(100, { message: "El nombre no puede tener más de 100 caracteres" }),
-//     descripcion: z.string()
-//         .max(255, { message: "La descripción no puede tener más de 255 caracteres" })
-//         .optional(),
-//     stock: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El stock debe ser un número positivo" })),
-//     // precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
-//     precio: z.string().min(1, "El precio es requerido"),
-//     imagen: z.instanceof(File, { message: "La imagen es requerida" }),
-//     // stock: z.number()
-//     //     .int({ message: "El stock debe ser un número entero" })
-//     //     .positive({ message: "El stock debe ser un número positivo" }),
-//     // precio: z.number()
-//     //     .positive({ message: "El precio debe ser un número positivo" }),
-//     tipo: z.enum([TipoMedicamento.Pastilla, TipoMedicamento.Vacuna, TipoMedicamento.Inyeccion, TipoMedicamento.Crema, TipoMedicamento.Suero, TipoMedicamento.Polvo, TipoMedicamento.Gel, TipoMedicamento.Otro], {
-//         errorMap: () => ({ message: "El tipo de medicamento es inválido" })
-//     }),
-//     archivo: z.optional(z.instanceof(File, { message: "El archivo es requerido" })),
-// });
 export const MedicamentoSchema = z.object({
     nombre: z.string()
         .min(1, { message: "El nombre es obligatorio" })
         .max(100, { message: "El nombre no puede tener más de 100 caracteres" }),
     descripcion: z.string()
-        .max(255, { message: "La descripción no puede tener más de 255 caracteres" })
+        .max(150, { message: "La descripción no puede tener más de 150 caracteres" })
         .optional(),
+    indicaciones: z.string()
+        .max(200, { message: "Las indicaciones no pueden tener más de 200 caracteres" })
+        .optional(),
+    unidadMedida: z.string()
+        .max(50, { message: "La unidad de medicamento no puede tener más de 50 caracteres" })
+        .optional(),
+    cantidadPorUnidad: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "La cantidad por unidad debe ser un número positivo" })),
     stock: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El stock debe ser un número positivo" })),
-    // precio: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El precio debe ser un número positivo" })),
-    precio: z.string().min(1, "El precio es requerido"),
+    precio: z
+        .string()
+        .min(1, "El precio es requerido")
+        .refine(
+            (value) => {
+                const numericValue = parseFloat(value);
+                return !isNaN(numericValue) && numericValue >= 0 && numericValue <= 10000;
+            },
+            {
+                message: "El precio debe ser un número entre 0 y 10000",
+            }
+        )
+        .transform((value) => parseFloat(value).toFixed(2)),
+    sobrante: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El sobrante debe ser un número positivo" })).optional(),
     imagen: z.string().min(1, "Debe subir una Imagen del Medicamento"),
     tipo: z.nativeEnum(TipoMedicamento, {
         errorMap: () => ({ message: "El tipo de medicamento es inválido" })
     }),
     archivo: z.instanceof(File).optional(),
 });
+
+export const ServicioSchema = z.object({
+    nombre: z.string()
+        .min(1, 'El nombre es requerido')
+        .max(100, 'El nombre no puede tener más de 100 caracteres'),
+    descripcion: z.string()
+        .min(1, 'La descripción es requerida')
+        .max(255, 'La descripción no puede tener más de 255 caracteres'),
+    precio: z
+        .string()
+        .min(1, "El precio es requerido")
+        .refine(
+            (value) => {
+                const numericValue = parseFloat(value);
+                return !isNaN(numericValue) && numericValue >= 0 && numericValue <= 10000;
+            },
+            {
+                message: "El precio debe ser un número entre 0 y 10000",
+            }
+        )
+        .transform((value) => parseFloat(value).toFixed(2)),
+});
+
+// export const ServicioSchema = z.object({
+//     nombre: z.string()
+//       .min(1, 'El nombre es requerido')
+//       .max(100, 'El nombre no puede tener más de 100 caracteres'),
+//     descripcion: z.string()
+//       .min(1, 'La descripción es requerida')
+//       .max(255, 'La descripción no puede tener más de 255 caracteres'),
+//     precio: z
+//       .string()
+//         .min(1, 'El precio es requerido')
+//         .optional() // Permite que el campo sea opcional
+//       .refine(
+//         (value) => {
+//           if (value === "") return false;
+//    O       if (!value || value.trim() === "") return true; 
+//           const numericValue = parseFloat(value);
+//           return !isNaN(numericValue) && numericValue >= 0 && numericValue <= 10000;
+//         },
+//         {
+//           message: "El precio debe ser un número entre 0 y 10000",
+//         }
+//       )
+//       .transform((value) => (value === "" ? "" : parseFloat(value).toFixed(2))),
+//         .transform((value) => (value ? parseFloat(value).toFixed(2) : "")), // Mantiene el manejo del valor vacío
+
+// });
+
 
 export const PagoSchema = z.object({
     usuarioId: z.number({ required_error: "El ID del usuario es obligatorio" }),
@@ -318,4 +424,26 @@ export const SubirImagenSquema = z.object({
         .refine((file) => file instanceof File, {
             message: "El archivo es obligatorio y debe ser de tipo File",
         }),
+});
+
+
+
+
+
+export const tratamientoMedicamentoSchema = z.object({
+    id: z.number(),
+    cantidad: z.number().min(1, "La cantidad debe ser al menos 1"),
+    costoUnitario: z.number().min(0, "El costo unitario no puede ser negativo"),
+    dosificacion: z.string().nullable(),
+    medicamento: MedicamentoSchema,
+});
+
+export const tratamientoSchema = z.object({
+    id: z.number(),
+    descripcion: z.string().min(1, "La descripción es requerida"),
+    diagnostico: z.string().nullable(),
+    estado: z.number().min(0, "El estado debe ser un número positivo"),
+    idPago: z.number(),
+    medicamentos: z.array(tratamientoMedicamentoSchema),
+    servicios: z.array(ServicioSchema),
 });

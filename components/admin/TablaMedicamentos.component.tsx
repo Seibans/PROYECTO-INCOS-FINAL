@@ -73,7 +73,15 @@ export function TablaMedicamentos({ data }: DataTableProps) {
   const columns: ColumnDef<MedicamentoT>[] = [
     {
       id: "nro",
-      header: () => <div className="text-center">Nro.</div>,
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nro.
+          <ArrowUpDown className="ml-2 h-3 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
     },
     {
@@ -91,7 +99,7 @@ export function TablaMedicamentos({ data }: DataTableProps) {
     },
     {
       accessorKey: "imagen",
-      header: () => <div className="text-center">Imagen</div>,
+      header: () => <div className="">Imagen</div>,
       cell: ({ row }) => {
         const imagen = row.getValue("imagen");
         return (
@@ -100,9 +108,13 @@ export function TablaMedicamentos({ data }: DataTableProps) {
               src={typeof imagen === 'string' ? imagen : "/images/imagen-gato.png"}
               alt="Imagen del medicamento"
               onClick={() => handleImageClick(row.index)}
-              width={60}
-              height={60}
+              width={30}
+              height={30}
               className="cursor-pointer"
+              style={{
+                minWidth: "50px",
+                minHeight: "50px",
+              }}
             />
           </div>
         );
@@ -110,7 +122,7 @@ export function TablaMedicamentos({ data }: DataTableProps) {
     },
     {
       accessorKey: "descripcion",
-      header: () => <div className="text-center">Descripción</div>,
+      header: () => <div className="">Descripción</div>,
       cell: ({ row }) => (
         <div className="text-center font-medium h-auto w-56 whitespace-normal overflow-hidden text-ellipsis">
           {/* <Textarea> */}

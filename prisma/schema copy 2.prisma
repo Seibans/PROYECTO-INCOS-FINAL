@@ -1,0 +1,239 @@
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// // REGENERAR LA BASE
+// // npx prisma generate
+// //parece que cada vez que cambies algun modelo debes ejecutar el de arriba y luego seguir 
+
+// // npx prisma migrate reset
+// // npx prisma migrate dev --name migracion_inicial
+// // npx prisma migrate deploy
+// // npx prisma db push
+
+// // ESTE COMANDO CREA LOS ESUQEMAS DE MANERA REVERSA, SOLO DEBES VINCULAR LA BASE DE DATOS CON EL datasource db nada mas
+// // npx prisma db pull con esto prisma lee la base de datos y crea los esquemas
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum RolUsuario {
+  Administrador
+  Usuario
+  Veterinario
+}
+
+enum TipoMascota {
+  Perro
+  Gato
+  Otro
+}
+
+enum Sexo {
+  Macho
+  Hembra
+}
+
+enum TipoMedicamento {
+  Pastilla
+  Vacuna
+  Inyeccion
+  Crema
+  Suero
+  Polvo
+  Gel
+  Otro
+}
+
+model User {
+  id                      Int                      @id @default(autoincrement()) @db.UnsignedInt
+  name                    String                   @map("nombre") @db.VarChar(100)
+  username                String?                  @unique @map("usuario") @db.VarChar(100)
+  apellidoPat             String?                  @db.VarChar(40)
+  apellidoMat             String?                  @db.VarChar(40)
+  ci                      String?                  @db.VarChar(18)
+  sexo                    String?                  @db.VarChar(1)
+  email                   String                   @unique @map("correo") @db.VarChar(150)
+  emailVerified           DateTime?                @map("correoVerificado")
+  image                   String?                  @map("imagen") @db.VarChar(255)
+  password                String?                  @map("contrasena") @db.VarChar(200)
+  rol                     RolUsuario               @default(Usuario)
+  celular                 String?                  @map("celular") @db.VarChar(17)
+  direccion               String?                  @db.VarChar(100)
+  estado                  Int                      @default(1) @db.TinyInt
+  authDobleFactor         Boolean                  @default(false) @map("autenticacionDobleFactor")
+  dobleFactorConfirmacion ConfirmacionDobleFactor?
+  Account                 Account?
+  mascotas                Mascota[]
+  reservasMedicas         ReservaMedica[]
+  createdAt               DateTime                 @default(now()) @map("creadoEn") @db.Timestamp(3)
+  updatedAt               DateTime?                @updatedAt @map("actualizadoEn") @db.Timestamp(3)
+  idUsuario               Int?                     @db.UnsignedInt
+
+  @@map("Usuario")
+}
+
+model Account {
+  id                       Int       @id @default(autoincrement()) @db.UnsignedInt
+  userId                   Int       @unique @map("usuarioId") @db.UnsignedInt
+  type                     String    @map("tipo") @db.VarChar(20)
+  provider                 String    @map("proveedor") @db.VarChar(50)
+  providerAccountId        String    @map("idCuentaProveedor") @db.VarChar(100)
+  refresh_token            String?   @map("tokenActualizacion") @db.Text
+  access_token             String?   @map("tokenAcceso") @db.Text
+  expires_at               Int?      @map("expiraEn")
+  token_type               String?   @map("tipoToken") @db.VarChar(50)
+  scope                    String?   @map("alcance") @db.VarChar(255)
+  id_token                 String?   @map("idToken") @db.Text
+  session_state            String?   @map("estadoSesion") @db.VarChar(100)
+  refresh_token_expires_in Int?      @map("tokenActualizacionExpiraEn")
+  user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt                DateTime  @default(now()) @map("creadoEn") @db.Timestamp(3)
+  updatedAt                DateTime? @updatedAt @map("actualizadoEn") @db.Timestamp(3)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("Cuenta")
+}
+
+model TokenVerificacion {
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
+  token   String   @unique
+  email   String
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TokenReestablecimientoPassword {
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
+  token   String   @unique
+  email   String
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TokenDobleFactor {
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
+  token   String   @unique
+  email   String
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model ConfirmacionDobleFactor {
+  id        Int  @id @default(autoincrement()) @db.UnsignedInt
+  usuarioId Int  @db.UnsignedInt
+  usuario   User @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId])
+}
+
+model Mascota {
+  id              Int              @id @default(autoincrement()) @db.UnsignedInt
+  nombre          String           @db.VarChar(50)
+  especie         TipoMascota
+  raza            String?          @db.VarChar(40)
+  fechaNacimiento DateTime?        @db.Date
+  sexo            Sexo
+  detalles        String?          @db.VarChar(255)
+  imagen          String?          @db.VarChar(255)
+  peso            Float?           @db.Float
+  vacunas         Json?
+  estado          Int              @default(1) @db.TinyInt
+  idPropietario   Int?             @default(1) @db.UnsignedInt
+  usuario         User?            @relation(fields: [idPropietario], references: [id])
+  historial       HistorialMedico?
+  esterilizado    Boolean?         @default(false)
+  creadoEn        DateTime         @default(now()) @db.Timestamp(3)
+  actualizadoEn   DateTime?        @updatedAt @db.Timestamp(3)
+  idUsuario       Int              @db.UnsignedInt
+}
+
+model HistorialMedico {
+  id                      Int           @id @default(autoincrement()) @db.UnsignedInt
+  mascotaId               Int           @unique @db.UnsignedInt
+  mascota                 Mascota       @relation(fields: [mascotaId], references: [id])
+  descripcionTratamientos String?       @db.Text
+  tratamientos            Tratamiento[]
+  estado                  Int           @default(1) @db.TinyInt
+  creadoEn                DateTime      @default(now()) @db.Timestamp(3)
+  actualizadoEn           DateTime?     @updatedAt @db.Timestamp(3)
+  idUsuario               Int           @db.UnsignedInt
+}
+
+model Tratamiento {
+  id                Int                      @id @default(autoincrement()) @db.UnsignedInt
+  descripcion       String                  @db.VarChar(255)
+  precio            Decimal                  @db.Decimal(10, 2)
+  estado            Int                      @default(1) @db.TinyInt
+  historialMedicoId Int                      @db.UnsignedInt
+  historialMedico   HistorialMedico          @relation(fields: [historialMedicoId], references: [id])
+  medicamentos      TratamientoMedicamento[]
+  diagnostico       String?                  @db.VarChar(255)
+  pago              Pago?                    @relation(fields: [pagoId], references: [id])
+  pagoId            Int?                     @unique @db.UnsignedInt
+  creadoEn          DateTime                 @default(now()) @db.Timestamp(3)
+  actualizadoEn     DateTime?                @updatedAt @db.Timestamp(3)
+  idUsuario         Int                      @db.UnsignedInt
+}
+
+model Medicamento {
+  id            Int                      @id @default(autoincrement()) @db.UnsignedInt
+  imagen        String?                  @db.VarChar(255)
+  nombre        String                   @db.VarChar(100)
+  descripcion   String?                  @db.VarChar(255)
+  stock         Int                      @default(0)
+  estado        Int                      @default(1) @db.TinyInt
+  precio        Decimal                  @db.Decimal(10, 2)
+  tipo          TipoMedicamento
+  tratamientos  TratamientoMedicamento[]
+  creadoEn      DateTime                 @default(now()) @db.Timestamp(3)
+  actualizadoEn DateTime?                @updatedAt @db.Timestamp(3)
+  idUsuario     Int                      @db.UnsignedInt
+}
+
+model TratamientoMedicamento {
+  id            Int         @id @default(autoincrement()) @db.UnsignedInt
+  cantidad      Int         @default(1) @db.UnsignedInt
+  tratamientoId Int         @db.UnsignedInt
+  medicamentoId Int         @db.UnsignedInt
+  tratamiento   Tratamiento @relation(fields: [tratamientoId], references: [id])
+  medicamento   Medicamento @relation(fields: [medicamentoId], references: [id])
+}
+
+model Pago {
+  id                Int          @id @default(autoincrement()) @db.UnsignedInt
+  total             Decimal      @db.Decimal(18, 2)
+  fechaPago         DateTime    @db.DateTime(3)
+  detalle           String?      @db.VarChar(100)
+  estado            Int          @default(1) @db.TinyInt
+  tratamiento       Tratamiento?
+  esAyudaVoluntaria Boolean      @default(false)
+  creadoEn          DateTime     @default(now()) @db.Timestamp(3)
+  actualizadoEn     DateTime?    @updatedAt @db.Timestamp(3)
+  idUsuario         Int          @db.UnsignedInt
+}
+
+model ReservaMedica {
+  id            Int       @id @default(autoincrement()) @db.UnsignedInt
+  fechaReserva  DateTime  @db.DateTime(3)
+  detalles      String?   @db.VarChar(255)
+  servicio      String    @db.VarChar(150)
+  estado        Int       @default(1) @db.TinyInt
+  usuarioId     Int?      @db.UnsignedInt
+  usuario       User?     @relation(fields: [usuarioId], references: [id])
+  creadoEn      DateTime  @default(now()) @db.Timestamp(3)
+  actualizadoEn DateTime? @updatedAt @db.Timestamp(3)
+  idUsuario     Int       @db.UnsignedInt
+}

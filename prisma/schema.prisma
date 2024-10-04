@@ -16,6 +16,13 @@
 // // ESTE COMANDO CREA LOS ESUQEMAS DE MANERA REVERSA, SOLO DEBES VINCULAR LA BASE DE DATOS CON EL datasource db nada mas
 // // npx prisma db pull con esto prisma lee la base de datos y crea los esquemas
 
+
+// enum EstadoTratamiento {
+//   Pendiente
+//   EnProceso
+//   Completado
+//   Cancelado
+// }
 generator client {
   provider = "prisma-client-js"
 }
@@ -172,10 +179,22 @@ model HistorialMedico {
   idUsuario               Int           @db.UnsignedInt
 }
 
+model Servicio {
+  id            Int           @id @default(autoincrement()) @db.UnsignedInt
+  nombre        String        @unique @db.VarChar(100)
+  descripcion   String        @db.Text
+  precio         Decimal       @db.Decimal(10, 2)
+  estado        Int           @default(1) @db.TinyInt
+  tratamientos  Tratamiento[]
+  creadoEn      DateTime      @default(now()) @db.Timestamp(3)
+  actualizadoEn DateTime?     @updatedAt @db.Timestamp(3)
+  idUsuario     Int           @db.UnsignedInt
+}
+
 model Tratamiento {
   id                Int                      @id @default(autoincrement()) @db.UnsignedInt
-  descripcion       String                  @db.VarChar(255)
-  precio            Decimal                  @db.Decimal(10, 2)
+  descripcion       String                   @db.VarChar(255)
+  servicios     Servicio[]
   estado            Int                      @default(1) @db.TinyInt
   historialMedicoId Int                      @db.UnsignedInt
   historialMedico   HistorialMedico          @relation(fields: [historialMedicoId], references: [id])
@@ -189,23 +208,29 @@ model Tratamiento {
 }
 
 model Medicamento {
-  id            Int                      @id @default(autoincrement()) @db.UnsignedInt
-  imagen        String?                  @db.VarChar(255)
-  nombre        String                   @db.VarChar(100)
-  descripcion   String?                  @db.VarChar(255)
-  stock         Int                      @default(0)
-  estado        Int                      @default(1) @db.TinyInt
-  precio        Decimal                  @db.Decimal(10, 2)
-  tipo          TipoMedicamento
-  tratamientos  TratamientoMedicamento[]
-  creadoEn      DateTime                 @default(now()) @db.Timestamp(3)
-  actualizadoEn DateTime?                @updatedAt @db.Timestamp(3)
-  idUsuario     Int                      @db.UnsignedInt
+  id                Int                      @id @default(autoincrement()) @db.UnsignedInt
+  imagen            String?                  @db.VarChar(255)
+  nombre            String                   @db.VarChar(100)
+  descripcion       String?                  @db.VarChar(150)
+  indicaciones      String?                  @db.VarChar(200)
+  unidadMedida      String?                  @db.VarChar(50)
+  cantidadPorUnidad Int                      @default(1)
+  stock             Int                      @default(0)
+  sobrante          Int                      @default(0)
+  estado            Int                      @default(1) @db.TinyInt
+  precio            Decimal                  @db.Decimal(10, 2)
+  tipo              TipoMedicamento
+  tratamientos      TratamientoMedicamento[]
+  creadoEn          DateTime                 @default(now()) @db.Timestamp(3)
+  actualizadoEn     DateTime?                @updatedAt @db.Timestamp(3)
+  idUsuario         Int                      @db.UnsignedInt
 }
 
 model TratamientoMedicamento {
   id            Int         @id @default(autoincrement()) @db.UnsignedInt
   cantidad      Int         @default(1) @db.UnsignedInt
+  costoUnitario Decimal     @db.Decimal(10, 2)
+  dosificacion  String?     @db.VarChar(255)
   tratamientoId Int         @db.UnsignedInt
   medicamentoId Int         @db.UnsignedInt
   tratamiento   Tratamiento @relation(fields: [tratamientoId], references: [id])
@@ -215,7 +240,7 @@ model TratamientoMedicamento {
 model Pago {
   id                Int          @id @default(autoincrement()) @db.UnsignedInt
   total             Decimal      @db.Decimal(18, 2)
-  fechaPago         DateTime    @db.DateTime(3)
+  fechaPago         DateTime     @db.DateTime(3)
   detalle           String?      @db.VarChar(100)
   estado            Int          @default(1) @db.TinyInt
   tratamiento       Tratamiento?

@@ -112,12 +112,12 @@ export function TablaUsuarios({ data }: DataTableProps<UsuarioT>) {
               src={typeof imagen === "string" ? imagen : "/images/usuario.png"}
               alt="Imagen del usuario"
               onClick={() => handleImageClick(row.index)}
-              width={60}
-              height={60}
+              width={50}
+              height={50}
               className="cursor-pointer"
               style={{
-                minWidth: "200px",
-                minHeight: "200px",
+                minWidth: "50px",
+                minHeight: "50px",
               }}
             />
           </div>

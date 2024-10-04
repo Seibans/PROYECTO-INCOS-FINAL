@@ -16,6 +16,23 @@
 // // ESTE COMANDO CREA LOS ESUQEMAS DE MANERA REVERSA, SOLO DEBES VINCULAR LA BASE DE DATOS CON EL datasource db nada mas
 // // npx prisma db pull con esto prisma lee la base de datos y crea los esquemas
 
+//Genera una migración Una vez que hayas realizado los cambios en el esquema, puedes generar una migración.
+//npx prisma migrate dev --name nombre_de_la_migracion
+
+// Este comando generará una nueva migración basada en los cambios que hiciste en el esquema y aplicará esos cambios a tu base de datos. Si no deseas aplicar la migración inmediatamente, puedes usar:
+// bash
+// npx prisma migrate dev --create-only
+
+// Aplica la migración
+// Una vez que estés satisfecho con la migración y cualquier ajuste que hayas hecho, aplica la migración a tu base de datos con el siguiente comando:
+// bash
+// npx prisma migrate dev
+
+// Despliegue en producción
+// Cuando estés listo para desplegar tus cambios en producción, asegúrate de ejecutar el siguiente comando en tu entorno de producción:
+// bash
+// npx prisma migrate deploy
+
 generator client {
   provider = "prisma-client-js"
 }

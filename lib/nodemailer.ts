@@ -179,10 +179,6 @@
 //   // Enviar el correo usando nodemailer
 // };
 
-
-
-
-
 import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";

@@ -1,48 +1,49 @@
-"use client"
-import { useState } from 'react';
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Search, Calendar, Syringe, ChevronLeft, ChevronRight } from 'lucide-react';
-import { HistorialMedicoT } from "@/types";
-import { formatearFechaYHora } from '@/lib/formatearFecha';
-import { formatearPrecio } from '@/lib/formatearPrecio';
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Search, Calendar, Syringe, ChevronLeft, ChevronRight, Plus, ArrowRight } from 'lucide-react'
+import { HistorialMedicoVistaT } from "@/types"
+import { formatearFechaYHora } from '@/lib/formatearFecha'
+import { formatearPrecio } from '@/lib/formatearPrecio'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface TablaHistorialesProps {
-  data: HistorialMedicoT[];
+  data: HistorialMedicoVistaT[]
 }
 
 export function TablaHistoriales({ data }: TablaHistorialesProps) {
-  const [pagina, setPagina] = useState(1);
-  const [totalPaginas, setTotalPaginas] = useState(Math.ceil(data.length / 12));
-  const [cargando, setCargando] = useState(false);
-  const [busqueda, setBusqueda] = useState('');
-  const [mascotaSeleccionada, setMascotaSeleccionada] = useState<HistorialMedicoT | null>(null);
+  const [pagina, setPagina] = useState(1)
+  const [totalPaginas, setTotalPaginas] = useState(Math.ceil(data.length / 12))
+  const [cargando, setCargando] = useState(false)
+  const [busqueda, setBusqueda] = useState('')
+  const [mascotaSeleccionada, setMascotaSeleccionada] = useState<HistorialMedicoVistaT | null>(null)
 
-  // Filtra los datos según la búsqueda
   const filteredData = data.filter((historial) =>
     historial.nombreMascota.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  )
 
-  // Paginación de los datos
-  const mascotasPorPagina = 12;
-  const inicio = (pagina - 1) * mascotasPorPagina;
-  const fin = Math.min(inicio + mascotasPorPagina, filteredData.length);
-  const mascotas = filteredData.slice(inicio, fin);
+  const mascotasPorPagina = 12
+  const inicio = (pagina - 1) * mascotasPorPagina
+  const fin = Math.min(inicio + mascotasPorPagina, filteredData.length)
+  const mascotas = filteredData.slice(inicio, fin)
 
   const handleBusqueda = () => {
-    setPagina(1);
-  };
+    setPagina(1)
+  }
 
   const cambiarPagina = (nuevaPagina: number) => {
-    setPagina(nuevaPagina);
-    window.scrollTo(0, 0);
-  };
+    setPagina(nuevaPagina)
+    window.scrollTo(0, 0)
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -62,7 +63,7 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {mascotas.map((historial) => (
-          <Card key={historial.id} className="flex flex-col justify-between hover:shadow-lg transition-shadow">
+          <Card key={historial.id} className="flex flex-col justify-between hover:shadow-lg transition-shadow relative">
             <CardContent className="pt-6">
               <div className="flex items-center space-x-4 mb-4">
                 <Avatar>
@@ -78,10 +79,24 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
                 {historial.tratamientos.length} tratamiento(s)
               </Badge>
             </CardContent>
-            <CardFooter>
-              <Button onClick={() => setMascotaSeleccionada(historial)} className="w-full">
+            <CardFooter className="flex justify-between items-center">
+              <Button onClick={() => setMascotaSeleccionada(historial)}>
                 Ver detalles
               </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link href={`/admin/historiales/${historial.id}`} passHref>
+                      <Button variant="outline" size="icon" className="rounded-full">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Agregar tratamiento</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </CardFooter>
           </Card>
         ))}
@@ -128,7 +143,15 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
                   </AccordionTrigger>
                   <AccordionContent>
                     <p className="mb-2">{tratamiento.descripcion}</p>
-                    <Badge variant="outline">{`Precio: ${formatearPrecio(tratamiento.precio)} `}</Badge>
+                    {/* <Badge variant="outline" className="mb-2">{`Precio: ${formatearPrecio(tratamiento.precio)} `}</Badge> */}
+                    <div className="mt-2">
+                      <Link href={`/admin/historiales/${mascotaSeleccionada.id}?idTratamiento=${tratamiento.id}`} passHref>
+                        <Button variant="outline" size="sm">
+                          <ArrowRight className="h-4 w-4 mr-2" />
+                          Ir al tratamiento
+                        </Button>
+                      </Link>
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               ))}
@@ -137,5 +160,5 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }

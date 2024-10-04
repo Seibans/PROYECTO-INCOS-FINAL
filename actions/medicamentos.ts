@@ -37,6 +37,7 @@ export const registrarMedicamento = async (
     formMedicamento: FormData,
 ) => {
     try {
+        console.log(formMedicamento);
         const archivo = formMedicamento.get("archivo") as File | null;
 
         if (!archivo) {
@@ -45,8 +46,12 @@ export const registrarMedicamento = async (
 
         const nombre = formMedicamento.get('nombre') as string;
         const descripcion = formMedicamento.get('descripcion') as string;
+        const indicaciones = formMedicamento.get('indicaciones') as string;
+        const unidadMedida = formMedicamento.get('unidadMedida') as string;
+        const cantidadPorUnidad = parseInt(formMedicamento.get('cantidadPorUnidad') as string, 10);
         const stock = parseInt(formMedicamento.get('stock') as string, 10);
         const precio = formMedicamento.get('precio') as string;
+        const sobrante = parseInt(formMedicamento.get('sobrante') as string, 10);
         const tipo = formMedicamento.get('tipo') as TipoMedicamento;
         let rutaImagen: string | null = null;
 
@@ -54,9 +59,6 @@ export const registrarMedicamento = async (
             const nombreUnico = `${uuidv4()}_${archivo.name}`;
             const rutadeAlmacenamiento = path.join(process.cwd(), 'public', 'uploads', 'medicamentos', nombreUnico);
             await fs.ensureDir(path.dirname(rutadeAlmacenamiento));
-
-            // const arrayBuffer = await archivo.arrayBuffer();
-            // const buffer = new Uint8Array(arrayBuffer);
             const buffer = Buffer.from(await archivo.arrayBuffer());
             await fs.writeFile(rutadeAlmacenamiento, buffer);
             rutaImagen = `${process.env.NEXT_PUBLIC_APP_URL}/uploads/medicamentos/${nombreUnico}`;
@@ -66,6 +68,10 @@ export const registrarMedicamento = async (
             data: {
                 nombre,
                 descripcion,
+                indicaciones,
+                unidadMedida,
+                cantidadPorUnidad,
+                sobrante,
                 stock,
                 precio,
                 tipo,
@@ -87,20 +93,24 @@ export const editarMedicamento = async (
     idMedicamento: number,
 ) => {
     try {
-
+console.log(values);
 
         const validatedFields = MedicamentoSchema.safeParse(values);
 
         if (!validatedFields.success) {
             return { error: "Campos Inválidos!" };
         }
-        const { nombre, descripcion, stock, precio, tipo } = validatedFields.data;
+        const { nombre, descripcion, stock, precio, tipo, indicaciones, unidadMedida, cantidadPorUnidad, sobrante } = validatedFields.data;
 
         const medicamentoActualizado = await db.medicamento.update({
             where: { id: idMedicamento },
             data: {
                 nombre,
                 descripcion,
+                indicaciones,
+                unidadMedida,
+                cantidadPorUnidad,
+                sobrante,
                 stock,
                 precio,
                 tipo,
