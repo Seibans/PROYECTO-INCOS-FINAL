@@ -1,44 +1,7 @@
-// // app/admin/historiales/[historialId]/page.tsx
-// import { redirect } from 'next/navigation'
-// import { auth } from "@/auth"
-// import { obtenerHistorial, obtenerTratamiento } from '@/actions/transaccion'
-// import HistorialMedicoView from '../_components/HistorialMedicoView'
-
-// export default async function HistorialIdPage({ params, searchParams }: {
-//   params: { historialId: string },
-//   searchParams: { idTratamiento?: string }
-// }) {
-//   const { historialId } = params
-//   const { idTratamiento } = searchParams
-
-//   const usuario = await auth()
-//   if (!usuario || !usuario.user) {
-//     redirect("/login")
-//   }
-
-//   const historial = await obtenerHistorial(historialId)
-//   if (!historial) {
-//     redirect("/admin/historiales")
-//   }
-
-//   const tratamientoSeleccionado = idTratamiento ? await obtenerTratamiento(historialId, idTratamiento) : null
-
-//   return (
-//     <HistorialMedicoView
-//       historial={historial}
-//       tratamientoSeleccionado={tratamientoSeleccionado}
-//     />
-//   )
-// }
-
-
-// app/admin/historiales/[historialId]/page.tsx
-
 import { redirect } from 'next/navigation';
-import { auth } from "@/auth";
 import { obtenerHistorialconMascotayUsuario, obtenerTratamientoCompleto } from '@/actions/historiales';
-import { json } from 'stream/consumers';
-// import { obtenerUsuario } from '@/actions/usuario';
+import { obtenerServicios } from '@/actions/servicios';
+import { obtenerMedicamentos } from '@/actions/medicamentos';
 import HistorialMedicoView from '../_components/HistorialMedicoView';
 
 interface PageProps {
@@ -47,20 +10,40 @@ interface PageProps {
 }
 
 export default async function HistorialIdPage({ params, searchParams }: PageProps) {
-    const { historialId } = params;
-    const { tratamientoId } = searchParams;
+    const historialId = parseInt(params.historialId);
+    const tratamientoId = searchParams.tratamientoId ? parseInt(searchParams.tratamientoId) : undefined;
 
-    const historial = await obtenerHistorialconMascotayUsuario(parseInt(historialId));
-    const tratamiento = tratamientoId ? await obtenerTratamientoCompleto(parseInt(tratamientoId)) : null;
-    if (!historial) {
+    if (isNaN(historialId)) {
+        console.error('ID de historial inválido');
         redirect("/admin/historiales");
     }
-    console.log(historial);
-    console.log(tratamiento);
+
+    const historial = await obtenerHistorialconMascotayUsuario(historialId);
+    if (!historial || 'error' in historial) {
+        console.error('Historial no encontrado o error al obtenerlo');
+        redirect("/admin/historiales");
+    }
+
+    let tratamiento = null;
+    if (tratamientoId !== undefined) {
+        if (isNaN(tratamientoId)) {
+            console.error('ID de tratamiento inválido');
+        } else {
+            tratamiento = await obtenerTratamientoCompleto(tratamientoId);
+            if (!tratamiento || 'error' in tratamiento) {
+                console.error('Tratamiento no encontrado o error al obtenerlo');
+                tratamiento = null;
+            }
+        }
+    }
+    const servicios = await obtenerServicios();
+    const medicamentos = await obtenerMedicamentos();
     return (
         <HistorialMedicoView
             historial={historial}
-            tratamientoSeleccionado={tratamientoId ? parseInt(tratamientoId) : null}
+            tratamiento={tratamiento}
+            servicios={servicios}
+            medicamentos={medicamentos}
         />
     );
 }

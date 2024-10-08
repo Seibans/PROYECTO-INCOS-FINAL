@@ -63,7 +63,7 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {mascotas.map((historial) => (
-          <Card key={historial.id} className="flex flex-col justify-between hover:shadow-lg transition-shadow relative">
+          <Card key={historial.historialMascotaId} className="flex flex-col justify-between hover:shadow-lg transition-shadow relative">
             <CardContent className="pt-6">
               <div className="flex items-center space-x-4 mb-4">
                 <Avatar>
@@ -86,7 +86,7 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Link href={`/admin/historiales/${historial.id}`} passHref>
+                    <Link href={`/admin/historiales/${historial.historialMascotaId}`} passHref>
                       <Button variant="outline" size="icon" className="rounded-full">
                         <Plus className="h-4 w-4" />
                       </Button>
@@ -131,7 +131,7 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
               {mascotaSeleccionada?.especieMascota} - {mascotaSeleccionada?.razaMascota}
             </DialogDescription>
           </DialogHeader>
-          <ScrollArea className="h-[300px] w-full rounded-md border p-4">
+          <ScrollArea className="h-[400px] w-full rounded-md border px-4">
             <Accordion type="single" collapsible className="w-full">
               {mascotaSeleccionada?.tratamientos.map((tratamiento) => (
                 <AccordionItem key={tratamiento.id} value={tratamiento.id.toString()}>
@@ -144,8 +144,8 @@ export function TablaHistoriales({ data }: TablaHistorialesProps) {
                   <AccordionContent>
                     <p className="mb-2">{tratamiento.descripcion}</p>
                     {/* <Badge variant="outline" className="mb-2">{`Precio: ${formatearPrecio(tratamiento.precio)} `}</Badge> */}
-                    <div className="mt-2">
-                      <Link href={`/admin/historiales/${mascotaSeleccionada.id}?idTratamiento=${tratamiento.id}`} passHref>
+                    <div className="flex justify-end">
+                      <Link href={`/admin/historiales/${mascotaSeleccionada.historialMascotaId}?tratamientoId=${tratamiento.id}`} passHref>
                         <Button variant="outline" size="sm">
                           <ArrowRight className="h-4 w-4 mr-2" />
                           Ir al tratamiento

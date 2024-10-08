@@ -104,21 +104,21 @@
 // 			<ScrollArea className='h-[90dvh]'>
 // 				<div>
 // 					<div className="p-1 md:p-3">
-// 						<p className="text-slate-500 mb-2">General</p>
+// 						<p className="text-slate-500 mb-1">General</p>
 // 						{datosGeneralesSidebar.map((item, index) => (
 // 							<SideBarItem key={item.label} item={item} />
 // 						))}
 // 					</div>
 // 					<Separator />
 // 					<div className="p-1 md:p-3">
-// 						<p className="text-slate-500 mb-2">Soporte</p>
+// 						<p className="text-slate-500 mb-1">Soporte</p>
 // 						{datosSoporteSidebar.map((item, index) => (
 // 							<SideBarItem key={item.label} item={item} />
 // 						))}
 // 					</div>
 // 					<Separator />
 // 					<div className="p-1 md:p-3">
-// 						<p className="text-slate-500 mb-2">Herramientas</p>
+// 						<p className="text-slate-500 mb-1">Herramientas</p>
 // 						{datosToolsSidebar.map((item, index) => (
 // 							<SideBarItem key={item.label} item={item} />
 // 						))}
@@ -157,7 +157,9 @@ import {
   Pill,
   User2,
   HeartPulse,
-  ChevronDown
+  ChevronDown,
+  Hospital,
+  BatteryLow
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -191,7 +193,7 @@ export const SideBar = () => {
       <ScrollArea className='h-[90dvh]'>
         <div>
           <div className="p-1 md:p-3">
-            <p className="text-slate-500 mb-2">General</p>
+            <p className="text-slate-500 mb-1">General</p>
             <SideBarItem icon={PanelsTopLeft} label="Datos Generales" href="/admin" exact={true} />
             <SideBarItem icon={User2} label="Usuarios" href="/admin/usuarios" />
             <SideBarItem icon={Calendar} label="Agenda" href="/admin/agenda" />
@@ -216,18 +218,20 @@ export const SideBar = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+            <SideBarItem icon={Hospital} label="Servicios" href="/admin/servicios" />
             <SideBarItem icon={Pill} label="Medicamentos" href="/admin/medicamentos" />
+            <SideBarItem icon={BatteryLow} label="Reportes" href="/admin/report" />
             <SideBarItem icon={HandCoins} label="Pagos" href="/admin/pagos" />
           </div>
           <Separator />
           <div className="p-1 md:p-3">
-            <p className="text-slate-500 mb-2">Soporte</p>
+            <p className="text-slate-500 mb-1">Soporte</p>
             <SideBarItem icon={Settings} label="Configuración" href="/admin/configuracion" />
             <SideBarItem icon={ShieldCheck} label="Seguridad" href="/admin/seguridad" />
           </div>
           <Separator />
           <div className="p-1 md:p-3">
-            <p className="text-slate-500 mb-2">Herramientas</p>
+            <p className="text-slate-500 mb-1">Herramientas</p>
             <SideBarItem icon={CircleHelpIcon} label="Preguntas" href="/admin/preguntas" />
           </div>
         </div>

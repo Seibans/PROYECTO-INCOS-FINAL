@@ -8,15 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { PlusIcon, XIcon } from "lucide-react";
-import { ReservaMedica } from "@/types"; // Importamos la interfaz para las citas médicas
+import { ReservaMedicaT } from "@/types"; // Importamos la interfaz para las citas médicas
 import FormCitaMedica from "./formCitaMedica"; // El componente del formulario para crear citas
 
 export default function CitasMedicas() {
-  const [citas, setCitas] = useState<ReservaMedica[]>([]); // Estado local para almacenar las citas
+  const [citas, setCitas] = useState<ReservaMedicaT[]>([]); // Estado local para almacenar las citas
   const [isModalOpen, setIsModalOpen] = useState(false); // Controlar la visibilidad del modal
 
   // Función para agregar nuevas citas desde el formulario
-  const addCita = (newCita: ReservaMedica) => {
+  const addCita = (newCita: ReservaMedicaT) => {
     setCitas([...citas, newCita]); // Actualizamos el estado con la nueva cita
     setIsModalOpen(false); // Cerramos el modal
   };
@@ -33,7 +33,7 @@ export default function CitasMedicas() {
           transition={{ type: "spring", stiffness: 300 }}
         >
           <h2 className="text-xl font-semibold mb-2">Citas Pendientes</h2>
-          <p className="text-3xl font-bold">{citas.filter((c) => c.estado === "pendiente").length}</p>
+          <p className="text-3xl font-bold">{citas.filter((c) => c.estado === 1).length}</p>
         </motion.div>
         <motion.div
           className="bg-green-100 p-6 rounded-lg shadow-md"
@@ -41,7 +41,7 @@ export default function CitasMedicas() {
           transition={{ type: "spring", stiffness: 300 }}
         >
           <h2 className="text-xl font-semibold mb-2">Citas Completadas</h2>
-          <p className="text-3xl font-bold">{citas.filter((c) => c.estado === "completada").length}</p>
+          <p className="text-3xl font-bold">{citas.filter((c) => c.estado === 2).length}</p>
         </motion.div>
         <motion.div
           className="bg-red-100 p-6 rounded-lg shadow-md"
@@ -49,7 +49,7 @@ export default function CitasMedicas() {
           transition={{ type: "spring", stiffness: 300 }}
         >
           <h2 className="text-xl font-semibold mb-2">Citas Canceladas</h2>
-          <p className="text-3xl font-bold">{citas.filter((c) => c.estado === "cancelada").length}</p>
+          <p className="text-3xl font-bold">{citas.filter((c) => c.estado === 3).length}</p>
         </motion.div>
       </div>
 
@@ -57,9 +57,11 @@ export default function CitasMedicas() {
       <Button
         onClick={() => setIsModalOpen(true)}
         className="mb-4 bg-blue-500 hover:bg-blue-600 text-white"
-      >
-        <PlusIcon className="mr-2 h-4 w-4" /> Nueva Cita
-      </Button>
+        variant={"expandIcon"}
+        Icon={PlusIcon}
+        iconPlacement="right"
+
+      >Nueva Cita</Button>
 
       {/* Tabla de citas */}
       <Table>
@@ -75,7 +77,7 @@ export default function CitasMedicas() {
           {citas.map((cita) => (
             <TableRow key={cita.id}>
               <TableCell>{format(cita.fechaReserva, "PPP p", { locale: es })}</TableCell>
-              <TableCell>{cita.servicio}</TableCell>
+              <TableCell>{cita.detalles}</TableCell>
               <TableCell>{cita.detalles}</TableCell>
               <TableCell>
                 <Badge>

@@ -1,238 +1,277 @@
 import { RolUsuario, Sexo, TipoMascota, TipoMedicamento } from "@prisma/client";
 import Decimal from "decimal.js";
 
-export interface MedicamentoT {
-    id: number;
-    imagen: string | null;
-    nombre: string;
-    descripcion: string | null;
-    indicaciones: string | null;
-    unidadMedida: string | null;
-    cantidadPorUnidad: number | null;
-    stock: number;
-    sobrante: number;
-    estado: number;
-    precio: string;
-    tipo: TipoMedicamento;
-    creadoEn: Date;
-    actualizadoEn?: Date | null;
-    idUsuario: number;
+export interface UsuarioT {
+  id: number;
+  name: string;
+  username?: string | null;
+  apellidoPat: string | null;
+  apellidoMat: string | null;
+  ci: string | null;
+  sexo: string | null;
+  email: string | null;
+  emailVerified: Date | null;
+  image: string | null;
+  rol: RolUsuario;
+  celular: string | null;
+  direccion: string | null;
+  estado: number;
+  authDobleFactor: boolean;
+  createdAt: Date;
+  updatedAt: Date | null;
+  idUsuario: number | null;
 }
 
-export interface TratamientoMedicamentoT {
-    id: number;
-    cantidad: number;
-    costoUnitario: number;
-    dosificacion: string | null;
-    medicamento: MedicamentoT;
+export interface MascotaT {
+  id: number;
+  nombre: string;
+  imagen: string | null;
+  especie: TipoMascota;
+  raza: string | null;
+  fechaNacimiento: Date | null;
+  sexo: Sexo;
+  detalles: string | null;
+  peso: number | null;
+  estado: number;
+  idPropietario: number | null;
+  usuario: UsuarioT | null;
+  esterilizado: boolean | null;
+  creadoEn: Date;
+  actualizadoEn?: Date | null;
+  idUsuario: number;
+}
+
+export interface HistorialMedicoT {
+  historialMascotaId: number;
+  descripcionTratamientos: string | null;
+  estado: number;
+  mascota: MascotaT;
+  tratamientos?: TratamientoT[] | null;
+  creadoEn: Date;
+  actualizadoEn: Date | null;
+  idUsuario: number;
 }
 
 export interface ServicioT {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    precio: string;
-    estado: number;
-    creadoEn: Date;
-    actualizadoEn?: Date | null;
-    idUsuario: number;
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio: string;
+  estado: number;
+  tratamientos?: ServicioTratamientoT[] | null;
+  creadoEn: Date;
+  actualizadoEn?: Date | null;
+  idUsuario: number;
 }
 
+
 export interface TratamientoT {
+  id: number;
+  descripcion: string;
+  estado: number;
+  diagnostico: string | null;
+  historialMascotaId: number;
+  pagoId: number | null;
+  pago?: PagoT | null;
+  medicamentos?: TratamientoMedicamentoT[] | null;
+  servicios?: ServicioTratamientoT[] | null;
+  creadoEn: Date;
+  actualizadoEn: Date | null;
+  idUsuario: number;
+}
+
+export interface ServicioTratamientoT {
+  precioServicio: string;
+  servicioId: number;
+  tratamientoId: number;
+  servicio?: ServicioT | null;
+  tratamiento?: TratamientoT | null;
+}
+
+export interface MedicamentoT {
+  id: number;
+  imagen: string | null;
+  nombre: string;
+  codigo: string | null;
+  descripcion: string | null;
+  indicaciones: string | null;
+  unidadMedida: string | null;
+  stock: number;
+  cantidadPorUnidad: number;
+  sobrante: number;
+  estado: number;
+  precio: string;
+  tipo: TipoMedicamento;
+  tratamientos?: TratamientoMedicamentoT[] | null;
+  creadoEn: Date;
+  actualizadoEn?: Date | null;
+  idUsuario: number;
+}
+
+export interface TratamientoMedicamentoT {
+  tratamientoId: number;
+  medicamentoId: number;
+  cantidad: number;
+  costoUnitario: string;
+  dosificacion: string | null;
+  medicamento?: MedicamentoT | null;
+  tratamiento?: TratamientoT | null;
+}
+
+export interface PagoT {
+  id: number;
+  total: string;
+  fechaPago: Date | null;
+  detalle: string | null;
+  estado: number;
+  esAyudaVoluntaria: boolean;
+  tratamiento: TratamientoT | null;
+  creadoEn: Date;
+  actualizadoEn?: Date | null;
+  idUsuario: number;
+}
+
+export interface ReservaMedicaT {
+  id: number;
+  fechaReserva: Date;
+  detalles: string | null;
+  estado: number;
+  usuarioId: number;
+  usuario: UsuarioT;
+  creadoEn: Date
+  actualizadoEn: Date | null;
+  idUsuario: number;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//INTERFACES EXPERIMENTALES
+//ESTA INTERFAZ SOLO SE MUESTRA EN EL PAGE.TSX DE HISTORIALES, Y SOLO ES PARA VISTA
+export interface HistorialMedicoVistaT {
+  historialMascotaId: number;
+  estado: number;
+  creadoEn: Date;
+  actualizadoEn: Date | null;
+  nombreMascota: string;
+  imagenMascota?: string | null;
+  especieMascota: string;
+  razaMascota?: string | null;
+  sexoMascota: string;
+  tratamientos: {
     id: number;
     descripcion: string;
-    diagnostico: string | null;
-    estado: number;
-    idPago: number;
     creadoEn: Date;
     actualizadoEn: Date | null;
     idUsuario: number;
-    medicamentos: TratamientoMedicamentoT[];
-    servicios: ServicioT[];
+  }[];
 }
 
-
-
-
-export interface MascotaT {
+//ESTA INTERFAZ SOLO SE MUESTRA EN EL PAGE.TSX DE [historialID] Y ES EL HISTORIAL COMPLETO CON EL ARRAY DE TRATAMEINTOS
+export interface HistorialMedicoCompleto {
+  historialMascotaId: number;
+  descripcionTratamientos: string | null;
+  estado: number;
+  creadoEn: Date;
+  actualizadoEn?: Date | null;
+  idUsuario: number;
+  mascota: {
     id: number;
     nombre: string;
-    sexo: 'Macho' | 'Hembra';
     imagen: string | null;
-    especie: 'Perro' | 'Gato' | 'Otro';
+    especie: TipoMascota;
     raza: string | null;
     fechaNacimiento: Date | null;
+    sexo: Sexo;
     detalles: string | null;
     peso: number | null;
-    vacunas: any | null;
     estado: number;
     idPropietario: number | null;
     esterilizado: boolean | null;
     creadoEn: Date;
     actualizadoEn?: Date | null;
     idUsuario: number;
-}
-
-export interface HistorialMedicoT {
-    id: number;
-    mascotaId: number;
-    descripcionTratamientos: string | null;
-    estado: number;
-    creadoEn: Date;
-    actualizadoEn: Date | null;
-    idUsuario: number;
-    mascota: MascotaT;
-    tratamientos: TratamientoT[];
-}
-
-export interface ReservaMedicaT {
-    id: number;
-    fechaReserva: Date;
-    detalles: string | null;
-    servicio: string;
-    estado: number;
-    usuarioId: number | null;
-    creadoEn: Date
-    actualizadoEn: Date | null;
-    idUsuario: number;
-}
-
-
-
-
-export interface UsuarioT {
-    id: number;
-    name: string;
-    apellidoPat: string | null;
-    apellidoMat: string | null;
-    ci: string | null;
-    sexo: string | null;
-    email: string | null;
-    emailVerified: Date | null;
-    image: string | null;
-    rol: string;
-    celular: string | null;
-    direccion: string | null;
-    estado: number;
-    authDobleFactor: boolean;
-    createdAt: Date;
-    updatedAt: Date | null;
-    idUsuario: number | null;
-}
-
-
-
-export interface HistorialMedicoCompleto {
-    id: number;
-    mascotaId: number;
-    descripcionTratamientos: string | null;
-    estado: number;
-    creadoEn: Date;
-    actualizadoEn: Date | null;
-    idUsuario: number;
-    mascota: {
+    usuario: {
       id: number;
-      nombre: string;
-      especie: TipoMascota;
-      raza: string | null;
-      fechaNacimiento: Date | null;
-      sexo: Sexo;
-      detalles: string | null;
-      imagen: string | null;
-      peso: number | null;
-      vacunas: any | null;
+      name: string;
+      apellidoPat: string | null;
+      apellidoMat: string | null;
+      ci: string | null;
+      rol: RolUsuario;
+      sexo: string | null;
+      email: string | null;
+      emailVerified: Date | null;
+      image: string | null;
+      celular: string | null;
+      direccion: string | null;
       estado: number;
-      idPropietario: number | null;
-      esterilizado: boolean | null;
-      creadoEn: Date;
-      actualizadoEn: Date | null;
-      idUsuario: number;
-      usuario: {
-        id: number;
-        name: string;
-        apellidoPat: string | null;
-        apellidoMat: string | null;
-        ci: string | null;
-        sexo: string | null;
-        email: string | null;
-        emailVerified: Date | null;
-        image: string | null;
-        rol: RolUsuario;
-        celular: string | null;
-        direccion: string | null;
-        estado: number;
-        authDobleFactor: boolean;
-        createdAt: Date;
-        updatedAt: Date | null;
-        idUsuario: number | null;
-      } | null;
-    };
-    tratamientos: TratamientoT[];
-  }
+      authDobleFactor: boolean;
+      createdAt: Date;
+      updatedAt: Date | null;
+      idUsuario: number | null;
+    } | null;
+  };
+  tratamientos: TratamientoT[];
+}
 
 
-  export interface TratamientoCompleto {
-    id: number;
-    descripcion: string;
-    diagnostico: string | null;
-    estado: number;
-    historialMedicoId: number;
-    pagoId: number | null;
-    creadoEn: Date;
-    actualizadoEn: Date | null;
-    idUsuario: number;
-    servicios: ServicioT[];
-    medicamentos: {
-      id: number;
-      cantidad: number;
-      costoUnitario: number;
-      dosificacion: string | null;
-      medicamento: MedicamentoT;
-    }[];
-  }
+
+export interface TratamientoCompleto {
+  id: number;
+  descripcion: string;
+  estado: number;
+  diagnostico: string | null;
+  historialMascotaId: number;
+  pagoId: number | null;
+  pago: PagoT | null;
+  medicamentos: TratamientoMedicamentoT[];
+  servicios: ServicioTratamientoT[];
+  creadoEn: Date;
+  actualizadoEn?: Date | null;
+  idUsuario: number;
+}
 
 
 
 
 
 
+//PARA EL FORMULARIO Y EL ESQUEMA DE ZOD
+export interface TratamientoFormT {
+  descripcion: string;
+  estado: number;
+  diagnostico: string | null;
+  historialMascotaId: number;
+  servicios: STFormT[];
+  medicamentos: TMFormT[];
+  total: number;
+  detalle: string | null;
+  esAyudaVoluntaria: boolean;
+}
 
+export interface TMFormT {
+  medicamentoId: number;
+  cantidad: number;
+  costoUnitario: string;
+  dosificacion: string | null;
+  medicamento?: MedicamentoT | null;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  export interface HistorialMedicoVistaT {
-    id: number;
-    estado: number;
-    creadoEn: Date;
-    actualizadoEn: Date | null;
-    nombreMascota: string;
-    imagenMascota?: string | null;
-    especieMascota: string;
-    razaMascota?: string | null;
-    sexoMascota: string;
-    tratamientos: {
-        id: number;
-        descripcion: string;
-        creadoEn: Date;
-        actualizadoEn: Date | null;
-        idUsuario: number;
-    }[];
+export interface STFormT {
+  precioServicio: string;
+  servicioId: number;
+  servicio?: ServicioT | null;
 }

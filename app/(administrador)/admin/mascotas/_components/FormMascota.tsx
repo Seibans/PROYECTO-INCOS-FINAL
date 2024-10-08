@@ -79,7 +79,7 @@ export const FormMascota = (props: FormMascotaProps) => {
 		defaultValues: {
 			nombre: "",
 			especie: undefined,
-			raza: "Sin Raza (Especial)",
+			raza: "",
 			fechaNacimiento: undefined,
 			sexo: undefined,
 			detalles: undefined,

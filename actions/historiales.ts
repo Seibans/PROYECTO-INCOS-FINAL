@@ -1,8 +1,9 @@
 // actions/historiales.ts
 "use server";
 import { db } from "@/lib/db";
-import { HistorialMedicoVistaT } from "@/types";
-import { HistorialMedicoCompleto, TratamientoCompleto } from "@/types";
+import { HistorialMedicoCompleto, HistorialMedicoVistaT, TratamientoCompleto } from "@/types";
+// import { HistorialMedicoCompleto, TratamientoCompleto } from "@/types";
+// import { TratamientoCompleto } from "@/types";
 import { RolUsuario } from "@prisma/client";
 
 
@@ -33,7 +34,7 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
 
     // Ajustar la estructura para que coincida con HistorialMedicoVistaT
     const historialesConMascotas: HistorialMedicoVistaT[] = historiales.map(historial => ({
-      id: historial.id,
+      historialMascotaId: historial.historialMascotaId,
       estado: historial.estado,
       creadoEn: historial.creadoEn,
       actualizadoEn: historial.actualizadoEn,
@@ -58,66 +59,202 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
   }
 };
 
+
+
+
+
 export async function obtenerHistorialconMascotayUsuario(historialId: number): Promise<HistorialMedicoCompleto | null> {
+
+  // const historial = await db.historialMedico.findUnique({
+    //   where: { historialMascotaId: historialId },
+    //   include: {
+    //     mascota: {
+    //       include: {
+    //         usuario: true
+    //       }
+    //     },
+    //     tratamientos: {
+    //       include: {
+    //         servicios: {
+    //           include: {
+    //             servicio: true
+    //           }
+    //         },
+    //         medicamentos: {
+    //           include: {
+    //             medicamento: true
+    //           }
+    //         },
+    //         pago: true
+    //       }
+    //     }
+    //   }
+    // });
   try {
     const historial = await db.historialMedico.findUnique({
-      where: { id: historialId },
-      include: {
+      where: { historialMascotaId: historialId },
+      select: {
+        historialMascotaId: true,
+        descripcionTratamientos: true,
+        estado: true,
+        creadoEn: true,
+        actualizadoEn: true,
+        idUsuario: true,
         mascota: {
-          include: {
-            usuario: true
+          select: {
+            id: true,
+            nombre: true,
+            imagen: true,
+            especie: true,
+            raza: true,
+            fechaNacimiento: true,
+            sexo: true,
+            detalles: true,
+            peso: true,
+            estado: true,
+            idPropietario: true,
+            esterilizado: true,
+            creadoEn: true,
+            actualizadoEn: true,
+            idUsuario: true,
+            usuario: {
+              select: {
+                id: true,
+                name: true,
+                apellidoPat: true,
+                apellidoMat: true,
+                ci: true,
+                rol: true,
+                sexo: true,
+                email: true,
+                emailVerified: true,
+                image: true,
+                celular: true,
+                direccion: true,
+                estado: true,
+                authDobleFactor: true,
+                createdAt: true,
+                updatedAt: true,
+                idUsuario: true,
+              }
+            }
           }
         },
         tratamientos: {
-          include: {
-            servicios: true,
-            medicamentos: {
-              include: {
-                medicamento: true
+          select: {
+            id: true,
+            descripcion: true,
+            estado: true,
+            diagnostico: true,
+            historialMascotaId: true,
+            pagoId: true,
+            creadoEn: true,
+            actualizadoEn: true,
+            idUsuario: true,
+            servicios: {
+              select: {
+                precioServicio: true,
+                servicioId: true,
+                servicio: {
+                  select: {
+                    id: true,
+                    nombre: true,
+                    descripcion: true,
+                    precio: true,
+                    creadoEn: true,
+                    actualizadoEn: true,
+                    idUsuario: true,
+                  }
+                }
               }
             },
-            pago: true
+            medicamentos: {
+              select: {
+                cantidad: true,
+                costoUnitario: true,
+                dosificacion: true,
+                medicamentoId: true,
+                medicamento: {
+                  select: {
+                    id: true,
+                    nombre: true,
+                    imagen: true,
+                    codigo: true,
+                    descripcion: true,
+                    indicaciones: true,
+                    unidadMedida: true,
+                    stock: true,
+                    cantidadPorUnidad: true,
+                    sobrante: true,
+                    estado: true,
+                    precio: true,
+                    tipo: true,
+                    creadoEn: true,
+                    actualizadoEn: true,
+                    idUsuario: true,
+                  }
+                }
+              }
+            },
+            pago: {
+              select: {
+                id: true,
+                total: true,
+                fechaPago: true,
+                detalle: true,
+                estado: true,
+                esAyudaVoluntaria: true,
+              }
+            }
           }
         }
       }
     });
+
 
     if (!historial) {
       return null;
     }
 
     // Convertir los campos Decimal a string para que coincidan con las interfaces
-    const historialFormateado: HistorialMedicoCompleto = {
+    const historialFormateado: any = {
       ...historial,
       mascota: {
         ...historial.mascota,
         usuario: historial.mascota.usuario ? {
           ...historial.mascota.usuario,
-          rol: historial.mascota.usuario.rol as RolUsuario // Asegurarse de que el tipo sea correcto
         } : null
       },
       tratamientos: historial.tratamientos.map(tratamiento => ({
         ...tratamiento,
         servicios: tratamiento.servicios.map(servicio => ({
           ...servicio,
-          precio: servicio.precio.toString()
+          precioServicio: servicio.precioServicio.toNumber().toFixed(2),
+          servicio: {
+            ...servicio.servicio,
+            precio: servicio.servicio.precio.toNumber().toFixed(2),
+          }
         })),
         medicamentos: tratamiento.medicamentos.map(med => ({
           ...med,
-          costoUnitario: med.costoUnitario.toNumber(),
+          costoUnitario: med.costoUnitario.toNumber().toFixed(2),
           medicamento: {
             ...med.medicamento,
-            precio: med.medicamento.precio.toString()
+            precio: med.medicamento.precio.toNumber().toFixed(2)
           }
         })),
-        idPago: tratamiento.pagoId ?? 0 // Asumiendo que idPago es requerido en TratamientoT
+        idPago: tratamiento.pagoId || null,
+        pago: tratamiento.pago ? {
+          ...tratamiento.pago,
+          total: tratamiento.pago.total.toNumber().toFixed(2),
+        } : null
       }))
     };
 
     return historialFormateado;
   } catch (error) {
-    console.error("Error al obtener el historial médico:", error);
-    throw new Error("Ocurrió un error al obtener el historial médico.");
+    // return { error: "Ocurrió un error al obtener el historial médico." };
+    return null;
   }
 }
 
@@ -127,7 +264,11 @@ export async function obtenerTratamientoCompleto(tratamientoId: number): Promise
     const tratamiento = await db.tratamiento.findUnique({
       where: { id: tratamientoId },
       include: {
-        servicios: true,
+        servicios: {
+          include: {
+            servicio: true
+          }
+        },
         medicamentos: {
           include: {
             medicamento: true
@@ -142,21 +283,56 @@ export async function obtenerTratamientoCompleto(tratamientoId: number): Promise
     }
 
     // Convertir los campos Decimal a string para que coincidan con las interfaces
+    // const tratamientoFormateado: any = {
+    //   ...tratamiento,
+    //   servicios: tratamiento.servicios.map(servicio => ({
+    //     ...servicio,
+    //     precioServicio: servicio.precioServicio.toString(),
+    //     servicio: {
+    //       ...servicio.servicio,
+    //       precio: servicio.servicio.precio.toString()
+    //     }
+    //   })),
+    //   medicamentos: tratamiento.medicamentos.map(med => ({
+    //     ...med,
+    //     costoUnitario: med.costoUnitario.toNumber(),
+    //     medicamento: {
+    //       ...med.medicamento,
+    //       precio: med.medicamento.precio.toString()
+    //     }
+    //   }))
+    // };
+    
+    console.log("DETALLADO COMPLETO", JSON.stringify(tratamiento, null, 2), "DETALLADO COMPLETO");
+
+
+    // Convertir los campos Decimal a string para que coincidan con las interfaces
     const tratamientoFormateado: TratamientoCompleto = {
       ...tratamiento,
       servicios: tratamiento.servicios.map(servicio => ({
         ...servicio,
-        precio: servicio.precio.toString()
+        precioServicio: servicio.precioServicio.toNumber().toFixed(2),
+        servicio: {
+          ...servicio.servicio,
+          precio: servicio.servicio.precio.toNumber().toFixed(2)
+        }
       })),
       medicamentos: tratamiento.medicamentos.map(med => ({
         ...med,
-        costoUnitario: med.costoUnitario.toNumber(),
+        costoUnitario: med.costoUnitario.toNumber().toFixed(2),
         medicamento: {
           ...med.medicamento,
-          precio: med.medicamento.precio.toString()
+          precio: med.medicamento.precio.toNumber().toFixed(2)
         }
-      }))
+      })),
+      // pago: tratamiento.pago ? {
+      //   ...tratamiento.pago,
+      //   total: tratamiento.pago.total.toNumber().toFixed(2)
+      // } : null
+      pago: null
     };
+    console.log("DETALLADO COMPLETO", JSON.stringify(tratamientoFormateado, null, 2), "DETALLADO COMPLETO2");
+
 
     return tratamientoFormateado;
   } catch (error) {

@@ -16,6 +16,22 @@
 // // ESTE COMANDO CREA LOS ESUQEMAS DE MANERA REVERSA, SOLO DEBES VINCULAR LA BASE DE DATOS CON EL datasource db nada mas
 // // npx prisma db pull con esto prisma lee la base de datos y crea los esquemas
 
+//Genera una migración Una vez que hayas realizado los cambios en el esquema, puedes generar una migración.
+//npx prisma migrate dev --name nombre_de_la_migracion
+
+// Este comando generará una nueva migración basada en los cambios que hiciste en el esquema y aplicará esos cambios a tu base de datos. Si no deseas aplicar la migración inmediatamente, puedes usar:
+// bash
+// npx prisma migrate dev --create-only
+
+// Aplica la migración
+// Una vez que estés satisfecho con la migración y cualquier ajuste que hayas hecho, aplica la migración a tu base de datos con el siguiente comando:
+// bash
+// npx prisma migrate dev
+
+// Despliegue en producción
+// Cuando estés listo para desplegar tus cambios en producción, asegúrate de ejecutar el siguiente comando en tu entorno de producción:
+// bash
+// npx prisma migrate deploy
 
 // enum EstadoTratamiento {
 //   Pendiente
@@ -149,14 +165,13 @@ model ConfirmacionDobleFactor {
 model Mascota {
   id              Int              @id @default(autoincrement()) @db.UnsignedInt
   nombre          String           @db.VarChar(50)
+  imagen          String?          @db.VarChar(255)
   especie         TipoMascota
   raza            String?          @db.VarChar(40)
   fechaNacimiento DateTime?        @db.Date
   sexo            Sexo
-  detalles        String?          @db.VarChar(255)
-  imagen          String?          @db.VarChar(255)
+  detalles        String?          @db.VarChar(150)
   peso            Float?           @db.Float
-  vacunas         Json?
   estado          Int              @default(1) @db.TinyInt
   idPropietario   Int?             @default(1) @db.UnsignedInt
   usuario         User?            @relation(fields: [idPropietario], references: [id])
@@ -165,57 +180,71 @@ model Mascota {
   creadoEn        DateTime         @default(now()) @db.Timestamp(3)
   actualizadoEn   DateTime?        @updatedAt @db.Timestamp(3)
   idUsuario       Int              @db.UnsignedInt
+
+  @@unique([id, idPropietario])
 }
 
 model HistorialMedico {
-  id                      Int           @id @default(autoincrement()) @db.UnsignedInt
-  mascotaId               Int           @unique @db.UnsignedInt
-  mascota                 Mascota       @relation(fields: [mascotaId], references: [id])
+  historialMascotaId      Int           @unique @db.UnsignedInt
   descripcionTratamientos String?       @db.Text
-  tratamientos            Tratamiento[]
   estado                  Int           @default(1) @db.TinyInt
+  mascota                 Mascota       @relation(fields: [historialMascotaId], references: [id])
+  tratamientos            Tratamiento[]
   creadoEn                DateTime      @default(now()) @db.Timestamp(3)
   actualizadoEn           DateTime?     @updatedAt @db.Timestamp(3)
   idUsuario               Int           @db.UnsignedInt
+
+  @@id([historialMascotaId])
 }
 
 model Servicio {
-  id            Int           @id @default(autoincrement()) @db.UnsignedInt
-  nombre        String        @unique @db.VarChar(100)
-  descripcion   String        @db.Text
-  precio         Decimal       @db.Decimal(10, 2)
-  estado        Int           @default(1) @db.TinyInt
-  tratamientos  Tratamiento[]
-  creadoEn      DateTime      @default(now()) @db.Timestamp(3)
-  actualizadoEn DateTime?     @updatedAt @db.Timestamp(3)
-  idUsuario     Int           @db.UnsignedInt
+  id            Int                   @id @default(autoincrement()) @db.UnsignedInt
+  nombre        String                @unique @db.VarChar(100)
+  descripcion   String                @db.VarChar(150)
+  precio        Decimal               @db.Decimal(10, 2)
+  estado        Int                   @default(1) @db.TinyInt
+  tratamientos  ServicioTratamiento[]
+  creadoEn      DateTime              @default(now()) @db.Timestamp(3)
+  actualizadoEn DateTime?             @updatedAt @db.Timestamp(3)
+  idUsuario     Int                   @db.UnsignedInt
 }
 
 model Tratamiento {
-  id                Int                      @id @default(autoincrement()) @db.UnsignedInt
-  descripcion       String                   @db.VarChar(255)
-  servicios     Servicio[]
-  estado            Int                      @default(1) @db.TinyInt
-  historialMedicoId Int                      @db.UnsignedInt
-  historialMedico   HistorialMedico          @relation(fields: [historialMedicoId], references: [id])
-  medicamentos      TratamientoMedicamento[]
-  diagnostico       String?                  @db.VarChar(255)
-  pago              Pago?                    @relation(fields: [pagoId], references: [id])
-  pagoId            Int?                     @unique @db.UnsignedInt
-  creadoEn          DateTime                 @default(now()) @db.Timestamp(3)
-  actualizadoEn     DateTime?                @updatedAt @db.Timestamp(3)
-  idUsuario         Int                      @db.UnsignedInt
+  id                 Int                      @id @default(autoincrement()) @db.UnsignedInt
+  descripcion        String                   @db.VarChar(100)
+  estado             Int                      @default(1) @db.TinyInt
+  diagnostico        String?                  @db.VarChar(255)
+  historialMascotaId Int                      @db.UnsignedInt
+  historialMascota   HistorialMedico          @relation(fields: [historialMascotaId], references: [historialMascotaId])
+  pagoId             Int?                     @unique @db.UnsignedInt
+  pago               Pago?                    @relation(fields: [pagoId], references: [id])
+  medicamentos       TratamientoMedicamento[]
+  servicios          ServicioTratamiento[]
+  creadoEn           DateTime                 @default(now()) @db.Timestamp(3)
+  actualizadoEn      DateTime?                @updatedAt @db.Timestamp(3)
+  idUsuario          Int                      @db.UnsignedInt
+}
+
+model ServicioTratamiento {
+  precioServicio Decimal     @db.Decimal(10, 2)
+  servicioId     Int         @db.UnsignedInt
+  tratamientoId  Int         @db.UnsignedInt
+  servicio       Servicio    @relation(fields: [servicioId], references: [id])
+  tratamiento    Tratamiento @relation(fields: [tratamientoId], references: [id])
+
+  @@id([servicioId, tratamientoId])
 }
 
 model Medicamento {
   id                Int                      @id @default(autoincrement()) @db.UnsignedInt
-  imagen            String?                  @db.VarChar(255)
+  imagen            String                   @db.VarChar(255)
   nombre            String                   @db.VarChar(100)
+  codigo            String?                  @db.VarChar(50)
   descripcion       String?                  @db.VarChar(150)
-  indicaciones      String?                  @db.VarChar(200)
+  indicaciones      String?                  @db.VarChar(150)
   unidadMedida      String?                  @db.VarChar(50)
-  cantidadPorUnidad Int                      @default(1)
   stock             Int                      @default(0)
+  cantidadPorUnidad Int                      @default(1)
   sobrante          Int                      @default(0)
   estado            Int                      @default(1) @db.TinyInt
   precio            Decimal                  @db.Decimal(10, 2)
@@ -227,24 +256,25 @@ model Medicamento {
 }
 
 model TratamientoMedicamento {
-  id            Int         @id @default(autoincrement()) @db.UnsignedInt
-  cantidad      Int         @default(1) @db.UnsignedInt
-  costoUnitario Decimal     @db.Decimal(10, 2)
-  dosificacion  String?     @db.VarChar(255)
   tratamientoId Int         @db.UnsignedInt
   medicamentoId Int         @db.UnsignedInt
+  cantidad      Int         @default(1) @db.UnsignedInt
+  costoUnitario Decimal     @db.Decimal(10, 2)
+  dosificacion  String?     @db.VarChar(150)
   tratamiento   Tratamiento @relation(fields: [tratamientoId], references: [id])
   medicamento   Medicamento @relation(fields: [medicamentoId], references: [id])
+
+  @@id([tratamientoId, medicamentoId])
 }
 
 model Pago {
   id                Int          @id @default(autoincrement()) @db.UnsignedInt
   total             Decimal      @db.Decimal(18, 2)
-  fechaPago         DateTime     @db.DateTime(3)
+  fechaPago         DateTime?    @db.DateTime(3)
   detalle           String?      @db.VarChar(100)
   estado            Int          @default(1) @db.TinyInt
-  tratamiento       Tratamiento?
   esAyudaVoluntaria Boolean      @default(false)
+  tratamiento       Tratamiento?
   creadoEn          DateTime     @default(now()) @db.Timestamp(3)
   actualizadoEn     DateTime?    @updatedAt @db.Timestamp(3)
   idUsuario         Int          @db.UnsignedInt
@@ -253,11 +283,10 @@ model Pago {
 model ReservaMedica {
   id            Int       @id @default(autoincrement()) @db.UnsignedInt
   fechaReserva  DateTime  @db.DateTime(3)
-  detalles      String?   @db.VarChar(255)
-  servicio      String    @db.VarChar(150)
+  detalles      String?   @db.VarChar(150)
   estado        Int       @default(1) @db.TinyInt
-  usuarioId     Int?      @db.UnsignedInt
-  usuario       User?     @relation(fields: [usuarioId], references: [id])
+  usuarioId     Int       @db.UnsignedInt
+  usuario       User      @relation(fields: [usuarioId], references: [id])
   creadoEn      DateTime  @default(now()) @db.Timestamp(3)
   actualizadoEn DateTime? @updatedAt @db.Timestamp(3)
   idUsuario     Int       @db.UnsignedInt

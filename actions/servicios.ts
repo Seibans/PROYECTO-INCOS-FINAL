@@ -4,7 +4,6 @@ import Decimal from 'decimal.js';
 import * as z from "zod";
 import { ServicioSchema} from "@/schemas";
 import { db } from "@/lib/db";
-import { Servicio } from "@prisma/client";
 import { ServicioT } from '@/types';
 import { usuarioIdActual } from "@/lib/auth";
 

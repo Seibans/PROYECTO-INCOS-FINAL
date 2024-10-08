@@ -272,10 +272,14 @@ export const MascotaSchema = z.object({
     //     (val) => val === "" ? undefined : Number(val),
     //     z.number().positive().optional()
     // ),
+
+
     idPropietario: z.union([
         z.literal(""),
         z.number().positive()
     ]).optional().transform(val => val === "" ? undefined : Number(val)),
+
+
     peso: z.string({
         required_error: "El peso es obligatorio",
     }).min(1, "El peso es obligatorio")
@@ -337,7 +341,7 @@ export const ServicioSchema = z.object({
         .max(100, 'El nombre no puede tener más de 100 caracteres'),
     descripcion: z.string()
         .min(1, 'La descripción es requerida')
-        .max(255, 'La descripción no puede tener más de 255 caracteres'),
+        .max(150, 'La descripción no puede tener más de 150 caracteres'),
     precio: z
         .string()
         .min(1, "El precio es requerido")
@@ -380,18 +384,6 @@ export const ServicioSchema = z.object({
 
 // });
 
-
-export const PagoSchema = z.object({
-    usuarioId: z.number({ required_error: "El ID del usuario es obligatorio" }),
-    total: z.preprocess((val) => parseInt(val as string, 10), z.number().int({ message: "El total debe ser un número entero" }).positive({ message: "El total debe ser un número positivo" })),
-    cuotas: z.preprocess((val) => parseInt(val as string, 10), z.number().int({ message: "Las cuotas deben ser un número entero" }).positive({ message: "Las cuotas deben ser un número positivo" })),
-    // cuotas: z.number().int({ message: "Las cuotas deben ser un número entero" }).positive({ message: "Las cuotas deben ser un número positivo" }),
-    montoCuota: z.preprocess((val) => parseFloat(val as string), z.number().positive({ message: "El monto de la cuota debe ser un número positivo" })),
-    detalle: z.string().max(100, { message: "El detalle no puede tener más de 100 caracteres" }).optional(),
-    estado: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El estado debe ser un número positivo" })),
-    fechaPago: z.date().optional(),
-});
-
 export const ReservaMedicaSchema = z.object({
     fechaReserva: z.date({
         required_error: "La fecha de la reserva es obligatoria y debe ser válida"
@@ -403,6 +395,102 @@ export const ReservaMedicaSchema = z.object({
     estado: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El estado debe ser un número positivo" })),
 });
 
+
+
+export const SubirImagenSquema = z.object({
+    archivo: z
+        .instanceof(File)
+        .refine((file) => file instanceof File, {
+            message: "El archivo es obligatorio y debe ser de tipo File",
+        }),
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const TratamientoMedicamentoSchema = z.object({
+//     cantidad: z.number().int().positive(),
+//     costoUnitario: z.number().positive(),
+//     dosificacion: z.string().nullable(),
+// });
+
+// const ServicioTratamientoSchema = z.object({
+//     precioServicio: z.number().int().positive(),
+// });
+
+// export const TratamientoFormSchema = z.object({
+//     descripcion:
+//         z.string()
+//             .min(1, "La descripción es requerida")
+//             .max(100, "La descripción no puede tener más de 100 caracteres"),
+//     diagnostico: z.string().nullable(),
+//     estado: z.number().int(),
+//     historialMedicoId: z.number().int().positive(),
+//     medicamentos: z.array(TratamientoMedicamentoSchema).optional(),
+//     servicios: z.array(ServicioTratamientoSchema).optional(),
+// })
+const TratamientoMedicamentoSchema = z.object({
+  medicamentoId: z.number().int().positive(),
+  cantidad: z.number().int().positive(),
+  costoUnitario: z.string().regex(/^\d+(\.\d{1,2})?$/),
+  dosificacion: z.string().nullable(),
+});
+
+const ServicioTratamientoSchema = z.object({
+  servicioId: z.number().int().positive(),
+  precioServicio: z.string().regex(/^\d+(\.\d{1,2})?$/),
+});
+
+export const TratamientoFormSchema = z.object({
+  descripcion: z.string().min(1, "La descripción es requerida").max(100, "La descripción no puede tener más de 100 caracteres"),
+  diagnostico: z.string().nullable(),
+  estado: z.number().int().min(0).max(3),
+  historialMascotaId: z.number().int().positive(),
+  medicamentos: z.array(TratamientoMedicamentoSchema),
+  servicios: z.array(ServicioTratamientoSchema),
+  total: z.number().nonnegative(),
+  detalle: z.string().nullable(),
+  esAyudaVoluntaria: z.boolean(),
+});
+
+
+const PagoSchema = z.object({
+    total: z.string().optional(),
+    detalle: z.string().nullable(),
+    esAyudaVoluntaria: z.boolean(),
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   REVISAR ESTO
 
 export const formSchema = z.object({
     fechaReserva: z.date({
@@ -418,32 +506,3 @@ export const formSchema = z.object({
 })
 
 
-export const SubirImagenSquema = z.object({
-    archivo: z
-        .instanceof(File)
-        .refine((file) => file instanceof File, {
-            message: "El archivo es obligatorio y debe ser de tipo File",
-        }),
-});
-
-
-
-
-
-export const tratamientoMedicamentoSchema = z.object({
-    id: z.number(),
-    cantidad: z.number().min(1, "La cantidad debe ser al menos 1"),
-    costoUnitario: z.number().min(0, "El costo unitario no puede ser negativo"),
-    dosificacion: z.string().nullable(),
-    medicamento: MedicamentoSchema,
-});
-
-export const tratamientoSchema = z.object({
-    id: z.number(),
-    descripcion: z.string().min(1, "La descripción es requerida"),
-    diagnostico: z.string().nullable(),
-    estado: z.number().min(0, "El estado debe ser un número positivo"),
-    idPago: z.number(),
-    medicamentos: z.array(tratamientoMedicamentoSchema),
-    servicios: z.array(ServicioSchema),
-});

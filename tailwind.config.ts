@@ -105,11 +105,16 @@ const config = {
 						opacity: '0'
 					}
 				},
+				'shine': {
+					from: { backgroundPosition: '200% 0' },
+					to: { backgroundPosition: '-200% 0' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'caret-blink': 'caret-blink 1.25s ease-out infinite',
+				'shine': 'shine 8s ease-in-out infinite',
 			},
 			width: {
 				'1.8/12': '15%',

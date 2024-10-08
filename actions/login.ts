@@ -1,15 +1,9 @@
 "use server";
 //Esto es un server action
 import * as z from "zod";
-
 import { AuthError } from "next-auth";
 import { getUserByEmail } from '@/data/user';
-// import {
-//     enviarCorreodeVerificacion,
-//     enviarTokenDobleFactorEmail
-// } from '@/lib/mail';
-
-import { enviarCorreodeVerificacion,enviarTokenDobleFactorEmail } from "@/lib/nodemailer";
+import { enviarCorreodeVerificacion, enviarTokenDobleFactorEmail } from "@/lib/nodemailer";
 
 import { signIn } from "@/auth";
 import { LoginSchema } from "@/schemas";
@@ -30,81 +24,79 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
     }
 
     const { email, password, codigo } = validatedFields.data;
-    
-    const existingUser = await getUserByEmail(email);
+    try {
+        const existingUser = await getUserByEmail(email);
 
-    if (!existingUser || !existingUser.email || !existingUser.password) {
-        return { error: 'El correo no Existe!' };
-    }
+        if (!existingUser || !existingUser.email || !existingUser.password) {
+            return { error: 'Credenciales Incorrectas Intente Nuevamente!' };
+        }
 
-    if (!existingUser.emailVerified) {
-        const verificationToken = await generateVerificationToken(existingUser.email);
+        if (!existingUser.emailVerified) {
+            const verificationToken = await generateVerificationToken(existingUser.email);
 
-        await enviarCorreodeVerificacion(
-            verificationToken.email,
-            verificationToken.token
-        );
-
-
-        return { success: "Confirmación de Correo Enviada" };
-    }
-
-    if (existingUser.authDobleFactor && existingUser.email) {
-
-        if (codigo) {
-            const tokenDobleFactor = await getTwoFactorTokenByEmail(existingUser.email);
-
-            if(!tokenDobleFactor){
-                return {error: "El código ingresado es incorrecto"};
-            }
-
-            if(tokenDobleFactor.token !== codigo){
-                return {error: "El código ingresado es incorrecto"};
-            }
-
-            const haExpirado = new Date(tokenDobleFactor.expires) < new Date();
-
-            if(haExpirado){
-                return {error: "El código expiró"};
-            }
- 
-            await db.tokenDobleFactor.delete({
-                where: {
-                    id: tokenDobleFactor.id
-                }
-            });
-
-            const confirmacionExistente = await getTwoFactorConfirmationByUserId(existingUser.id);
-
-            if(confirmacionExistente){
-                await db.confirmacionDobleFactor.delete({
-                    where: {
-                        id: confirmacionExistente.id
-                    }
-                });
-            }
-
-
-            await db.confirmacionDobleFactor.create({
-                data: {
-                    usuarioId: existingUser.id,
-                }
-            });
-
-        } else {
-
-            const tokenDobleFactor = await generateTwoFactorToken(existingUser.email);
-
-            await enviarTokenDobleFactorEmail(
-                tokenDobleFactor.email,
-                tokenDobleFactor.token
+            await enviarCorreodeVerificacion(
+                verificationToken.email,
+                verificationToken.token
             );
 
-            return { dobleFactor: true };
+            return { success: "Confirmación de Correo Enviada! Revisa Tu Correo para confirmar tu cuenta." };
         }
-    }
 
-    try {
+        if (existingUser.authDobleFactor && existingUser.email) {
+
+            if (codigo) {
+                const tokenDobleFactor = await getTwoFactorTokenByEmail(existingUser.email);
+
+                if (!tokenDobleFactor) {
+                    return { error: "El código ingresado es incorrecto" };
+                }
+
+                if (tokenDobleFactor.token !== codigo) {
+                    return { error: "El código ingresado es incorrecto" };
+                }
+
+                const haExpirado = new Date(tokenDobleFactor.expires) <= new Date();
+
+                if (haExpirado) {
+                    return { error: "El código expiró" };
+                }
+
+                await db.tokenDobleFactor.delete({
+                    where: {
+                        id: tokenDobleFactor.id
+                    }
+                });
+
+                const confirmacionExistente = await getTwoFactorConfirmationByUserId(existingUser.id);
+
+                if (confirmacionExistente) {
+                    await db.confirmacionDobleFactor.delete({
+                        where: {
+                            id: confirmacionExistente.id
+                        }
+                    });
+                }
+
+
+                await db.confirmacionDobleFactor.create({
+                    data: {
+                        usuarioId: existingUser.id,
+                    }
+                });
+
+            } else {
+
+                const tokenDobleFactor = await generateTwoFactorToken(existingUser.email);
+
+                await enviarTokenDobleFactorEmail(
+                    tokenDobleFactor.email,
+                    tokenDobleFactor.token
+                );
+
+                return { dobleFactor: true };
+            }
+        }
+
         await signIn("credentials", {
             email,
             password,
@@ -112,7 +104,9 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
         });
         // return { success: "Login Correcto" };
     } catch (error) {
+        console.log("existe?", error)
         if (error instanceof AuthError) {
+            console.log(error.type)
             switch (error.type) {
                 case "CredentialsSignin":
                     return { error: "Email o contraseña incorrectos" };

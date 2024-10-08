@@ -25,7 +25,6 @@ export const HeaderHistoriales = () => {
 							Edita el Historial
 						</DialogDescription>
 					</DialogHeader>
-					{/* <FormMascota setabrirModal={setabrirModal} /> */}
 				</DialogContent>
 			</Dialog>
 

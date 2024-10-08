@@ -134,7 +134,7 @@ export function FormPerfilAdmin() {
   return (
     <>
       <h2 className="text-2xl z-10">Mi Perfil</h2>
-      <Tabs defaultValue="cuenta" className="w-4/5 bg-background p-4 rounded-lg shadow-[44px_44px_88px_#777777,-44px_-44px_88px_#ffffff] dark:shadow-[44px_44px_88px_#1c1c1c,-44px_-44px_88px_#3c3c3c]">
+      <Tabs defaultValue="cuenta" className="w-11/12 sm:w-9/12 bg-background p-4 rounded-lg mb-10 shadow-[22px_22px_44px_#777777,-22px_-22px_44px_#ffffff] dark:shadow-[22px_22px_44px_#a9b0b7,-22px_-22px_44px_#3c3c3c]">
         <TabsList className="flex flex-col h-full w-full md:flex-row">
           <TabsTrigger value="cuenta" className="w-full">Datos de la Cuenta</TabsTrigger>
           <TabsTrigger value="contrasena"  className="w-full">Contraseña</TabsTrigger>

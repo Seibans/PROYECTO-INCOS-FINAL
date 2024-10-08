@@ -38,7 +38,7 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
     try {
         const idUActual = await usuarioIdActual();
         const mascota = await db.$transaction(async (tx) => {
-            const createdMascota = await tx.mascota.create({
+            const mascotaCreada = await tx.mascota.create({
                 data: {
                     nombre,
                     especie,
@@ -56,13 +56,13 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
 
             await tx.historialMedico.create({
                 data: {
-                    mascotaId: createdMascota.id,
+                    historialMascotaId: mascotaCreada.id,
                     estado: 1,
                     idUsuario: idUActual,
                 },
             });
 
-            return createdMascota;
+            return mascotaCreada;
         });
         return { success: "Mascota y Historial Médico Registrados Correctamente!" };
     } catch (error) {
@@ -99,7 +99,7 @@ export const registrarMascotaConImagen = async (formMascota: FormData) => {
   
       const idUActual = await usuarioIdActual();
       const mascota = await db.$transaction(async (tx) => {
-        const createdMascota = await tx.mascota.create({
+        const mascotaCreada = await tx.mascota.create({
           data: {
             nombre,
             especie,
@@ -118,13 +118,13 @@ export const registrarMascotaConImagen = async (formMascota: FormData) => {
   
         await tx.historialMedico.create({
           data: {
-            mascotaId: createdMascota.id,
+            historialMascotaId: mascotaCreada.id,
             estado: 1,
             idUsuario: idUActual,
           },
         });
   
-        return createdMascota;
+        return mascotaCreada;
       });
   
       return { success: "Mascota y Historial Médico Registrados Correctamente!" };

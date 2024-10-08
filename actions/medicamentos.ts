@@ -53,7 +53,7 @@ export const registrarMedicamento = async (
         const precio = formMedicamento.get('precio') as string;
         const sobrante = parseInt(formMedicamento.get('sobrante') as string, 10);
         const tipo = formMedicamento.get('tipo') as TipoMedicamento;
-        let rutaImagen: string | null = null;
+        let rutaImagen: string = "";
 
         if (archivo) {
             const nombreUnico = `${uuidv4()}_${archivo.name}`;
