@@ -1,8 +1,7 @@
 "use client"
-
 import { E164Number } from "libphonenumber-js/core";
-
 import 'react-phone-number-input/style.css';
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { RolUsuario } from "@prisma/client";
 import { useForm } from "react-hook-form";
@@ -323,53 +322,6 @@ export const FormEditarUsuario = (props: FormEditarUsuarioProps) => {
 						</FormItem>
 					)}
 				/>
-
-				{/* <FormField
-					disabled={isPending}
-					control={form.control}
-					name="imagen"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Detalles y Color de la mascota</FormLabel>
-							<FormControl>{
-								subirImagen ? (
-									<p className='text-sm'>Imagen Subida!</p>
-								) : (
-									<UploadButton
-										{...field}
-										className='bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-3'
-										endpoint='imagenMascota'
-										content={{
-											button({ ready }) {
-												if (ready) return <div>Upload stuff</div>;
-
-												return "Getting ready...";
-											},
-											allowedContent({ ready, fileTypes, isUploading }) {
-												if (!ready) return "Checking what you allow";
-												if (isUploading) return "Seems like stuff is uploading";
-												return `Stuff you can upload: ${fileTypes.join(", ")}`;
-											},
-										}}
-										onClientUploadComplete={(res) => {
-											form.setValue("imagen", res?.[0].url);
-											setsubirImagen(true);
-											toast.success("Imagen Subida!");
-
-										}}
-										onUploadError={(err) => {
-											toast.error(err.message);
-										}}
-									/>
-								)}
-							</FormControl>
-							<FormDescription>
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/> */}
-
 				<div className="flex justify-center">
 					<Button
 						disabled={isPending}

@@ -37,7 +37,8 @@ const config = {
 			fontFamily: {
 				sans: ["var(--font-abc-regular)", ...fontFamily.sans],
 				bold: ["var(--font-abc-bold)", ...fontFamily.sans],
-				light: ["var(--font-abc-light)", ...fontFamily.sans]
+				light: ["var(--font-abc-light)", ...fontFamily.sans],
+				flow: ["var(--font-flow-ext)", ...fontFamily.sans]
 			},
 			colors: {
 				border: 'hsl(var(--border))',

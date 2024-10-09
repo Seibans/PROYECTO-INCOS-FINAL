@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Dog } from 'lucide-react';
 import { FormEditarUsuario } from './FormEditarUsuario';
 import CambiarImagen from '@/components/admin/CambiarImagen.component';
+import { FormUsuarioGlobal } from '../../_components/FomrUsuarioGlobal';
 
 type InformacionUsuarioProps = {
     usuario: User;
@@ -30,7 +31,8 @@ export const InformacionUsuario = (props: InformacionUsuarioProps) => {
                         componente='usuario'
                     />
                 </div>
-                <FormEditarUsuario usuario={usuario} />
+                {/* <FormEditarUsuario usuario={usuario} /> */}
+					<FormUsuarioGlobal usuario={usuario} isDialog={false} />
             </div>
 
             <div className="p-4 rounded-lg shadow-md bg-background hover:shadow-lg h-min">

@@ -105,7 +105,7 @@ export function UserSelect({ users, onSelect, value }: UserSelectProps) {
               className="h-8"
             />
           </div>
-          <ScrollArea className="h-[250px] overflow-y-auto w-full">
+          <ScrollArea className="h-[280px] overflow-y-auto w-full">
             {filteredUsers.length === 0 ? (
               <div className="py-2 px-2 text-sm text-muted-foreground text-center">
                 No se encontraron resultados.

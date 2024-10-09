@@ -98,7 +98,13 @@ export const registrarUsuarioByAdmin = async (values: z.infer<typeof RegistroAdm
         const formattedApellidoMat = apellidoMat ? formatearNombre(apellidoMat) : null;
         const formattedDireccion = direccion ? direccion.trim() : null;
 
-        const usuarioExistente = await getUserByEmail(email);
+        let usuarioExistente;
+        if(email !== undefined){
+            usuarioExistente = await getUserByEmail(email);
+        }else{
+            return {error: "El correo es requerido"}
+        }
+
         if (usuarioExistente) {
             return { error: "El correo ya se encuentra Registrado!" };
         }

@@ -33,22 +33,61 @@
 //   );
 // }
 
+// "use client";
+// import React from 'react';
+// import Link from 'next/link';
+// import { usePathname } from 'next/navigation';
+// import { LucideIcon } from 'lucide-react';
+// import { cn } from '@/lib/utils';
+// import { IconType } from 'react-icons/lib';
+
+// type SideBarItemProps = {
+//   icon: LucideIcon | IconType ;
+//   label: string;
+//   href: string;
+//   className?: string;
+//   exact?: boolean;
+// };
+
+// export function SideBarItem({ icon: Icon, label, href, className, exact = false }: SideBarItemProps) {
+//   const pathname = usePathname();
+//   const isActive = exact ? pathname === href : pathname.startsWith(href) && href !== '/admin';
+
+//   return (
+//     <Link
+//       href={href}
+//       className={cn(
+//         `flex items-center gap-x-2 text-sm mt-2 light:text-slate-700 dark:text-white hover:bg-slate-300/20 rounded-lg py-2 px-4 w-full`,
+//         isActive && 'bg-orange-300 dark:bg-orange-600 hover:bg-orange-400 dark:hover:bg-orange-700',
+//         className
+//       )}
+//     >
+//       <Icon strokeWidth={1} className="w-5 h-5" />
+//       <p className="flex-grow">{label}</p>
+//     </Link>
+//   );
+// }
+
+
 "use client";
+
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { IconType } from 'react-icons/lib';
 
 type SideBarItemProps = {
-  icon: LucideIcon;
+  icon: LucideIcon | IconType;
   label: string;
   href: string;
   className?: string;
   exact?: boolean;
+  onClick?: () => void;
 };
 
-export function SideBarItem({ icon: Icon, label, href, className, exact = false }: SideBarItemProps) {
+export function SideBarItem({ icon: Icon, label, href, className, exact = false, onClick }: SideBarItemProps) {
   const pathname = usePathname();
   const isActive = exact ? pathname === href : pathname.startsWith(href) && href !== '/admin';
 
@@ -60,6 +99,11 @@ export function SideBarItem({ icon: Icon, label, href, className, exact = false 
         isActive && 'bg-orange-300 dark:bg-orange-600 hover:bg-orange-400 dark:hover:bg-orange-700',
         className
       )}
+      onClick={(e) => {
+        if (onClick) {
+          onClick();
+        }
+      }}
     >
       <Icon strokeWidth={1} className="w-5 h-5" />
       <p className="flex-grow">{label}</p>

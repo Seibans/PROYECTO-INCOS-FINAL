@@ -84,7 +84,7 @@ model User {
   apellidoMat             String?                  @db.VarChar(40)
   ci                      String?                  @db.VarChar(18)
   sexo                    String?                  @db.VarChar(1)
-  email                   String                   @unique @map("correo") @db.VarChar(150)
+  email                   String?                  @unique @map("correo") @db.VarChar(150)
   emailVerified           DateTime?                @map("correoVerificado")
   image                   String?                  @map("imagen") @db.VarChar(255)
   password                String?                  @map("contrasena") @db.VarChar(200)

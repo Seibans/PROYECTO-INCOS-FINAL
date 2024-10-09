@@ -6,6 +6,7 @@
   --font-abc-regular: "ABCSocial-Regular";
   --font-abc-bold: "ABCSocial-Bold";
   --font-abc-light: "ABCSocial-Light";
+  --font-flow-ext: "FlowExt"
 }
 
 html, body, :root{
@@ -22,6 +23,10 @@ html, body, :root{
 
 .font-light {
   font-family: var(--font-abc-light), sans-serif;
+}
+
+.font-flow {
+  font-family: var(--font-flow-ext), sans-serif;
 }
 
 .calendar-container .fc .fc-button-primary{

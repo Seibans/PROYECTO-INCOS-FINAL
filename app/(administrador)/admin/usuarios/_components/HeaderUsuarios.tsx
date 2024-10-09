@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { FormUsuario } from "./FormUsuario";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { FormUsuarioGlobal } from "./FomrUsuarioGlobal";
 
 export const HeaderUsuarios = () => {
 	const [abrirModal, setabrirModal] = useState(false);
@@ -22,7 +23,8 @@ export const HeaderUsuarios = () => {
 							Registra un Nuevo Usuario
 						</DialogDescription>
 					</DialogHeader>
-					<FormUsuario setabrirModal={setabrirModal} />
+					{/* <FormUsuario setabrirModal={setabrirModal} /> */}
+					<FormUsuarioGlobal setabrirModal={setabrirModal} isDialog={true} />
 				</DialogContent>
 			</Dialog>
 

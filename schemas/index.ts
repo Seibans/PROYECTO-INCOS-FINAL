@@ -102,13 +102,13 @@ export const RegistroAdminSchema = z.object({
         })
     )),
     sexo: z.optional(z.enum(["M", "F"])),
-    email: z.string({
+    email: z.optional(z.string({
         invalid_type_error: "Ingrese Caracteres válidos"
     }).email({
         message: "* El Email es requerido"
     }).max(150, {
         message: "* El Email no puede tener más de 150 caracteres"
-    }),
+    })),
     celular: z.optional(
         z.string()
             .max(17, {
@@ -122,6 +122,7 @@ export const RegistroAdminSchema = z.object({
             .max(255, { message: "La dirección no debe tener más de 255 caracteres." })
     ),
     image: z.string().optional(),
+    estado: z.optional(z.number().positive({ message: "El estado debe ser un número positivo" })),
     archivo: z.instanceof(File).optional(),
     rol: z.nativeEnum(RolUsuario, {
         errorMap: () => ({ message: "El tipo de usuario es inválido" })

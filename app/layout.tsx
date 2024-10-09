@@ -35,6 +35,11 @@ const fontABCSocialRegular = localFont({
   variable: "--font-abc-regular",
 });
 
+const fontFlexExt = localFont({
+  src: "./fonts/FlowExt.woff2",
+  variable: "--font-flow-ext",
+});
+
 
 
 export const metadata: Metadata = {
@@ -61,6 +66,7 @@ export default async function RootLayout({
             fontABCSocialRegular.variable,
             fontABCSocialLight.variable,
             fontABCSocialBold.variable,
+            fontFlexExt.variable
           )}
         >
           <NextSSRPlugin
