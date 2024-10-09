@@ -34,6 +34,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { es } from "date-fns/locale";
+
+import { formatearFechaBoton } from "@/lib/formatearFecha";
 
 const months = [
   "Enero",
@@ -430,8 +433,9 @@ export const CalendarDatePicker = React.forwardRef<
                         onMouseOver={() => handleMouseOver("firstDay")}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {formatWithTz(date.from, "dd")}
-                      </span>{" "}
+                        {/* {formatWithTz(date.from, "dd")} */}
+                        {formatearFechaBoton(date.from, 'day')}
+                      </span>{" de "}
                       <span
                         id={`firstMonth-${id}`}
                         className={cn(
@@ -442,9 +446,10 @@ export const CalendarDatePicker = React.forwardRef<
                         onMouseOver={() => handleMouseOver("firstMonth")}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {formatWithTz(date.from, "LLL")}
+                        {/* {formatWithTz(date.from, "LLL")} */}
+                        {formatearFechaBoton(date.from, 'month').toLocaleUpperCase()}
                       </span>
-                      ,{" "}
+                      {" de "}
                       <span
                         id={`firstYear-${id}`}
                         className={cn(
@@ -455,11 +460,12 @@ export const CalendarDatePicker = React.forwardRef<
                         onMouseOver={() => handleMouseOver("firstYear")}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {formatWithTz(date.from, "y")}
+                        {/* {formatWithTz(date.from, "y")} */}
+                        {formatearFechaBoton(date.from, 'year')}
                       </span>
                       {numberOfMonths === 2 && (
                         <>
-                          {" - "}
+                          {"   hasta   "}
                           <span
                             id={`secondDay-${id}`}
                             className={cn(
@@ -470,8 +476,9 @@ export const CalendarDatePicker = React.forwardRef<
                             onMouseOver={() => handleMouseOver("secondDay")}
                             onMouseLeave={handleMouseLeave}
                           >
-                            {formatWithTz(date.to, "dd")}
-                          </span>{" "}
+                            {/* {formatWithTz(date.to, "dd")} */}
+                            {formatearFechaBoton(date.to, 'day')}
+                          </span>{" de "}
                           <span
                             id={`secondMonth-${id}`}
                             className={cn(
@@ -482,9 +489,10 @@ export const CalendarDatePicker = React.forwardRef<
                             onMouseOver={() => handleMouseOver("secondMonth")}
                             onMouseLeave={handleMouseLeave}
                           >
-                            {formatWithTz(date.to, "LLL")}
+                            {/* {formatWithTz(date.to, "LLL")} */}
+                            {formatearFechaBoton(date.to, 'month').toUpperCase()}
                           </span>
-                          ,{" "}
+                          {" de "}
                           <span
                             id={`secondYear-${id}`}
                             className={cn(
@@ -495,7 +503,8 @@ export const CalendarDatePicker = React.forwardRef<
                             onMouseOver={() => handleMouseOver("secondYear")}
                             onMouseLeave={handleMouseLeave}
                           >
-                            {formatWithTz(date.to, "y")}
+                            {/* {formatWithTz(date.to, "y")} */}
+                            {formatearFechaBoton(date.to, 'year')}
                           </span>
                         </>
                       )}
@@ -511,8 +520,9 @@ export const CalendarDatePicker = React.forwardRef<
                         onMouseOver={() => handleMouseOver("day")}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {formatWithTz(date.from, "dd")}
-                      </span>{" "}
+                        {/* {formatWithTz(date.from, "dd")} */}
+                        {formatearFechaBoton(date.from, 'day')}
+                      </span>{" de "}
                       <span
                         id="month"
                         className={cn(
@@ -522,9 +532,10 @@ export const CalendarDatePicker = React.forwardRef<
                         onMouseOver={() => handleMouseOver("month")}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {formatWithTz(date.from, "LLL")}
+                        {/* {formatWithTz(date.from, "LLL")} */}
+                        {formatearFechaBoton(date.from, 'month').toUpperCase()}
                       </span>
-                      ,{" "}
+                      {" de "}
                       <span
                         id="year"
                         className={cn(
@@ -534,12 +545,13 @@ export const CalendarDatePicker = React.forwardRef<
                         onMouseOver={() => handleMouseOver("year")}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {formatWithTz(date.from, "y")}
+                        {/* {formatWithTz(date.from, "y")} */}
+                        {formatearFechaBoton(date.from, 'year')}
                       </span>
                     </>
                   )
                 ) : (
-                  <span>Pick a date</span>
+                  <span>Seleccionar Fecha</span>
                 )}
               </span>
             </Button>
@@ -670,6 +682,7 @@ export const CalendarDatePicker = React.forwardRef<
                   <div className="flex">
                     <Calendar
                       mode="range"
+                      locale={es}
                       defaultMonth={monthFrom}
                       month={monthFrom}
                       onMonthChange={setMonthFrom}

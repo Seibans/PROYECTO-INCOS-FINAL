@@ -9,6 +9,8 @@ import { addHours } from "date-fns";
 import fs from 'fs-extra';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { formatearNombre } from "@/lib/formatearNombre";
+import { formatearDetalle } from "@/lib/formatearDescripcion";
 
 export const obtenerMascotas = async (): Promise<Mascota[]> => {
     const mascotas = await db.mascota.findMany({
@@ -29,23 +31,29 @@ export const obtenerMascotas = async (): Promise<Mascota[]> => {
     return mascotasConFechaAjustada;
 }
 
+//TODO: Corregir bug de campos invalidos
 export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSchema>) => {
     const validatedMascota = MascotaSchema.safeParse(mascotaValues);
+    console.log(validatedMascota.error)
     if (!validatedMascota.success) {
         return { error: "Campos Inválidos!" };
     }
     const { nombre, especie, raza, fechaNacimiento, sexo, detalles, idPropietario, peso, esterilizado, estado } = validatedMascota.data;
+    // if(isNaN(idPropietario))
+
+    const nombreF = formatearNombre(nombre);
+    const detallesF = formatearDetalle(detalles);
     try {
         const idUActual = await usuarioIdActual();
         const mascota = await db.$transaction(async (tx) => {
             const mascotaCreada = await tx.mascota.create({
                 data: {
-                    nombre,
+                    nombre: nombreF,
                     especie,
                     raza,
                     fechaNacimiento,
                     sexo,
-                    detalles,
+                    detalles: detallesF,
                     idPropietario,
                     peso: parseFloat(peso as string),
                     esterilizado,
@@ -74,17 +82,17 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
 export const registrarMascotaConImagen = async (formMascota: FormData) => {
     try {
       const archivo = formMascota.get("archivo") as File | null;
-      const nombre = formMascota.get('nombre') as string;
+      const nombre = formatearNombre(formMascota.get('nombre') as string) as string;
       const especie = formMascota.get('especie') as TipoMascota;
       const raza = formMascota.get('raza') as string;
       const fechaNacimiento = new Date(formMascota.get('fechaNacimiento') as string);
       const sexo = formMascota.get('sexo') as Sexo;
-      const detalles = formMascota.get('detalles') as string;
+      const detalles = formatearDetalle(formMascota.get('detalles') as string) as string;
       const idPropietario = formMascota.get('idPropietario') ? parseInt(formMascota.get('idPropietario') as string, 10) : undefined;
       const peso = parseFloat(formMascota.get('peso') as string);
       const esterilizado = formMascota.get('esterilizado') === 'true';
       const estado = parseInt(formMascota.get('estado') as string, 10);
-  
+
       let rutaImagen: string | null = null;
   
       if (archivo) {

@@ -79,11 +79,11 @@ const InputImagen = forwardRef<ImageUploaderRef, ImageUploaderProps>(({ initialP
               height={60}
               className="w-full h-full object-contain cursor-pointer rounded-xl"
             />
-            <div
+            {/* <div
               className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
             >
               <EyeIcon className="h-10 w-10 text-white" />
-            </div>
+            </div> */}
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full">

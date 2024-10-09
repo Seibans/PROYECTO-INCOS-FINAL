@@ -6,6 +6,7 @@ import { ServicioSchema} from "@/schemas";
 import { db } from "@/lib/db";
 import { ServicioT } from '@/types';
 import { usuarioIdActual } from "@/lib/auth";
+import { formatearNombre } from '@/lib/formatearNombre';
 
 export const obtenerServicios = async (): Promise<ServicioT[]> => {
     try {
@@ -35,12 +36,14 @@ export const registrarServicio = async (values: z.infer<typeof ServicioSchema>) 
         return { error: "Campos Inválidos!" };
     }
     const { nombre, descripcion, precio } = validatedServicio.data;
+    const nombreF = formatearNombre(nombre);
+    const descripcionF = formatearNombre(descripcion);
     try {
         const idUActual = await usuarioIdActual();
         const servicio = await db.servicio.create({
             data: {
-                nombre,
-                descripcion,
+                nombre: nombreF,
+                descripcion: descripcionF,
                 precio,
                 idUsuario: idUActual,
             },
@@ -65,12 +68,14 @@ export const editarServicio = async (
             return { error: "Campos Inválidos!" };
         }
         const { nombre, descripcion, precio } = validatedFields.data;
+        const nombreF = formatearNombre(nombre);
+        const descripcionF = formatearNombre(descripcion);
 
         const servicioActualizado = await db.servicio.update({
             where: { id: idServicio },
             data: {
-                nombre,
-                descripcion,
+                nombre: nombreF,
+                descripcion: descripcionF,
                 precio,
                 idUsuario: await usuarioIdActual(),
             },

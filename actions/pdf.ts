@@ -228,6 +228,47 @@ export async function generatePDF() {
   }
 }
 
+// export async function generatePDFFromURL(url: string) {
+//   try {
+//     const browser = await puppeteer.launch({
+//       headless: true,
+//       args: ['--no-sandbox', '--disable-setuid-sandbox']
+//     });
+//     const page = await browser.newPage();
+
+//     await page.goto(url, { waitUntil: 'networkidle0' });
+
+//     const pdfBuffer = await page.pdf({
+//       format: 'A4',
+//       printBackground: true,
+//       margin: {
+//         top: '20mm',
+//         right: '20mm',
+//         bottom: '20mm',
+//         left: '20mm'
+//       },
+//       displayHeaderFooter: true,
+//       headerTemplate: '<div></div>',
+//       footerTemplate: `
+//         <div style="font-size: 10px; text-align: center; width: 100%;">
+//           <span class="pageNumber"></span> / <span class="totalPages"></span>
+//         </div>
+//       `,
+//       scale: 0.8
+//     });
+
+//     await browser.close();
+
+//     const pdfPath = path.join(process.cwd(), 'public', 'url-report.pdf');
+//     await fs.writeFile(pdfPath, pdfBuffer);
+
+//     return '/url-report.pdf';
+//   } catch (error) {
+//     console.error('Error al generar el PDF desde URL:', error);
+//     throw new Error('No se pudo generar el PDF desde la URL');
+//   }
+// }
+
 export async function generatePDFFromURL(url: string) {
   try {
     const browser = await puppeteer.launch({
@@ -236,16 +277,46 @@ export async function generatePDFFromURL(url: string) {
     });
     const page = await browser.newPage();
 
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    // Aumentar el tiempo de espera y manejar la carga de la página
+    await page.goto(url, { 
+      waitUntil: 'networkidle0',
+      timeout: 60000 // Aumentar el tiempo de espera a 60 segundos
+    });
+
+    // Esperar un poco más para asegurarse de que todo el contenido se haya cargado
+    // await page.waitForTimeout(5000);
+
+    // Ajustar el viewport para que coincida con el tamaño del papel
+    await page.setViewport({
+      width: 1240,
+      height: 1754, // Altura aproximada de A4 a 96 DPI
+      deviceScaleFactor: 1,
+    });
+
+    // Ajustar el contenido para la impresión
+    await page.evaluate(() => {
+      const style = document.createElement('style');
+      style.textContent = `
+        @media print {
+          body {
+            margin: 0;
+            padding: 20mm;
+            box-sizing: border-box;
+          }
+          /* Ajusta otros estilos según sea necesario */
+        }
+      `;
+      document.head.appendChild(style);
+    });
 
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
       margin: {
-        top: '20mm',
-        right: '20mm',
-        bottom: '20mm',
-        left: '20mm'
+        top: '10mm',
+        right: '10mm',
+        bottom: '10mm',
+        left: '10mm'
       },
       displayHeaderFooter: true,
       headerTemplate: '<div></div>',
@@ -265,7 +336,7 @@ export async function generatePDFFromURL(url: string) {
     return '/url-report.pdf';
   } catch (error) {
     console.error('Error al generar el PDF desde URL:', error);
-    throw new Error('No se pudo generar el PDF desde la URL');
+    throw new Error('No se pudo generar el PDF desde la URL. Por favor, inténtelo de nuevo más tarde.');
   }
 }
 

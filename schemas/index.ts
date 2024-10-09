@@ -274,6 +274,7 @@ export const MascotaSchema = z.object({
     // ),
 
 
+    //TODO: ARREGLAR ESTO
     idPropietario: z.union([
         z.literal(""),
         z.number().positive()
@@ -300,6 +301,10 @@ export const MascotaSchema = z.object({
 // }),
 
 export const MedicamentoSchema = z.object({
+    codigo: z.optional(
+        z.string()
+            .max(50, { message: "El código no puede tener más de 50 caracteres" }),
+    ),
     nombre: z.string()
         .min(1, { message: "El nombre es obligatorio" })
         .max(100, { message: "El nombre no puede tener más de 100 caracteres" }),
@@ -421,51 +426,34 @@ export const SubirImagenSquema = z.object({
 
 
 
-
-
-// const TratamientoMedicamentoSchema = z.object({
-//     cantidad: z.number().int().positive(),
-//     costoUnitario: z.number().positive(),
-//     dosificacion: z.string().nullable(),
-// });
-
-// const ServicioTratamientoSchema = z.object({
-//     precioServicio: z.number().int().positive(),
-// });
-
-// export const TratamientoFormSchema = z.object({
-//     descripcion:
-//         z.string()
-//             .min(1, "La descripción es requerida")
-//             .max(100, "La descripción no puede tener más de 100 caracteres"),
-//     diagnostico: z.string().nullable(),
-//     estado: z.number().int(),
-//     historialMedicoId: z.number().int().positive(),
-//     medicamentos: z.array(TratamientoMedicamentoSchema).optional(),
-//     servicios: z.array(ServicioTratamientoSchema).optional(),
-// })
 const TratamientoMedicamentoSchema = z.object({
-  medicamentoId: z.number().int().positive(),
-  cantidad: z.number().int().positive(),
-  costoUnitario: z.string().regex(/^\d+(\.\d{1,2})?$/),
-  dosificacion: z.string().nullable(),
+    medicamentoId: z.number().int().positive(),
+    cantidad: z.number().int().positive(),
+    costoUnitario: z.string().regex(/^\d+(\.\d{1,2})?$/),
+    dosificacion: z.string().nullable(),
 });
 
 const ServicioTratamientoSchema = z.object({
-  servicioId: z.number().int().positive(),
-  precioServicio: z.string().regex(/^\d+(\.\d{1,2})?$/),
+    servicioId: z.number().int().positive(),
+    precioServicio: z.string().regex(/^\d+(\.\d{1,2})?$/),
 });
 
 export const TratamientoFormSchema = z.object({
-  descripcion: z.string().min(1, "La descripción es requerida").max(100, "La descripción no puede tener más de 100 caracteres"),
-  diagnostico: z.string().nullable(),
-  estado: z.number().int().min(0).max(3),
-  historialMascotaId: z.number().int().positive(),
-  medicamentos: z.array(TratamientoMedicamentoSchema),
-  servicios: z.array(ServicioTratamientoSchema),
-  total: z.number().nonnegative(),
-  detalle: z.string().nullable(),
-  esAyudaVoluntaria: z.boolean(),
+    descripcion: z.string()
+        .min(1, "La descripción es requerida")
+        .max(100, "La descripción no puede tener más de 100 caracteres"),
+    diagnostico: z.string().optional().nullable(),
+    estado: z.number().int(),
+    historialMascotaId: z.number().int().positive(),
+    medicamentos: z.array(TratamientoMedicamentoSchema).optional(),
+    servicios: z.array(ServicioTratamientoSchema).optional(),
+    total: z.number(),
+    detalle:
+        z.optional(
+            z.string().nullable()
+        ),
+    esAyudaVoluntaria:
+        z.boolean(),
 });
 
 

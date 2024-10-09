@@ -5,6 +5,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 import { enGB } from 'date-fns/locale/en-GB'
 
 export const formatearFecha = (date: Date | null, formatStr: string = "yyyy-MM-dd HH:mm:ss"): string => {
+// export const formatearFecha = (date: Date | null, formatStr: string = "dd/MM/yyyy"): string => {
     if (!date) {
         return 'Sin registro de fecha';
     }
@@ -18,6 +19,23 @@ export const formatearFechaYHora = (date: Date | null | undefined, formatStr: st
     const fechaFormateada = format(date, formatStr, { locale: es });
     return `${fechaFormateada}`;
 };
+
+export const formatearFechaBoton = (date: Date, part: 'day' | 'month' | 'year'): string => {
+    if (!date) {
+        return '';
+    }
+    switch (part) {
+        case 'day':
+            return format(date, 'dd', { locale: es });
+        case 'month':
+            return format(date, 'MMMM', { locale: es });
+        case 'year':
+            return format(date, 'yyyy', { locale: es });
+        default:
+            return '';
+    }
+};
+
 
 /*
 PPP: Fecha en formato corto o largo dependiendo de la localización.

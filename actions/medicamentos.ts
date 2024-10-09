@@ -10,6 +10,8 @@ import { usuarioIdActual } from "@/lib/auth";
 import fs from 'fs-extra';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { formatearDetalle } from '@/lib/formatearDescripcion';
+import { formatearNombre } from '@/lib/formatearNombre';
 
 
 export const obtenerMedicamentos = async (): Promise<MedicamentoT[]> => {
@@ -45,8 +47,8 @@ export const registrarMedicamento = async (
         }
 
         const nombre = formMedicamento.get('nombre') as string;
-        const descripcion = formMedicamento.get('descripcion') as string;
-        const indicaciones = formMedicamento.get('indicaciones') as string;
+        const descripcion = formatearDetalle(formMedicamento.get('descripcion') as string);
+        const indicaciones = formatearDetalle(formMedicamento.get('indicaciones') as string);
         const unidadMedida = formMedicamento.get('unidadMedida') as string;
         const cantidadPorUnidad = parseInt(formMedicamento.get('cantidadPorUnidad') as string, 10);
         const stock = parseInt(formMedicamento.get('stock') as string, 10);
@@ -100,14 +102,17 @@ console.log(values);
         if (!validatedFields.success) {
             return { error: "Campos Inválidos!" };
         }
-        const { nombre, descripcion, stock, precio, tipo, indicaciones, unidadMedida, cantidadPorUnidad, sobrante } = validatedFields.data;
+        const { codigo, nombre, descripcion, stock, precio, tipo, indicaciones, unidadMedida, cantidadPorUnidad, sobrante } = validatedFields.data;
 
+        const descripcionF = formatearDetalle(descripcion);
+        const indicacionesF = formatearDetalle(indicaciones);
         const medicamentoActualizado = await db.medicamento.update({
             where: { id: idMedicamento },
             data: {
+                codigo,
                 nombre,
-                descripcion,
-                indicaciones,
+                descripcion: descripcionF,
+                indicaciones: indicacionesF,
                 unidadMedida,
                 cantidadPorUnidad,
                 sobrante,

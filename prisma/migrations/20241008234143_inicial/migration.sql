@@ -162,6 +162,7 @@ CREATE TABLE `Tratamiento` (
 
 -- CreateTable
 CREATE TABLE `ServicioTratamiento` (
+    `precioServicio` DECIMAL(10, 2) NOT NULL,
     `servicioId` INTEGER UNSIGNED NOT NULL,
     `tratamientoId` INTEGER UNSIGNED NOT NULL,
 
@@ -171,7 +172,7 @@ CREATE TABLE `ServicioTratamiento` (
 -- CreateTable
 CREATE TABLE `Medicamento` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    `imagen` VARCHAR(255) NOT NULL,
+    `imagen` VARCHAR(255) NULL,
     `nombre` VARCHAR(100) NOT NULL,
     `codigo` VARCHAR(50) NULL,
     `descripcion` VARCHAR(150) NULL,

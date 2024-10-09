@@ -83,7 +83,7 @@ export const usuariosMascota = async (): Promise<any[]> => {
 
   return usuarios.map(usuario => ({
     ...usuario,
-    nombreCompleto: `${usuario.name} ${usuario.apellidoPat} ${usuario.apellidoMat}`.trim()
+    nombreCompleto: `${usuario.name} ${usuario.apellidoPat} ${usuario.apellidoMat ? usuario.apellidoMat : ""}`.trim()
   }));
 };
 

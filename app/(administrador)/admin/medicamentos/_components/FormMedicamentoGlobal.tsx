@@ -231,7 +231,7 @@
 // 							</FormItem>
 // 						)}
 // 					/>
-          
+
 //           {(!medicamento || !medicamento.imagen) && (
 //             <FormField
 //               control={form.control}
@@ -260,7 +260,7 @@
 //               )}
 //             />
 //           )}
-          
+
 //           <div className="flex justify-center">
 //             <Button disabled={isPending} type="submit" className="bg-gradient" variant={"outline"}>
 //               {medicamento ? 'Editar Medicamento' : 'Registrar Medicamento'}
@@ -328,6 +328,7 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
   const [unidadesMedidaOpciones, setUnidadesMedidaOpciones] = useState<string[]>(unidadesMedida.Otro);
 
   const defaultValues = medicamento ? {
+    codigo: medicamento.codigo || '',
     nombre: medicamento.nombre,
     descripcion: medicamento.descripcion || '',
     indicaciones: medicamento.indicaciones || '',
@@ -335,18 +336,19 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
     cantidadPorUnidad: medicamento.cantidadPorUnidad || 0,
     stock: medicamento.stock,
     precio: medicamento.precio.toString(),
-    sobrante: medicamento.sobrante || 0,
+    sobrante: medicamento.sobrante || 1,
     tipo: medicamento.tipo as TipoMedicamento,
     imagen: medicamento.imagen || '',
   } : {
+    codigo: "",
     nombre: "",
     descripcion: "",
     indicaciones: "",
     unidadMedida: "",
-    cantidadPorUnidad: 0,
-    stock: 0,
+    cantidadPorUnidad: 1,
+    stock: 1,
     precio: "0",
-    sobrante: 0,
+    sobrante: 1,
     tipo: TipoMedicamento.Otro,
     imagen: "",
   };
@@ -408,6 +410,20 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <FormField
+              disabled={isPending}
+              control={form.control}
+              name="codigo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Codigo del Medicamento:</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Código del medicamento" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               disabled={isPending}
               control={form.control}
@@ -506,12 +522,11 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
                 <FormItem>
                   <FormLabel>Cantidad por Unidad:</FormLabel>
                   <FormControl>
-                    {/* <Input type="number" placeholder="Cantidad por unidad" {...field} min={0} step="0.01" /> */}
                     <CustomNumberInput
                       {...field}
                       onValueChange={(value) => field.onChange(value)}
-                      min={0}
-                      max={1000}
+                      min={1}
+                      max={10000}
                       step={1}
                     />
                   </FormControl>
@@ -529,12 +544,11 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
                 <FormItem>
                   <FormLabel>Stock:</FormLabel>
                   <FormControl>
-                    {/* <Input type="number" placeholder="Stock disponible" {...field} min={0} /> */}
                     <CustomNumberInput
                       {...field}
                       onValueChange={(value) => field.onChange(value)}
-                      min={0}
-                      max={10000}
+                      min={1}
+                      max={100000}
                       step={1}
                     />
                   </FormControl>
@@ -566,7 +580,7 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               disabled={isPending}
               control={form.control}
               name="sobrante"
@@ -574,7 +588,6 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
                 <FormItem>
                   <FormLabel>Sobrante:</FormLabel>
                   <FormControl>
-                    {/* <Input type="number" placeholder="Cantidad sobrante" {...field} min={0} step="0.01" /> */}
                     <CustomNumberInput
                       {...field}
                       onValueChange={(value) => field.onChange(value)}
@@ -586,9 +599,9 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           </div>
-          
+
           {(!medicamento || !medicamento.imagen) && (
             <FormField
               control={form.control}
@@ -617,7 +630,7 @@ export const FormMedicamentoGlobal = (props: FormMedicamentoProps) => {
               )}
             />
           )}
-          
+
           <div className="flex justify-center">
             <Button disabled={isPending} type="submit" className="bg-gradient" variant={"outline"}>
               {medicamento ? 'Editar Medicamento' : 'Registrar Medicamento'}

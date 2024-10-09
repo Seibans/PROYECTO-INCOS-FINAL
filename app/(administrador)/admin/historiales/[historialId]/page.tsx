@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { obtenerHistorialconMascotayUsuario, obtenerTratamientoCompleto } from '@/actions/historiales';
 import { obtenerServicios } from '@/actions/servicios';
 import { obtenerMedicamentos } from '@/actions/medicamentos';
-import HistorialMedicoView from '../_components/HistorialMedicoView';
+import HistorialMedicoView from './_components/HistorialMedicoView';
 
 interface PageProps {
     params: { historialId: string };

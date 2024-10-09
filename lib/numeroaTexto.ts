@@ -2,8 +2,11 @@ const unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 
 const decenas = ['diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa']
 const especiales = ['once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve']
 
-export function numeroATexto(numero: number): string {
-  const partes = numero.toFixed(2).split('.')
+export function numeroATexto(numero: string): string {
+
+  const numeroF = parseInt(numero)
+  // if(typeof numero == "string") return numero;
+  const partes = numeroF.toFixed(2).split('.')
   const entero = parseInt(partes[0])
   const decimal = parseInt(partes[1])
 
@@ -26,10 +29,10 @@ export function numeroATexto(numero: number): string {
     resultado = 'número fuera de rango'
   }
 
-  resultado += ' bolivianos'
+  resultado += ' Bs.'
 
   if (decimal > 0) {
-    resultado += ` con ${decimal} centavos`
+    resultado += ` Con ${decimal} Centavos.`
   }
 
   return resultado.charAt(0).toUpperCase() + resultado.slice(1)

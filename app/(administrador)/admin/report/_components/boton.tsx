@@ -12,10 +12,12 @@ import { cn } from '@/lib/utils'
 import { Editor } from '@tiptap/core'
 import { useCallback, useRef } from 'react'
 import { TooltipProvider } from '@/components/ui/tooltip';
+// import { toast } from '@/components/ui/use-toast'
+import { useToast } from "@/hooks/use-toast"
 
 
 async function generatePDF() {
-  const pdfPath = await generatePDFFromURL(`https://www.google.com/search?client=opera&q=sopa&sourceid=opera&ie=UTF-8&oe=UTF-8`);
+  const pdfPath = await generatePDFFromURL(`https://psicologiaymente.com/miscelanea/animales-compania-mas-populares`);
   return pdfPath;
 }
 
@@ -45,18 +47,42 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 export default function GeneratePDFButton() {
+  const [isLoading, setIsLoading] = useState(false);
+  // const handleClick = async () => {
+  //   // const pdfPath = await handleGeneratePDF();
+  //   const pdfPath = await generatePDF();
+  //   window.open(pdfPath);
+  // };
+  const { toast } = useToast()
+
   const handleClick = async () => {
-    // const pdfPath = await handleGeneratePDF();
-    const pdfPath = await generatePDF();
-    window.open(pdfPath);
+    setIsLoading(true);
+    try {
+      const pdfPath = await generatePDF();
+      window.open(pdfPath);
+      toast({
+        title: "PDF generado con éxito",
+        description: "El PDF se ha generado y abierto en una nueva pestaña.",
+      });
+    } catch (error) {
+      console.error('Error al generar el PDF:', error);
+      toast({
+        title: "Error al generar el PDF",
+        description: "Por favor, inténtelo de nuevo más tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   const [value, setValue] = useState<Content>('')
 
   return (
     <>
-      <button onClick={handleClick} className="mt-4 p-2 bg-blue-500 text-white rounded">
-        Generar PDF
-      </button>
+    <Button onClick={handleClick} disabled={isLoading}>
+      {isLoading ? 'Generando PDF...' : 'Generar PDF'}
+    </Button>
       <div className="px-4 py-12 sm:py-24">
         <div className="mx-auto w-full max-w-3xl">
           <div className="mt-12 flex flex-col gap-12 sm:mt-20">
@@ -67,6 +93,68 @@ export default function GeneratePDFButton() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const ExampleForm: React.FC = () => {

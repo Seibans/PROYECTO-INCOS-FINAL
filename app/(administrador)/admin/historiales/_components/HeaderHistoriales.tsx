@@ -12,7 +12,7 @@ export const HeaderHistoriales = () => {
 	return (
 		<div className="flex justify-between items-center">
 			<h2 className="text-2xl">Lista de Historiales</h2>
-			<Dialog open={abrirModal} onOpenChange={setabrirModal}>
+			{/* <Dialog open={abrirModal} onOpenChange={setabrirModal}>
 				<DialogTrigger asChild>
 					<Button variant="outline">Registrar Historial</Button>
 				</DialogTrigger>
@@ -26,8 +26,7 @@ export const HeaderHistoriales = () => {
 						</DialogDescription>
 					</DialogHeader>
 				</DialogContent>
-			</Dialog>
-
+			</Dialog> */}
 		</div>
 	)
 }

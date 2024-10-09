@@ -237,7 +237,7 @@ model ServicioTratamiento {
 
 model Medicamento {
   id                Int                      @id @default(autoincrement()) @db.UnsignedInt
-  imagen            String                   @db.VarChar(255)
+  imagen            String?                   @db.VarChar(255)
   nombre            String                   @db.VarChar(100)
   codigo            String?                  @db.VarChar(50)
   descripcion       String?                  @db.VarChar(150)
