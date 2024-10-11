@@ -34,7 +34,6 @@ export const HeaderMascotas = () => {
 							Registra y Edita tu Mascota
 						</DialogDescription>
 					</DialogHeader>
-					{/* <FormMascota setabrirModal={setabrirModal} /> */}
 					<FormMascotaGlobal setabrirModal={setabrirModal} usuarios={usuarios} isDialog={true} />
 				</DialogContent>
 			</Dialog>

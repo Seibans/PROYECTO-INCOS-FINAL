@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -77,10 +78,54 @@ import {
 	TooltipProvider
 } from "@/components/ui/tooltip"
 
+
+import { useState, useEffect } from 'react'
+import { obtenerPagos, obtenerTratamientoCompleto, obtenerResumenIngresos } from '@/actions/pagos'
+
+
+
 export const description =
 	"An orders dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. The main area has a list of recent orders with a filter and export button. The main area also has a detailed view of a single order with order details, shipping information, billing information, customer information, and payment information."
 
-export function Pagos2() {
+export function PagosDashboard() {
+
+
+	useEffect(() => {
+		fetchPayments()
+		fetchResumenIngresos()
+	  }, [])
+	
+	  const fetchPayments = async () => {
+		const result = await obtenerPagos()
+		console.log(JSON.stringify(result, null, 2), "   PAGOS");
+	
+		// if (result.success && result.pagos) {
+		//   setPayments(result.pagos)
+		// } else {
+		//   console.error(result.error)
+		// }
+	  }
+	
+	  const fetchResumenIngresos = async () => {
+		const result = await obtenerResumenIngresos()
+		console.log(JSON.stringify(result, null, 2), "   RESUMEN");
+		// if (result.success && result.resumen) {
+		//   setResumenIngresos(result.resumen)
+		// } else {
+		//   console.error(result.error)
+		// }
+	  }
+	
+	  const handlePaymentClick = async (tratamientoId: number) => {
+		const result = await obtenerTratamientoCompleto(2)
+		console.log(JSON.stringify(result, null, 2), "   TRATAMIENTO");
+	
+		// if (result.success && result.tratamiento) {
+		//   setSelectedTreatment(result.tratamiento)
+		// } else {
+		//   console.error(result.error)
+		// }
+	  }
 	return (
 		<TooltipProvider>
 			<div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -145,18 +190,18 @@ export function Pagos2() {
 							<BreadcrumbList>
 								<BreadcrumbItem>
 									<BreadcrumbLink asChild>
-										<Link href="#">Dashboard</Link>
+										<Link href="#">Datos Generales</Link>
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator />
 								<BreadcrumbItem>
 									<BreadcrumbLink asChild>
-										<Link href="#">Orders</Link>
+										<Link href="#">Pagos</Link>
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Recent Orders</BreadcrumbPage>
+									<BreadcrumbPage>Pagos Recientes</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
@@ -164,7 +209,7 @@ export function Pagos2() {
 							<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 							<Input
 								type="search"
-								placeholder="Search..."
+								placeholder="Buscar..."
 								className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
 							/>
 						</div>
@@ -176,24 +221,23 @@ export function Pagos2() {
 									className="sm:col-span-2" x-chunk="dashboard-05-chunk-0"
 								>
 									<CardHeader className="pb-3">
-										<CardTitle>Your Orders</CardTitle>
+										<CardTitle>Pagos Recientes</CardTitle>
 										<CardDescription className="max-w-lg text-balance leading-relaxed">
-											Introducing Our Dynamic Orders Dashboard for Seamless
-											Management and Insightful Analysis.
+											Lista de Pagos Recientes en el Sistema.
 										</CardDescription>
 									</CardHeader>
 									<CardFooter>
-										<Button>Create New Order</Button>
+										<Button>Registrar Nuevo Pago</Button>
 									</CardFooter>
 								</Card>
 								<Card x-chunk="dashboard-05-chunk-1">
 									<CardHeader className="pb-2">
-										<CardDescription>This Week</CardDescription>
-										<CardTitle className="text-4xl">$1,329</CardTitle>
+										<CardDescription>Esta Semana</CardDescription>
+										<CardTitle className="text-4xl">{"Bs. "+"1,265"}</CardTitle>
 									</CardHeader>
 									<CardContent>
 										<div className="text-xs text-muted-foreground">
-											+25% from last week
+											+25% En comparacion a la semana Pasada.
 										</div>
 									</CardContent>
 									<CardFooter>
@@ -202,12 +246,12 @@ export function Pagos2() {
 								</Card>
 								<Card x-chunk="dashboard-05-chunk-2">
 									<CardHeader className="pb-2">
-										<CardDescription>This Month</CardDescription>
-										<CardTitle className="text-4xl">$5,329</CardTitle>
+										<CardDescription>Este Mes</CardDescription>
+										<CardTitle className="text-4xl">{"Bs. "+"1,265"}</CardTitle>
 									</CardHeader>
 									<CardContent>
 										<div className="text-xs text-muted-foreground">
-											+10% from last month
+											+10% En comparacion al mes Pasado.
 										</div>
 									</CardContent>
 									<CardFooter>
@@ -218,9 +262,9 @@ export function Pagos2() {
 							<Tabs defaultValue="week">
 								<div className="flex items-center">
 									<TabsList>
-										<TabsTrigger value="week">Week</TabsTrigger>
-										<TabsTrigger value="month">Month</TabsTrigger>
-										<TabsTrigger value="year">Year</TabsTrigger>
+										<TabsTrigger value="week">Semana</TabsTrigger>
+										<TabsTrigger value="month">Mes</TabsTrigger>
+										<TabsTrigger value="year">Año</TabsTrigger>
 									</TabsList>
 									<div className="ml-auto flex items-center gap-2">
 										<DropdownMenu>
@@ -231,20 +275,23 @@ export function Pagos2() {
 													className="h-7 gap-1 text-sm"
 												>
 													<ListFilter className="h-3.5 w-3.5" />
-													<span className="sr-only sm:not-sr-only">Filter</span>
+													<span className="sr-only sm:not-sr-only">Filtro</span>
 												</Button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent align="end">
-												<DropdownMenuLabel>Filter by</DropdownMenuLabel>
+												<DropdownMenuLabel>Filtrar por</DropdownMenuLabel>
 												<DropdownMenuSeparator />
 												<DropdownMenuCheckboxItem checked>
-													Fulfilled
+													Todos
 												</DropdownMenuCheckboxItem>
 												<DropdownMenuCheckboxItem>
-													Declined
+													Pendiente
 												</DropdownMenuCheckboxItem>
 												<DropdownMenuCheckboxItem>
-													Refunded
+													En Proceso
+												</DropdownMenuCheckboxItem>
+												<DropdownMenuCheckboxItem>
+													Completado
 												</DropdownMenuCheckboxItem>
 											</DropdownMenuContent>
 										</DropdownMenu>
@@ -254,23 +301,26 @@ export function Pagos2() {
 											className="h-7 gap-1 text-sm"
 										>
 											<File className="h-3.5 w-3.5" />
-											<span className="sr-only sm:not-sr-only">Export</span>
+											<span className="sr-only sm:not-sr-only">Exportar</span>
 										</Button>
 									</div>
 								</div>
 								<TabsContent value="week">
 									<Card x-chunk="dashboard-05-chunk-3">
 										<CardHeader className="px-7">
-											<CardTitle>Orders</CardTitle>
+											<CardTitle>Pagos</CardTitle>
 											<CardDescription>
-												Recent orders from your store.
+												Pagos Recientes en el Sistema.
 											</CardDescription>
 										</CardHeader>
 										<CardContent>
 											<Table>
 												<TableHeader>
 													<TableRow>
-														<TableHead>Customer</TableHead>
+														<TableHead>#</TableHead>
+														<TableHead className="hidden sm:table-cell">
+															Customer
+														</TableHead>
 														<TableHead className="hidden sm:table-cell">
 															Type
 														</TableHead>
@@ -286,6 +336,9 @@ export function Pagos2() {
 												<TableBody>
 													<TableRow className="bg-accent">
 														<TableCell>
+															1
+														</TableCell>
+														<TableCell>
 															<div className="font-medium">Liam Johnson</div>
 															<div className="hidden text-sm text-muted-foreground md:inline">
 																liam@example.com
@@ -302,9 +355,12 @@ export function Pagos2() {
 														<TableCell className="hidden md:table-cell">
 															2023-06-23
 														</TableCell>
-														<TableCell className="text-right">$250.00</TableCell>
+														<TableCell className="text-right">BS. 250.00</TableCell>
 													</TableRow>
 													<TableRow>
+													<TableCell>
+															1
+														</TableCell>
 														<TableCell>
 															<div className="font-medium">Olivia Smith</div>
 															<div className="hidden text-sm text-muted-foreground md:inline">
@@ -322,128 +378,9 @@ export function Pagos2() {
 														<TableCell className="hidden md:table-cell">
 															2023-06-24
 														</TableCell>
-														<TableCell className="text-right">$150.00</TableCell>
+														<TableCell className="text-right">BS. 150.00</TableCell>
 													</TableRow>
-													<TableRow>
-														<TableCell>
-															<div className="font-medium">Noah Williams</div>
-															<div className="hidden text-sm text-muted-foreground md:inline">
-																noah@example.com
-															</div>
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															Subscription
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															<Badge className="text-xs" variant="secondary">
-																Fulfilled
-															</Badge>
-														</TableCell>
-														<TableCell className="hidden md:table-cell">
-															2023-06-25
-														</TableCell>
-														<TableCell className="text-right">$350.00</TableCell>
-													</TableRow>
-													<TableRow>
-														<TableCell>
-															<div className="font-medium">Emma Brown</div>
-															<div className="hidden text-sm text-muted-foreground md:inline">
-																emma@example.com
-															</div>
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															Sale
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															<Badge className="text-xs" variant="secondary">
-																Fulfilled
-															</Badge>
-														</TableCell>
-														<TableCell className="hidden md:table-cell">
-															2023-06-26
-														</TableCell>
-														<TableCell className="text-right">$450.00</TableCell>
-													</TableRow>
-													<TableRow>
-														<TableCell>
-															<div className="font-medium">Liam Johnson</div>
-															<div className="hidden text-sm text-muted-foreground md:inline">
-																liam@example.com
-															</div>
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															Sale
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															<Badge className="text-xs" variant="secondary">
-																Fulfilled
-															</Badge>
-														</TableCell>
-														<TableCell className="hidden md:table-cell">
-															2023-06-23
-														</TableCell>
-														<TableCell className="text-right">$250.00</TableCell>
-													</TableRow>
-													<TableRow>
-														<TableCell>
-															<div className="font-medium">Liam Johnson</div>
-															<div className="hidden text-sm text-muted-foreground md:inline">
-																liam@example.com
-															</div>
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															Sale
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															<Badge className="text-xs" variant="secondary">
-																Fulfilled
-															</Badge>
-														</TableCell>
-														<TableCell className="hidden md:table-cell">
-															2023-06-23
-														</TableCell>
-														<TableCell className="text-right">$250.00</TableCell>
-													</TableRow>
-													<TableRow>
-														<TableCell>
-															<div className="font-medium">Olivia Smith</div>
-															<div className="hidden text-sm text-muted-foreground md:inline">
-																olivia@example.com
-															</div>
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															Refund
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															<Badge className="text-xs" variant="outline">
-																Declined
-															</Badge>
-														</TableCell>
-														<TableCell className="hidden md:table-cell">
-															2023-06-24
-														</TableCell>
-														<TableCell className="text-right">$150.00</TableCell>
-													</TableRow>
-													<TableRow>
-														<TableCell>
-															<div className="font-medium">Emma Brown</div>
-															<div className="hidden text-sm text-muted-foreground md:inline">
-																emma@example.com
-															</div>
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															Sale
-														</TableCell>
-														<TableCell className="hidden sm:table-cell">
-															<Badge className="text-xs" variant="secondary">
-																Fulfilled
-															</Badge>
-														</TableCell>
-														<TableCell className="hidden md:table-cell">
-															2023-06-26
-														</TableCell>
-														<TableCell className="text-right">$450.00</TableCell>
-													</TableRow>
+													
 												</TableBody>
 											</Table>
 										</CardContent>
@@ -458,23 +395,23 @@ export function Pagos2() {
 								<CardHeader className="flex flex-row items-start bg-muted/50">
 									<div className="grid gap-0.5">
 										<CardTitle className="group flex items-center gap-2 text-lg">
-											Order Oe31b70H
+											Pago 12345678
 											<Button
 												size="icon"
 												variant="outline"
 												className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
 											>
 												<Copy className="h-3 w-3" />
-												<span className="sr-only">Copy Order ID</span>
+												<span className="sr-only">Copiar ID de Pago</span>
 											</Button>
 										</CardTitle>
-										<CardDescription>Date: November 23, 2023</CardDescription>
+										<CardDescription>Fecha: {"Fecha Pago"}</CardDescription>
 									</div>
 									<div className="ml-auto flex items-center gap-1">
 										<Button size="sm" variant="outline" className="h-8 gap-1">
 											<Truck className="h-3.5 w-3.5" />
 											<span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-												Track Order
+												Completar Pago
 											</span>
 										</Button>
 										<DropdownMenu>
@@ -485,75 +422,90 @@ export function Pagos2() {
 												</Button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent align="end">
-												<DropdownMenuItem>Edit</DropdownMenuItem>
-												<DropdownMenuItem>Export</DropdownMenuItem>
+												<DropdownMenuItem>Editar</DropdownMenuItem>
+												<DropdownMenuItem>Exportar</DropdownMenuItem>
 												<DropdownMenuSeparator />
-												<DropdownMenuItem>Trash</DropdownMenuItem>
+												<DropdownMenuItem>Borrar</DropdownMenuItem>
 											</DropdownMenuContent>
 										</DropdownMenu>
 									</div>
 								</CardHeader>
 								<CardContent className="p-6 text-sm">
 									<div className="grid gap-3">
-										<div className="font-semibold">Order Details</div>
+										<div className="font-semibold">Detalles del Pago</div>
+										<div className="font-md">Servicios Adquiridos</div>
 										<ul className="grid gap-3">
 											<li className="flex items-center justify-between">
 												<span className="text-muted-foreground">
-													Glimmer Lamps x <span>2</span>
+													Servicio 1 <span></span>
 												</span>
-												<span>$250.00</span>
+												<span>Bs. 250.00</span>
 											</li>
 											<li className="flex items-center justify-between">
 												<span className="text-muted-foreground">
-													Aqua Filters x <span>1</span>
+													Servicio 2 <span></span>
 												</span>
-												<span>$49.00</span>
+												<span>Bs. 49.00</span>
+											</li>
+										</ul>
+										<Separator className="my-2" />
+										<div className="font-md">Medicamentos Detallados</div>
+										<ul className="grid gap-3">
+											<li className="flex items-center justify-between">
+												<span className="text-muted-foreground">
+													Medicamento1 x <span>cantidad</span>
+												</span>
+												<span>Bs. 250.00</span>
+											</li>
+											<li className="flex items-center justify-between">
+												<span className="text-muted-foreground">
+													Medicamento 2 x <span>cantidad</span>
+												</span>
+												<span>Bs. 49.00</span>
 											</li>
 										</ul>
 										<Separator className="my-2" />
 										<ul className="grid gap-3">
 											<li className="flex items-center justify-between">
-												<span className="text-muted-foreground">Subtotal</span>
-												<span>$299.00</span>
+												<span className="text-muted-foreground">Subtotal Servicios</span>
+												<span>BS. 299.00</span>
 											</li>
 											<li className="flex items-center justify-between">
-												<span className="text-muted-foreground">Shipping</span>
-												<span>$5.00</span>
-											</li>
-											<li className="flex items-center justify-between">
-												<span className="text-muted-foreground">Tax</span>
-												<span>$25.00</span>
+												<span className="text-muted-foreground">Subtotal Medicamentos</span>
+												<span>BS. 5.00</span>
 											</li>
 											<li className="flex items-center justify-between font-semibold">
 												<span className="text-muted-foreground">Total</span>
-												<span>$329.00</span>
+												<span>BS. 329.00</span>
 											</li>
 										</ul>
 									</div>
 									<Separator className="my-4" />
 									<div className="grid grid-cols-2 gap-4">
 										<div className="grid gap-3">
-											<div className="font-semibold">Shipping Information</div>
+											<div className="font-semibold">Informacion de Tratamiento</div>
 											<address className="grid gap-0.5 not-italic text-muted-foreground">
-												<span>Liam Johnson</span>
-												<span>1234 Main St.</span>
-												<span>Anytown, CA 12345</span>
+												<span>nombreTratamiento</span>
+												<span>Diagnostico</span>
+												<span>Fecha</span>
 											</address>
 										</div>
 										<div className="grid auto-rows-max gap-3">
-											<div className="font-semibold">Billing Information</div>
+											<div className="font-semibold">Informacion de Mascota</div>
 											<div className="text-muted-foreground">
-												Same as shipping address
+												<span>nombreMascota</span>
+												{"Imagen de Mascota con Avatar"}
+												<span>tipomascota</span>
 											</div>
 										</div>
 									</div>
 									<Separator className="my-4" />
 									<div className="grid gap-3">
-										<div className="font-semibold">Customer Information</div>
+										<div className="font-semibold">Informacion Propietario</div>
 										<dl className="grid gap-3">
 											<div className="flex items-center justify-between">
-												<dt className="text-muted-foreground">Customer</dt>
-												<dd>Liam Johnson</dd>
+												<dt className="text-muted-foreground">Cliente</dt>
+												<dd>Pablo Fernandez</dd>
 											</div>
 											<div className="flex items-center justify-between">
 												<dt className="text-muted-foreground">Email</dt>
@@ -562,43 +514,43 @@ export function Pagos2() {
 												</dd>
 											</div>
 											<div className="flex items-center justify-between">
-												<dt className="text-muted-foreground">Phone</dt>
+												<dt className="text-muted-foreground">Celular</dt>
 												<dd>
-													<a href="tel:">+1 234 567 890</a>
+													<a href="tel:">+591 78956874</a>
 												</dd>
 											</div>
 										</dl>
 									</div>
 									<Separator className="my-4" />
 									<div className="grid gap-3">
-										<div className="font-semibold">Payment Information</div>
+										<div className="font-semibold">Informacion de Pago</div>
 										<dl className="grid gap-3">
 											<div className="flex items-center justify-between">
 												<dt className="flex items-center gap-1 text-muted-foreground">
 													<CreditCard className="h-4 w-4" />
-													Visa
+													Metodo
 												</dt>
-												<dd>**** **** **** 4532</dd>
+												<dd>Efectivo</dd>
 											</div>
 										</dl>
 									</div>
 								</CardContent>
 								<CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
 									<div className="text-xs text-muted-foreground">
-										Updated <time dateTime="2023-11-23">November 23, 2023</time>
+										Actualizado En <time dateTime="2023-11-23">{"Fecha Actualizacion"}</time>
 									</div>
 									<Pagination className="ml-auto mr-0 w-auto">
 										<PaginationContent>
 											<PaginationItem>
 												<Button size="icon" variant="outline" className="h-6 w-6">
 													<ChevronLeft className="h-3.5 w-3.5" />
-													<span className="sr-only">Previous Order</span>
+													<span className="sr-only">Pago Anterior</span>
 												</Button>
 											</PaginationItem>
 											<PaginationItem>
 												<Button size="icon" variant="outline" className="h-6 w-6">
 													<ChevronRight className="h-3.5 w-3.5" />
-													<span className="sr-only">Next Order</span>
+													<span className="sr-only">Siguiente Pago</span>
 												</Button>
 											</PaginationItem>
 										</PaginationContent>

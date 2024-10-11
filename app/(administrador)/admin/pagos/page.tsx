@@ -1,12 +1,10 @@
-import DownloadButtons from "./_components/app_components_DownloadPDFButton";
-import { PaymentDashboard } from "./_components/Pagos.component";
-import { Pagos2 } from "./_components/pagos2";
+import DownloadButtons from "./_components/botonDescargaPdfExcel";
+import { PagosDashboard } from "./_components/PagosDashboard";
 
 export default function PagosPage() {
   return (
     <div>
-      {/* <Pagos2 /> */}
-      <PaymentDashboard />
+      <PagosDashboard />
       <DownloadButtons userId={5} />
     </div>
   )

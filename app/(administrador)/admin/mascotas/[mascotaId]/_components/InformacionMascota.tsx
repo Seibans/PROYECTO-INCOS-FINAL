@@ -1,21 +1,32 @@
+"use client"
 import React from 'react'
 import { Mascota } from '@prisma/client'
 import Image from 'next/image';
+import { useEffect, useState } from "react";
 import { Dog } from 'lucide-react';
 import { FormEditarMascota } from './FormEditarMascota';
 import CambiarImagen from '@/components/admin/CambiarImagen.component';
+import { FormMascotaGlobal } from '../../_components/FormMascotaGlobal';
+import { usuariosMascota } from "@/actions/usuarios";
+import { MascotaT } from '@/types';
+
 
 type InformacionMascotaProps = {
-    mascota: Mascota;
-};
-
-const DefaultImage: React.FC<{ src: string | null, alt: string }> = ({ src, alt }) => {
-    const imageSrc = src ?? '/images/imagen-gato.png';
-    return <Image src={imageSrc} alt={alt} width={200} height={200} />;
+    mascota: MascotaT;
 };
 
 export const InformacionMascota = (props: InformacionMascotaProps) => {
     const { mascota } = props;
+
+    const [usuarios, setUsuarios] = useState<any[]>([]);
+
+	useEffect(() => {
+		const loadUsuarios = async () => {
+			const usuariosData = await usuariosMascota();
+			setUsuarios(usuariosData);
+		};
+		loadUsuarios();
+	}, []);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 gap-y-4">
@@ -28,7 +39,8 @@ export const InformacionMascota = (props: InformacionMascotaProps) => {
                         imagenPrevia={mascota.imagen}
                         componente="mascota"
                     />
-                    <FormEditarMascota mascota={mascota} />
+                    {/* <FormEditarMascota mascota={mascota} /> */}
+                    <FormMascotaGlobal mascota={mascota} usuarios={usuarios}/>
                 </div>
             </div>
             {/* <div className="p-4 rounded-lg shadow-md bg-background hover:shadow-lg h-min">

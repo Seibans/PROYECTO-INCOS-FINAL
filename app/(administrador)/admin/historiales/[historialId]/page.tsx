@@ -25,14 +25,17 @@ export default async function HistorialIdPage({ params, searchParams }: PageProp
     }
 
     let tratamiento = null;
+    console.log(typeof tratamientoId)
     if (tratamientoId !== undefined) {
         if (isNaN(tratamientoId)) {
             console.error('ID de tratamiento inválido');
+            redirect("/admin/historiales");
         } else {
             tratamiento = await obtenerTratamientoCompleto(tratamientoId);
             if (!tratamiento || 'error' in tratamiento) {
                 console.error('Tratamiento no encontrado o error al obtenerlo');
                 tratamiento = null;
+                redirect("/admin/historiales/" + historialId);
             }
         }
     }

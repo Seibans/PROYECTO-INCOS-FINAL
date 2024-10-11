@@ -1,11 +1,14 @@
 'use client'
+import { E164Number } from "libphonenumber-js/core";
+import 'react-phone-number-input/style.css';
 
-import { useState, useTransition } from 'react';
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useState, useTransition, useRef } from 'react';
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { RegistroAdminSchema } from "@/schemas";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+
 import {
   Form,
   FormControl,
@@ -15,20 +18,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from 'next/navigation';
-import { editarUsuario } from '@/actions/usuarios';
-import { registrarUsuarioByAdmin, registrarUsuarioConImagen } from '@/actions/registro';
-import { toast } from 'sonner';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RolUsuario } from "@prisma/client";
-import InputImagen from '@/components/admin/FormInputImagen';
+import { Button } from "@/components/ui/button";
 import PhoneInput from "react-phone-number-input";
-import { E164Number } from "libphonenumber-js/core";
-import 'react-phone-number-input/style.css';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+import { Textarea } from "@/components/ui/textarea";
+
+import { registrarUsuarioByAdmin, registrarUsuarioConImagen } from '@/actions/registro';
+import { editarUsuario } from '@/actions/usuarios';
+
+import InputImagen, {ImageUploaderRef} from '@/components/admin/FormInputImagen';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { RegistroAdminSchema } from "@/schemas";
+import { RolUsuario } from "@prisma/client";
 import { UsuarioT } from "@/types";
+import { PlusIcon } from "lucide-react";
 
 type FormUsuarioGlobalProps = {
   usuario?: UsuarioT;
@@ -40,27 +47,33 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
+	const imageUploaderRef = useRef<ImageUploaderRef>(null);
+
+  if (usuario?.estado == 0) {
+    router.push("/admin/usuarios")
+  }
+
   const defaultValues: z.infer<typeof RegistroAdminSchema> = usuario ? {
     name: usuario.name,
     apellidoPat: usuario.apellidoPat || '',
-    apellidoMat: usuario.apellidoMat || '',
-    ci: usuario.ci || '',
+    apellidoMat: usuario.apellidoMat || undefined,
+    ci: usuario.ci || undefined,
     sexo: usuario.sexo as "M" | "F" | undefined,
-    email: usuario.email || '',
-    celular: usuario.celular || '',
-    direccion: usuario.direccion || '',
-    rol: usuario.rol,
-    estado: usuario.estado,
+    email: usuario.email || undefined,
+    celular: usuario.celular || undefined,
+    direccion: usuario.direccion || undefined,
+    rol: usuario.rol as "Usuario" | "Veterinario" | "Administrador",
+    estado: usuario.estado || undefined,
     image: usuario.image || '',
   } : {
     name: "",
     apellidoPat: "",
-    apellidoMat: "",
-    ci: "",
+    apellidoMat: undefined,
+    ci: undefined,
     sexo: undefined,
-    email: "",
-    celular: "",
-    direccion: "",
+    email: undefined,
+    celular: undefined,
+    direccion: undefined,
     rol: RolUsuario.Usuario,
     estado: 1,
     image: "",
@@ -123,9 +136,14 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nombres *</FormLabel>
+                  <FormLabel>Nombres *:</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nombres" {...field} />
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="Nombres"
+                      type="text"
+                      />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -136,9 +154,14 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
               name="apellidoPat"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Apellido Paterno</FormLabel>
+                  <FormLabel>Apellido Paterno *:</FormLabel>
                   <FormControl>
-                    <Input placeholder="Apellido Paterno" {...field} />
+                    <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="Apellido Paterno"
+                        type="text"
+                        />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -149,9 +172,14 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
               name="apellidoMat"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Apellido Materno</FormLabel>
+                  <FormLabel>Apellido Materno:</FormLabel>
                   <FormControl>
-                    <Input placeholder="Apellido Materno" {...field} />
+                    <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="Apellido Materno"
+                        type="text"
+                        />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -162,9 +190,14 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
               name="ci"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Carnet de Identidad</FormLabel>
+                  <FormLabel>Carnet de Identidad:</FormLabel>
                   <FormControl>
-                    <Input placeholder="1234567-A" {...field} />
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="1234567-A"
+                      type="text"
+                      />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,48 +206,55 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
           </div>
 
           <FormField
-            control={form.control}
-            name="sexo"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Género</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="flex gap-6"
-                  >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="M" />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        Hombre
-                      </FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="F" />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        Mujer
-                      </FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+							disabled={isPending}
+							control={form.control}
+							name="sexo"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Genero::</FormLabel>
+									<FormControl>
+										<RadioGroup
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+											className="flex gap-6 xl-justify-between"
+										>
+											<FormItem>
+												<FormLabel className="radio-group">
+													<FormControl>
+														<RadioGroupItem value={"M"} />
+													</FormControl>
+													Hombre
+												</FormLabel>
+											</FormItem>
+											<FormItem>
+												<FormLabel className="radio-group">
+													<FormControl>
+														<RadioGroupItem value={"F"} />
+													</FormControl>
+													Mujer
+												</FormLabel>
+											</FormItem>
+										</RadioGroup>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email *</FormLabel>
+                <FormLabel>Email *:</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="correo@ejemplo.com" {...field} />
+                  <Input
+                    {...field}
+                    disabled={isPending}
+                    placeholder="correo@ejemplo.com"
+                    type="email"
+                    readOnly={usuario ? true : false}
+                    />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -226,7 +266,7 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
             name="celular"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Celular</FormLabel>
+                <FormLabel>Celular:</FormLabel>
                 <FormControl>
                   <PhoneInput
                     defaultCountry="BO"
@@ -237,6 +277,9 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
                     onChange={(value) => field.onChange(value || '')}
                     className="input-phone"
                     countries={['PE', 'BO', 'AR', 'CL', 'CO', 'EC', 'MX', 'PY', 'UY', 'VE']}
+                    countrySelectProps={{
+                      className: 'bg-white text-black dark:bg-gray-800 dark:text-white',
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -245,11 +288,12 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
           />
 
           <FormField
+            disabled={isPending}
             control={form.control}
             name="direccion"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Dirección</FormLabel>
+                <FormLabel>Dirección:</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Ciudad, Zona, Calle, Número, Localidad"
@@ -267,8 +311,10 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
             name="rol"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Rol del Usuario *</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormLabel>Rol del Usuario *:</FormLabel>
+                <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccione un rol" />
@@ -294,6 +340,7 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
                   <FormLabel>Imagen de Perfil del Usuario (Opcional)</FormLabel>
                   <FormControl>
                     <InputImagen
+											ref={imageUploaderRef}
                       onImageChange={(file) => {
                         if (file) {
                           field.onChange(file.name);
@@ -313,7 +360,7 @@ export const FormUsuarioGlobal = ({ usuario, setabrirModal, isDialog = false }: 
           )}
 
           <div className="flex justify-center">
-            <Button disabled={isPending} type="submit" className="bg-gradient" variant="outline">
+            <Button disabled={isPending} type="submit" className="bg-gradient" variant="expandIcon" Icon={PlusIcon} iconPlacement="right">
               {usuario ? 'Actualizar Usuario' : 'Registrar Usuario'}
             </Button>
           </div>

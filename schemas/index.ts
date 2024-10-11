@@ -260,10 +260,13 @@ export const MascotaSchema = z.object({
     fechaNacimiento: z.optional(z.date().refine(date => date < new Date(), {
         message: "La fecha de nacimiento no puede ser futura",
     })),
-    sexo: z.enum([Sexo.Macho, Sexo.Hembra], {
-        message: "Por favor selecciona el género de la mascota",
-        required_error: "El género es obligatorio",
-    }),
+    // sexo: z.enum([Sexo.Macho, Sexo.Hembra], {
+    //     message: "Por favor selecciona el género de la mascota",
+    //     required_error: "El género es obligatorio",
+    // }),
+    sexo: z.nativeEnum(Sexo, {
+        errorMap: () => ({ message: "Por favor selecciona el género de la mascota" })
+      }),
     detalles: z.optional(
         z.string()
             .max(255, { message: "La descripción no debe tener más de 255 caracteres." })
@@ -273,9 +276,7 @@ export const MascotaSchema = z.object({
     //     (val) => val === "" ? undefined : Number(val),
     //     z.number().positive().optional()
     // ),
-
-
-    //TODO: ARREGLAR ESTO
+    //TODO: ARREGLAR ESTOF
     idPropietario: z.union([
         z.literal(""),
         z.number().positive()
@@ -291,8 +292,8 @@ export const MascotaSchema = z.object({
             return !isNaN(num) && num > 0 && num <= 999.99;
         }, "El peso debe ser mayor que 0 y no exceder 999.99 kg"),
     esterilizado: z.boolean().optional(),
-    // estado: z.optional(z.string().min(1, "El estado es obligatorio")),
-    estado: z.string(),
+    estado: z.optional(z.string()),
+    // estado: z.preprocess((val) => parseInt(val as string, 10), z.number().positive({ message: "El estado debe ser un número positivo" })),
     archivo: z.instanceof(File).optional(),
 });
 

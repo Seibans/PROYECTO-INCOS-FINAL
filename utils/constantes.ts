@@ -12,28 +12,28 @@ export const data = [
       icon: Waypoints,
       total: "14%",
       average: 50,
-      titulo: "Total Compañias",
+      titulo: "Total Mascotas",
       tooltipTexto: "Ver todo el contenido"
     },
     {
       icon: BookOpenCheck,
       total: "14%",
       average: 80,
-      titulo: "Total Datos",
+      titulo: "Total Tratamientos",
       tooltipTexto: "Ver todo el contenido"
     },
     {
       icon: Dog,
       total: "50%",
       average: 90,
-      titulo: "Total Datos",
+      titulo: "Total Medicamentos",
       tooltipTexto: "Ver todo el contenido"
     },
     {
       icon: ClipboardPlus,
       total: "50%",
       average: 90,
-      titulo: "Total Historiales",
+      titulo: "Total Servicio",
       tooltipTexto: "Ver todo el contenido"
     }
   ];

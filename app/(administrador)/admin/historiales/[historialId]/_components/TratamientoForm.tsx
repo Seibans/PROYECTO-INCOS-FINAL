@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,18 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import MedicamentoSelector from "./MedicamentoSelector"
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { numeroATexto } from '@/lib/numeroaTexto';
+import { convertirNumeroEspanyol, numeroATexto } from '@/lib/numeroaTexto';
+
+// import { TratamientoSchema } from '@/schemas/tratamiento';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 interface TratamientoFormProps {
   historialId: number;
@@ -33,6 +45,8 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedServicio, setSelectedServicio] = useState<number | null>(null);
   const [editingMedicamentoIndex, setEditingMedicamentoIndex] = useState<number | null>(null);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
   const {
     tratamiento: formTratamiento,
     setTratamiento,
@@ -43,12 +57,17 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
     actualizarMedicamento,
     eliminarMedicamento,
     calcularTotalTratamiento,
+    calcularTotalServicios,
+    calcularTotalMedicamentos,
     resetTratamiento
   } = useTratamientoStore();
   const router = useRouter();
 
   const form = useForm<TratamientoFormT>({
+    //TODO: Agregar validacion de formulario
+    // resolver: zodResolver(TratamientoSchema),
     defaultValues: formTratamiento,
+
   });
 
   useEffect(() => {
@@ -75,12 +94,14 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
         esAyudaVoluntaria: tratamiento.pago?.esAyudaVoluntaria || false,
       });
     } else {
-      setTratamiento({
-        ...formTratamiento,
-        historialMascotaId: historialId,
-      });
+        resetTratamiento(historialId);
+      // setTratamiento({
+      //   ...formTratamiento,
+      //   historialMascotaId: historialId,
+      // });
     }
-  }, [tratamiento, historialId, setTratamiento]);
+  // }, [tratamiento, historialId, setTratamiento]);
+  }, [tratamiento, historialId, setTratamiento, resetTratamiento]);
 
   useEffect(() => {
     const total = calcularTotalTratamiento();
@@ -95,8 +116,17 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
   const onSubmit = async (data: TratamientoFormT) => {
     console.log("DATOS DEL FORMULARIO   ", JSON.stringify(data, null, 2), "");
     console.log("DATOS DEL STORE   ", JSON.stringify(formTratamiento, null, 2), "");
+    console.log(data);
+    console.log(formTratamiento);
+    console.log(tratamiento);
     console.log(tratamiento?.id)
+    console.log(historialId)
+    setIsConfirmDialogOpen(true);
+  };
 
+
+  const handleConfirmSubmit = async () => {
+    setIsConfirmDialogOpen(false);
     const action = tratamiento ? actualizarTratamiento(historialId, tratamiento.id, formTratamiento) : crearTratamiento(historialId, formTratamiento);
     toast.promise(action, {
       loading: "Cargando...",
@@ -104,7 +134,7 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
         if (data.error) {
           throw new Error(data.error);
         } else {
-          resetTratamiento();
+          resetTratamiento(historialId);
           form.reset();
           router.refresh();
           return `${data.success}`;
@@ -113,6 +143,7 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
       error: (error) => error.message,
     });
   };
+
 
   const handleServicioClick = (servicio: ServicioT) => {
     if (selectedServicio === servicio.id) {
@@ -165,7 +196,7 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
   };
 
   const handleResetForm = () => {
-    resetTratamiento();
+    resetTratamiento(historialId);
     form.reset();
   };
 
@@ -251,7 +282,17 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
                 />
 
                 <div className="border-2 border-dashed rounded-md p-4">
-                  <h3 className="font-semibold mb-2">Servicios Seleccionados</h3>
+                <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-semibold">Servicios Seleccionados</h3>
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <Button variant="outline" className="block lg:hidden">Agregar Servicio</Button>
+                      </SheetTrigger>
+                      <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+                        <ServicioSelector servicios={servicios} onSelectServicio={handleAddServicio} />
+                      </SheetContent>
+                    </Sheet>
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-1 gap-2">
                     {formTratamiento.servicios.map((servicio, index) => (
                       <Card
@@ -376,7 +417,7 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
                                       onClick={() => eliminarMedicamento(index)}
                                       type='button'
                                     >
-                
+
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
                                   </TooltipTrigger>
@@ -393,10 +434,15 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
                   </Table>
                 </div>
 
-                <div>
-                  <h3 className="font-semibold mb-2">Información de Pago</h3>
-                  <p className='text-center text-2xl font-bold'>Total a Cancelar: Bs.{calcularTotalTratamiento().toFixed(2)}</p>
-                  <p className='text-center text-lg'>{numeroATexto(calcularTotalTratamiento().toFixed(2))}</p>
+                <div className=' border-2 lg:border-4 border-dashed rounded-md p-4'>
+                  <div>
+                    <h3 className="font-semibold mb-2">Información de Pago</h3>
+                    <p className='text-center text-lg'>Total Servicios: Bs.{"   " + calcularTotalServicios().toFixed(2)}</p>
+                    <p className='text-center text-lg'>Total Medicamentos: Bs.{"   " + calcularTotalMedicamentos().toFixed(2)}</p>
+                    <p className='text-center text-xl font-bold'>Total a Cancelar: Bs.{"   " + calcularTotalTratamiento().toFixed(2)}</p>
+                    <p className='text-center text-md md:text-lg'>{convertirNumeroEspanyol(calcularTotalTratamiento().toFixed(2))}</p>
+                    {/* <p className='text-center text-lg'>{numeroATexto(calcularTotalTratamiento().toFixed(2))}</p> */}
+                  </div>
                   <FormField
                     control={form.control}
                     name="detalle"
@@ -457,9 +503,36 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
           </form>
         </Form>
       </div>
-      <div className='w-full lg:w-3/12'>
+      <div className='hidden lg:block lg:w-3/12'>
         <ServicioSelector servicios={servicios} onSelectServicio={handleAddServicio} />
       </div>
+
+      <AlertDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar {tratamiento ? 'Actualización' : 'Creación'} de Tratamiento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Por favor, verifique los datos del tratamiento:
+              <div className="mt-4 space-y-2">
+                <p><strong>Descripción:</strong> {formTratamiento.descripcion}</p>
+                <p><strong>Estado:</strong> {formTratamiento.estado}</p>
+                <p><strong>Diagnóstico:</strong> {formTratamiento.diagnostico || 'No especificado'}</p>
+                <p><strong>Total Servicios:</strong> Bs. {calcularTotalServicios().toFixed(2)}</p>
+                <p><strong>Total Medicamentos:</strong> Bs. {calcularTotalMedicamentos().toFixed(2)}</p>
+                <p><strong>Total a Cancelar:</strong> Bs. {calcularTotalTratamiento().toFixed(2)}</p>
+                <p><strong>Detalle del Pago:</strong> {formTratamiento.detalle || 'No especificado'}</p>
+                <p><strong>Ayuda Voluntaria:</strong> {formTratamiento.esAyudaVoluntaria ? 'Sí' : 'No'}</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmSubmit}>
+              {tratamiento ? 'Actualizar' : 'Crear'} Tratamiento
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

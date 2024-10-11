@@ -323,11 +323,11 @@ export const SideBar: React.FC<SideBarProps> = ({ onItemClick }) => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+            <SideBarItem icon={HandCoins} label="Pagos" href="/admin/pagos" onClick={onItemClick} />
             <SideBarItem icon={Hospital} label="Servicios" href="/admin/servicios" onClick={onItemClick} />
             <SideBarItem icon={Pill} label="Medicamentos" href="/admin/medicamentos" onClick={onItemClick} />
             {/* <SideBarItem icon={GiAlienFire} label="Sofia (Ia)" href="/admin/ia" onClick={onItemClick} /> */}
-            {/* <SideBarItem icon={BatteryLow} label="Reportes" href="/admin/report" onClick={onItemClick} /> */}
-            {/* <SideBarItem icon={HandCoins} label="Pagos" href="/admin/pagos" onClick={onItemClick} /> */}
+            <SideBarItem icon={BatteryLow} label="Reportes" href="/admin/report" onClick={onItemClick} />
           </div>
           <Separator />
           <div className="p-1 md:p-3">

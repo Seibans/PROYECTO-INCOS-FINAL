@@ -6,33 +6,20 @@ import { formatearFecha, formatearFechaYHora } from "@/lib/formatearFecha";
 
 export default function CalendarioSimple() {
 
-	const [selectedDateRange, setSelectedDateRange] = useState({
-		from: new Date(new Date().getFullYear(), 0, 1),
-		to: new Date(),
-	});
-
 	const [selectedDateRangeSimple, setSelectedDateRangeSimple] = useState({
 		from: new Date(),
 		to: new Date(),
 	});
 
 	return (
-		// <div className="p-4 max-w-2xl">
 		<div className="p-4 max-full">
 			<h1 className="text-2xl font-bold mb-4">
 				Selecciona el Rango de Fechas Para obtener los reportes.
 			</h1>
 			<div className="flex items-center justify-center">
-
-				<CalendarDatePicker
-					date={selectedDateRange}
-					onDateSelect={setSelectedDateRange}
-				/>
-
 				<CalendarDatePicker
 					date={selectedDateRangeSimple}
 					onDateSelect={({ from, to }) => {
-						// form.setValue("datePicker", { from, to });
 						setSelectedDateRangeSimple({ from, to });
 					}}
 					variant="outline"
@@ -43,13 +30,26 @@ export default function CalendarioSimple() {
 			<div className="mt-4">
 				<h2 className="text-md font-semibold">Selecciona un rango de Fechas</h2>
 				<p className="text-sm">
-					{/* {selectedDateRange.from.toDateString()} - {" "}{selectedDateRange.to.toDateString()} */}
-					{`${formatearFecha(selectedDateRange.from, "PPP")} hasta ${formatearFecha(selectedDateRange.to, "PPP")}`}
+					{`${formatearFecha(selectedDateRangeSimple.from, "PPP")} hasta ${formatearFecha(selectedDateRangeSimple.to, "PPP")}`}
 				</p>
 			</div>
 		</div>
 	);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

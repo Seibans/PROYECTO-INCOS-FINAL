@@ -34,7 +34,7 @@ export interface MascotaT {
   peso: number | null;
   estado: number;
   idPropietario: number | null;
-  usuario: UsuarioT | null;
+  usuario?: UsuarioT | null;
   esterilizado: boolean | null;
   creadoEn: Date;
   actualizadoEn?: Date | null;
@@ -171,6 +171,12 @@ export interface HistorialMedicoVistaT {
   especieMascota: string;
   razaMascota?: string | null;
   sexoMascota: string;
+  estadoMascota: number;
+  nombrePropietario?: string | null;
+  emailPropietario?: string | null;
+  imagenPropietario?: string | null;
+  celularPropietario?: string | null;
+  direccionPropietario?: string | null;
   tratamientos: {
     id: number;
     descripcion: string;
@@ -179,6 +185,14 @@ export interface HistorialMedicoVistaT {
     idUsuario: number;
   }[];
 }
+
+
+
+
+
+
+
+
 
 //ESTA INTERFAZ SOLO SE MUESTRA EN EL PAGE.TSX DE [historialID] Y ES EL HISTORIAL COMPLETO CON EL ARRAY DE TRATAMEINTOS
 export interface HistorialMedicoCompleto {

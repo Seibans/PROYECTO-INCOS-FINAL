@@ -7,6 +7,58 @@ import { HistorialMedicoCompleto, HistorialMedicoVistaT, TratamientoCompleto } f
 import { RolUsuario } from "@prisma/client";
 
 
+// export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiales: HistorialMedicoVistaT[] } | { error: string }> => {
+//   try {
+//     const historiales = await db.historialMedico.findMany({
+//       include: {
+//         mascota: {
+//           select: {
+//             nombre: true,
+//             sexo: true,
+//             imagen: true,
+//             especie: true,
+//             raza: true,
+//           },
+//         },
+//         tratamientos: {
+//           select: {
+//             id: true,
+//             descripcion: true,
+//             creadoEn: true,
+//             actualizadoEn: true,
+//             idUsuario: true,
+//           },
+//         },
+//       },
+//     });
+
+//     // Ajustar la estructura para que coincida con HistorialMedicoVistaT
+//     const historialesConMascotas: HistorialMedicoVistaT[] = historiales.map(historial => ({
+//       historialMascotaId: historial.historialMascotaId,
+//       estado: historial.estado,
+//       creadoEn: historial.creadoEn,
+//       actualizadoEn: historial.actualizadoEn,
+//       nombreMascota: historial.mascota.nombre,
+//       imagenMascota: historial.mascota.imagen ?? null,
+//       especieMascota: historial.mascota.especie,
+//       razaMascota: historial.mascota.raza ?? null,
+//       sexoMascota: historial.mascota.sexo,
+//       tratamientos: historial.tratamientos.map(tratamiento => ({
+//         id: tratamiento.id,
+//         descripcion: tratamiento.descripcion,
+//         creadoEn: tratamiento.creadoEn,
+//         actualizadoEn: tratamiento.actualizadoEn,
+//         idUsuario: tratamiento.idUsuario,
+//       })),
+//     }));
+
+//     return { historiales: historialesConMascotas };
+//   } catch (error) {
+//     console.error("Error al obtener todos los historiales médicos:", error);
+//     return { error: "Ocurrió un error al obtener los historiales médicos." };
+//   }
+// };
+
 export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiales: HistorialMedicoVistaT[] } | { error: string }> => {
   try {
     const historiales = await db.historialMedico.findMany({
@@ -18,6 +70,16 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
             imagen: true,
             especie: true,
             raza: true,
+            estado: true,
+            usuario: {
+              select: {
+                name: true,
+                email: true,
+                image: true,
+                celular: true,
+                direccion: true,
+              },
+            },
           },
         },
         tratamientos: {
@@ -32,7 +94,6 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
       },
     });
 
-    // Ajustar la estructura para que coincida con HistorialMedicoVistaT
     const historialesConMascotas: HistorialMedicoVistaT[] = historiales.map(historial => ({
       historialMascotaId: historial.historialMascotaId,
       estado: historial.estado,
@@ -43,6 +104,12 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
       especieMascota: historial.mascota.especie,
       razaMascota: historial.mascota.raza ?? null,
       sexoMascota: historial.mascota.sexo,
+      estadoMascota: historial.mascota.estado,
+      nombrePropietario: historial.mascota.usuario?.name ?? null,
+      emailPropietario: historial.mascota.usuario?.email ?? null,
+      imagenPropietario: historial.mascota.usuario?.image ?? null,
+      celularPropietario: historial.mascota.usuario?.celular ?? null,
+      direccionPropietario: historial.mascota.usuario?.direccion ?? null,
       tratamientos: historial.tratamientos.map(tratamiento => ({
         id: tratamiento.id,
         descripcion: tratamiento.descripcion,
