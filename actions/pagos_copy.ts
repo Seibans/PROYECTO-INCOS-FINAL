@@ -1,6 +1,6 @@
 // File: @/actions/pagos.ts
 "use server"
-import { db } from '@/lib/db';
+import { prisma } from "@/lib/prisma";
 import { Prisma } from '@prisma/client';
 import Decimal from 'decimal.js';
 

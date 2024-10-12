@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { db } from '@/lib/db'
+import { prisma } from "@/lib/prisma"
 
 export function useMedicamentos() {
   const [medicamentos, setMedicamentos] = useState([])

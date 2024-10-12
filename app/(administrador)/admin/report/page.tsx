@@ -1,5 +1,5 @@
 // app/report/page.tsx
-import { db } from '@/lib/db';
+import { prisma } from "@/lib/prisma";
 import CalendarioReporteComponent from './_components/FormCalendarioReporte';
 
 export default async function Report() {
