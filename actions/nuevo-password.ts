@@ -43,12 +43,12 @@ export const nuevoPassword = async (
 	}
 
 	const passwordHash = await bcrypt.hash(password, 10);
-	await db.user.update({
+	await prisma.user.update({
 		where: {id: usuarioExistente.id},
 		data: {password: passwordHash},
 	});
 
-	await db.tokenReestablecimientoPassword.delete({
+	await prisma.tokenReestablecimientoPassword.delete({
 		where: {id: tokenExistente.id},
 	});
 

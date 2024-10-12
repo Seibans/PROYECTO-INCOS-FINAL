@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { unstable_update } from "@/auth";
 
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { CambiarPasswordSchema, ConfiguracionSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
 import { usuarioActual } from "@/lib/auth";
@@ -72,7 +72,7 @@ export const perfil = async (values: z.infer<typeof ConfiguracionSchema>) => {
     // const { nombre } = values;
 
     // if (nombre) {
-    //     await db.user.update({
+    //     await prisma.user.update({
     //         where: {
     //             id: dbUsuario.id
     //         },
@@ -83,7 +83,7 @@ export const perfil = async (values: z.infer<typeof ConfiguracionSchema>) => {
     // }
 
     // lo de Antonio no extrae el nombre, porque no lo necesitamos y actualiza todo
-    const usuarioActualizado = await db.user.update({
+    const usuarioActualizado = await prisma.user.update({
         where: {
             id: dbUsuario.id
         },
@@ -156,7 +156,7 @@ export const perfilPassword = async (values: z.infer<typeof CambiarPasswordSchem
     // const { nombre } = values;
 
     // if (nombre) {
-    //     await db.user.update({
+    //     await prisma.user.update({
     //         where: {
     //             id: dbUsuario.id
     //         },
@@ -167,7 +167,7 @@ export const perfilPassword = async (values: z.infer<typeof CambiarPasswordSchem
     // }
 
     // lo de Antonio no extrae el nombre, porque no lo necesitamos y actualiza todo
-    const usuarioActualizado = await db.user.update({
+    const usuarioActualizado = await prisma.user.update({
         where: {
             id: dbUsuario.id
         },

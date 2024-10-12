@@ -1,9 +1,9 @@
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 
 export const getCuentaById = async (usuarioId: number) => {
     try {
 		
-		const cuenta = await db.account.findFirst({
+		const cuenta = await prisma.account.findFirst({
 			where: {
 				userId: usuarioId
 			}

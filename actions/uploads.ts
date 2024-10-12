@@ -1,6 +1,6 @@
 // "use server";
 // import * as z from "zod";
-// import { db } from "@/lib/db";
+// import { prisma } from "@/lib/prisma"
 // import { usuarioActual, usuarioIdActual } from "@/lib/auth";
 // import fs from 'fs-extra';
 // import path from 'path';
@@ -24,7 +24,7 @@
 // 		const nombre = archivo.get('nombre') as string;
 
 // 		if (ruta === 'medicamento') {
-// 			const medicamentoExistente = await db.medicamento.findUnique({
+// 			const medicamentoExistente = await prisma.medicamento.findUnique({
 // 				where: { id: idTabla },
 // 			});
 
@@ -58,7 +58,7 @@
 // 			}
 
 
-// 			const medicamentoActualizado = await db.medicamento.update({
+// 			const medicamentoActualizado = await prisma.medicamento.update({
 // 				where: { id: idTabla },
 // 				data: {
 // 					imagen: rutaImagen,
@@ -69,7 +69,7 @@
 // 			return { success: "Imagen de Medicamento actualizada correctamente!" };
 // 		} else if (ruta === 'usuario') {
 // 			const nombre = archivo.get('nombre') as string;
-// 			const usuarioExistente = await db.user.findUnique({
+// 			const usuarioExistente = await prisma.user.findUnique({
 // 				where: { id: idTabla },
 // 			});
 
@@ -102,7 +102,7 @@
 // 				rutaImagen = usuarioExistente.image;
 // 			}
 
-// 			const usuarioActualizado = await db.user.update({
+// 			const usuarioActualizado = await prisma.user.update({
 // 				where: { id: idTabla },
 // 				data: {
 // 					image: rutaImagen,
@@ -112,7 +112,7 @@
 
 // 			return { success: "Imagen de Usuario actualizada correctamente!" };
 // 		} else if (ruta === 'mascota') {
-// 			const mascotaExistente = await db.mascota.findUnique({
+// 			const mascotaExistente = await prisma.mascota.findUnique({
 // 				where: { id: idTabla },
 // 			});
 
@@ -143,7 +143,7 @@
 // 				rutaImagen = mascotaExistente.imagen;
 // 			}
 
-// 			await db.mascota.update({
+// 			await prisma.mascota.update({
 // 				where: { id: idTabla },
 // 				data: {
 // 					imagen: rutaImagen,
@@ -188,7 +188,7 @@
 // 				rutaImagen = dbUsuario.image;
 // 			}
 
-// 			const usuarioActualizado = await db.user.update({
+// 			const usuarioActualizado = await prisma.user.update({
 // 				where: { id: dbUsuario.id },
 // 				data: {
 // 					image: rutaImagen,
@@ -216,7 +216,7 @@
 
 "use server";
 import * as z from "zod";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { usuarioActual, usuarioIdActual } from "@/lib/auth";
 import fs from 'fs-extra';
 import path from 'path';
@@ -266,15 +266,15 @@ export const editarEsquema = async (
 
 		switch (ruta) {
 			case 'medicamento':
-				entidadExistente = await db.medicamento.findUnique({ where: { id: idTabla } });
+				entidadExistente = await prisma.medicamento.findUnique({ where: { id: idTabla } });
 				carpeta = 'medicamentos';
 				break;
 			case 'usuario':
-				entidadExistente = await db.user.findUnique({ where: { id: idTabla } });
+				entidadExistente = await prisma.user.findUnique({ where: { id: idTabla } });
 				carpeta = 'usuarios';
 				break;
 			case 'mascota':
-				entidadExistente = await db.mascota.findUnique({ where: { id: idTabla } });
+				entidadExistente = await prisma.mascota.findUnique({ where: { id: idTabla } });
 				carpeta = 'mascotas';
 				break;
 			case 'perfil':
@@ -305,13 +305,13 @@ export const editarEsquema = async (
 		let entidadActualizada;
 		switch (ruta) {
 			case 'medicamento':
-				entidadActualizada = await db.medicamento.update({
+				entidadActualizada = await prisma.medicamento.update({
 					where: { id: idTabla },
 					data: { imagen: rutaImagen, idUsuario: usuarioActualId },
 				});
 				break;
 			case 'usuario':
-				entidadActualizada = await db.user.update({
+				entidadActualizada = await prisma.user.update({
 					where: { id: idTabla },
 					data: {
 						image: rutaImagen,
@@ -319,7 +319,7 @@ export const editarEsquema = async (
 					},
 				});
 			case 'perfil':
-				entidadActualizada = await db.user.update({
+				entidadActualizada = await prisma.user.update({
 					where: { id: entidadExistente.id },
 					data: { image: rutaImagen, idUsuario: usuarioActualId },
 				});
@@ -333,7 +333,7 @@ export const editarEsquema = async (
 				}
 				break;
 			case 'mascota':
-				entidadActualizada = await db.mascota.update({
+				entidadActualizada = await prisma.mascota.update({
 					where: { id: idTabla },
 					data: { imagen: rutaImagen, idUsuario: usuarioActualId },
 				});
@@ -349,7 +349,7 @@ export const editarEsquema = async (
 };
 // export const eliminarEsquema = async (id: number) => {
 // 	try {
-// 		const medicamento = await db.medicamento.delete({
+// 		const medicamento = await prisma.medicamento.delete({
 // 			where: { id },
 // 		});
 
@@ -369,7 +369,7 @@ export const editarEsquema = async (
 // 			throw new Error('ID del usuario autenticado no es válido');
 // 		}
 
-// 		const medicamento = await db.medicamento.update({
+// 		const medicamento = await prisma.medicamento.update({
 // 			where: { id },
 // 			data: {
 // 				estado: 0,
@@ -400,7 +400,7 @@ export const editarEsquema = async (
 
 // // let rutaImagen: string | null = null;
 
-// // const medicamentoExistente = await db.medicamento.findUnique({
+// // const medicamentoExistente = await prisma.medicamento.findUnique({
 // //     where: { id: idMedicamento },
 // // });
 

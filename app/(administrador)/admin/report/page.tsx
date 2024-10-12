@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import CalendarioReporteComponent from './_components/FormCalendarioReporte';
 
 export default async function Report() {
-  const mascotas = await db.mascota.findMany();
+  const mascotas = await prisma.mascota.findMany();
 
   return (
     <div className="mx-auto p-4">

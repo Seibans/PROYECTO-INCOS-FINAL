@@ -1,11 +1,11 @@
 // actions/historiales.ts
 "use server";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { HistorialMedicoCompleto, HistorialMedicoVistaT, TratamientoCompleto } from "@/types";
 
 export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiales: HistorialMedicoVistaT[] } | { error: string }> => {
   try {
-    const historiales = await db.historialMedico.findMany({
+    const historiales = await prisma.historialMedico.findMany({
       include: {
         mascota: {
           select: {
@@ -72,7 +72,7 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
 
 export async function obtenerHistorialconMascotayUsuario(historialId: number): Promise<HistorialMedicoCompleto | null> {
   try {
-    const historial = await db.historialMedico.findUnique({
+    const historial = await prisma.historialMedico.findUnique({
       where: { historialMascotaId: historialId },
       select: {
         historialMascotaId: true,
@@ -239,7 +239,7 @@ export async function obtenerHistorialconMascotayUsuario(historialId: number): P
 
 export async function obtenerTratamientoCompleto(tratamientoId: number): Promise<TratamientoCompleto | null> {
   try {
-    const tratamiento = await db.tratamiento.findUnique({
+    const tratamiento = await prisma.tratamiento.findUnique({
       where: { id: tratamientoId },
       include: {
         servicios: {

@@ -2,14 +2,14 @@
 
 import PDFDocument from 'pdfkit'
 import ExcelJS from 'exceljs'
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import puppeteer from 'puppeteer';
 import fs from 'fs-extra';
 import path from 'path';
 
 export async function generatePDF() {
   try {
-    const mascotas = await db.mascota.findMany();
+    const mascotas = await prisma.mascota.findMany();
 
     const browser = await puppeteer.launch();
     // const browser = await puppeteer.launch({
@@ -341,7 +341,7 @@ export async function generatePDFFromURL(url: string) {
 }
 
 export async function generateExcel(userId: number) {
-  const user = await db.user.findUnique({ where: { id: userId } })
+  const user = await prisma.user.findUnique({ where: { id: userId } })
 
   if (!user) {
     throw new Error('Usuario no encontrado')

@@ -1,6 +1,6 @@
 "use server";
 import * as z from "zod";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { usuarioIdActual } from "@/lib/auth";
 import { UsuarioT } from "@/types";
 import { ConfiguracionSchema } from "@/schemas";
@@ -15,7 +15,7 @@ export const obtenerUsuarios = async (): Promise<UsuarioT[]> => {
     throw new Error('ID del usuario autenticado no es un número válido');
   }
 
-  const usuarios = await db.user.findMany({
+  const usuarios = await prisma.user.findMany({
     where: {
       id: {
         not: usuarioActualId,
@@ -58,7 +58,7 @@ export const usuariosMascota = async (): Promise<any[]> => {
     throw new Error('ID del usuario autenticado no es un número válido');
   }
 
-  const usuarios = await db.user.findMany({
+  const usuarios = await prisma.user.findMany({
     where: {
       id: {
         not: usuarioActualId,
@@ -111,7 +111,7 @@ export const editarUsuario = async (values: z.infer<typeof ConfiguracionSchema>,
 
   try {
     
-    await db.user.update({
+    await prisma.user.update({
       where: {
         id: idUsuario
       },
@@ -137,7 +137,7 @@ export const deshabilitarUsuario = async (id: number) => {
     throw new Error('ID del usuario autenticado no es un número válido');
   }
   try {
-    await db.user.update({
+    await prisma.user.update({
       where: { id },
       data: {
         estado: 0,

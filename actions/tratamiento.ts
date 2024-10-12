@@ -1,6 +1,6 @@
 "use server"
 import * as z from "zod";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { TratamientoFormT, TratamientoCompleto } from '@/types';
 import { usuarioIdActual } from "@/lib/auth";
 import { addHours } from "date-fns"; 
@@ -11,7 +11,7 @@ export async function crearTratamiento(historialId: number, data: TratamientoFor
   try {
     // Verificar el stock de los medicamentos antes de la transacción
     for (const med of data.medicamentos) {
-      const medicamento = await db.medicamento.findUnique({
+      const medicamento = await prisma.medicamento.findUnique({
         where: { id: med.medicamentoId },
         select: { stock: true, nombre: true },
       });
@@ -24,7 +24,7 @@ export async function crearTratamiento(historialId: number, data: TratamientoFor
     }
     
     const idUActual = await usuarioIdActual();
-    const resultado = await db.$transaction(async (prisma) => {
+    const resultado = await prisma.$transaction(async (prisma) => {
       // Crear el tratamiento
       const tratamiento = await prisma.tratamiento.create({
         data: {
@@ -93,7 +93,7 @@ export async function crearTratamiento(historialId: number, data: TratamientoFor
 export async function actualizarTratamiento(historialId: number, tratamientoId: number, data: TratamientoFormT) {
   try {
     // Obtener el tratamiento actual para comparar los cambios en los medicamentos
-    const tratamientoActual = await db.tratamiento.findFirst({
+    const tratamientoActual = await prisma.tratamiento.findFirst({
       where: {
         id: tratamientoId,
         historialMascotaId: historialId,
@@ -111,7 +111,7 @@ export async function actualizarTratamiento(historialId: number, tratamientoId: 
       const cantidadAdicional = medicamentoActual ? med.cantidad - medicamentoActual.cantidad : med.cantidad;
 
       if (cantidadAdicional > 0) {
-        const medicamento = await db.medicamento.findUnique({
+        const medicamento = await prisma.medicamento.findUnique({
           where: { id: med.medicamentoId },
           select: { stock: true, nombre: true },
         });
@@ -126,7 +126,7 @@ export async function actualizarTratamiento(historialId: number, tratamientoId: 
       }
     }
 
-    const resultado = await db.$transaction(async (prisma) => {
+    const resultado = await prisma.$transaction(async (prisma) => {
       // Actualizar el tratamiento
       const tratamiento = await prisma.tratamiento.update({
         where: {

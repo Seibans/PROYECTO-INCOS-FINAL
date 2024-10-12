@@ -14,7 +14,7 @@ import {
 } from "@/lib/tokens";
 
 import { getTwoFactorTokenByEmail } from "@/data/doble-factor-token";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { getTwoFactorConfirmationByUserId } from "@/data/doble-factor-confirmacion";
 
 export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: string | null) => {
@@ -61,7 +61,7 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
                     return { error: "El código expiró" };
                 }
 
-                await db.tokenDobleFactor.delete({
+                await prisma.tokenDobleFactor.delete({
                     where: {
                         id: tokenDobleFactor.id
                     }
@@ -70,7 +70,7 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
                 const confirmacionExistente = await getTwoFactorConfirmationByUserId(existingUser.id);
 
                 if (confirmacionExistente) {
-                    await db.confirmacionDobleFactor.delete({
+                    await prisma.confirmacionDobleFactor.delete({
                         where: {
                             id: confirmacionExistente.id
                         }
@@ -78,7 +78,7 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
                 }
 
 
-                await db.confirmacionDobleFactor.create({
+                await prisma.confirmacionDobleFactor.create({
                     data: {
                         usuarioId: existingUser.id,
                     }

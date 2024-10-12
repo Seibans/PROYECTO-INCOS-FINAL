@@ -27,7 +27,7 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
-      await db.user.update({
+      await prisma.user.update({
          where: {
             id: Number(user.id),
          },
@@ -40,7 +40,7 @@ export const {
       try {
         const usuarioId = parseInt(user.id as string, 10);
         const {name, apellidoPat, apellidoMat} = actualizarNombres(user.name as string)
-        await db.user.update({
+        await prisma.user.update({
           where: { id: usuarioId },
           data: { 
             name: name,
@@ -83,7 +83,7 @@ export const {
           if (!dobleFactorConfirmacion) return false;
 
           // Eliminar la confirmación de dos factores para el próximo inicio de sesión
-          await db.confirmacionDobleFactor.delete({
+          await prisma.confirmacionDobleFactor.delete({
               where: {
                   id: dobleFactorConfirmacion.id,
               }

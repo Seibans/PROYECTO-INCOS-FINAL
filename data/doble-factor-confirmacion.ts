@@ -1,8 +1,8 @@
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 
 export const getTwoFactorConfirmationByUserId = async (userId: number) => {
 	try {
-		const dobleFactorConfirmacion = await db.confirmacionDobleFactor.findUnique({
+		const dobleFactorConfirmacion = await prisma.confirmacionDobleFactor.findUnique({
 			where: {
 				usuarioId: userId,
 			},

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "dev:open": "npm run dev && open http://localhost:3000/",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",

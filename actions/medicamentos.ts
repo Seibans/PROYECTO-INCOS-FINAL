@@ -3,7 +3,7 @@ import Decimal from 'decimal.js';
 
 import * as z from "zod";
 import { MedicamentoSchema } from "@/schemas";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { Medicamento, TipoMedicamento } from "@prisma/client";
 import { MedicamentoT } from '@/types';
 import { usuarioIdActual } from "@/lib/auth";
@@ -16,7 +16,7 @@ import { formatearNombre } from '@/lib/formatearNombre';
 
 export const obtenerMedicamentos = async (): Promise<MedicamentoT[]> => {
     try {
-        const medicamentos = await db.medicamento.findMany({
+        const medicamentos = await prisma.medicamento.findMany({
             where: {
                 estado: 1,
             },
@@ -66,7 +66,7 @@ export const registrarMedicamento = async (
             rutaImagen = `${process.env.NEXT_PUBLIC_APP_URL}/uploads/medicamentos/${nombreUnico}`;
         }
 
-        const medicamento = await db.medicamento.create({
+        const medicamento = await prisma.medicamento.create({
             data: {
                 nombre,
                 descripcion,
@@ -106,7 +106,7 @@ console.log(values);
 
         const descripcionF = formatearDetalle(descripcion);
         const indicacionesF = formatearDetalle(indicaciones);
-        const medicamentoActualizado = await db.medicamento.update({
+        const medicamentoActualizado = await prisma.medicamento.update({
             where: { id: idMedicamento },
             data: {
                 codigo,
@@ -133,7 +133,7 @@ console.log(values);
 
 export const obtenerMedicamento = async (id: number) => {
     try {
-        const medicamento = await db.medicamento.findUnique({
+        const medicamento = await prisma.medicamento.findUnique({
             where: {
                 id,
             },
@@ -157,7 +157,7 @@ export const obtenerMedicamento = async (id: number) => {
 
 export const eliminarMedicamento = async (id: number) => {
     try {
-        const medicamento = await db.medicamento.delete({
+        const medicamento = await prisma.medicamento.delete({
             where: { id },
         });
 
@@ -177,7 +177,7 @@ export const deshabilitarMedicamento = async (id: number) => {
             throw new Error('ID del usuario autenticado no es válido');
         }
 
-        const medicamento = await db.medicamento.update({
+        const medicamento = await prisma.medicamento.update({
             where: { id },
             data: {
                 estado: 0,
@@ -233,7 +233,7 @@ export const deshabilitarMedicamento = async (id: number) => {
 //             rutaImagen = `${process.env.NEXT_PUBLIC_APP_URL}/uploads/admin/medicamentos/${nombreUnico}`;
 //         }
 //         const idUActual = await usuarioIdActual();
-//         const medicamento = await db.medicamento.create({
+//         const medicamento = await prisma.medicamento.create({
 //             data: {
 //                 nombre,
 //                 descripcion,
@@ -263,7 +263,7 @@ export const deshabilitarMedicamento = async (id: number) => {
 
 //     try {
 //         const idUActual = await usuarioIdActual();
-//         const medicamentoActualizado = await db.medicamento.update({
+//         const medicamentoActualizado = await prisma.medicamento.update({
 //             where: {
 //                 id: idMedicamento
 //             },

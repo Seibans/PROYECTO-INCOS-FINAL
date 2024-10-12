@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { MascotaSchema } from "@/schemas";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { Mascota, Sexo, TipoMascota } from "@prisma/client";
 import { usuarioIdActual } from "@/lib/auth";
 import { addHours } from "date-fns"; 
@@ -13,7 +13,7 @@ import { formatearNombre } from "@/lib/formatearNombre";
 import { formatearDetalle } from "@/lib/formatearDescripcion";
 
 export const obtenerMascotas = async (): Promise<Mascota[]> => {
-    const mascotas = await db.mascota.findMany({
+    const mascotas = await prisma.mascota.findMany({
         where: {
             estado: {
                 not: 0
@@ -45,7 +45,7 @@ export const registrarMascota = async (mascotaValues: z.infer<typeof MascotaSche
     const detallesF = formatearDetalle(detalles);
     try {
         const idUActual = await usuarioIdActual();
-        const mascota = await db.$transaction(async (tx) => {
+        const mascota = await prisma.$transaction(async (tx) => {
             const mascotaCreada = await tx.mascota.create({
                 data: {
                     nombre: nombreF,
@@ -106,7 +106,7 @@ export const registrarMascotaConImagen = async (formMascota: FormData) => {
       }
   
       const idUActual = await usuarioIdActual();
-      const mascota = await db.$transaction(async (tx) => {
+      const mascota = await prisma.$transaction(async (tx) => {
         const mascotaCreada = await tx.mascota.create({
           data: {
             nombre,
@@ -156,7 +156,7 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
     // console.log(validatedFields.data)
     // console.log(idMascota)
 
-    // const pablo = await db.mascota.update({
+    // const pablo = await prisma.mascota.update({
     //     data: {
     //         nombre,
     //         especie,
@@ -168,7 +168,7 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
     // });
     try {
         // const idUActual = await usuarioIdActual();
-        // const mascotaActualizada = await db.mascota.update({
+        // const mascotaActualizada = await prisma.mascota.update({
         //     where: {
         //         id: idMascota,
         //     },
@@ -188,7 +188,7 @@ export const editarMascota = async (values: z.infer<typeof MascotaSchema>, idMas
 export const obtenerMascota = async (id: number) => {
     try {
         // Intentamos obtener la mascota
-        const mascota = await db.mascota.findUnique({
+        const mascota = await prisma.mascota.findUnique({
             where: {
                 id,
             },
@@ -216,7 +216,7 @@ export const obtenerMascota = async (id: number) => {
 
 export const eliminarMascota = async (id: number) => {
     try {
-        const mascota = await db.mascota.delete({
+        const mascota = await prisma.mascota.delete({
             where: { id },
         });
 
@@ -237,7 +237,7 @@ export const deshabilitarMascota = async (id: number) => {
             throw new Error('ID del usuario autenticado no es válido');
         }
 
-        const mascota = await db.mascota.update({
+        const mascota = await prisma.mascota.update({
             where: { id },
             data: {
                 estado: 0,

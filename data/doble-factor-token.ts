@@ -1,8 +1,8 @@
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 
 export const getTwoFactorTokenByToken = async (token: string) => {
 	try {
-		const dobleFactorToken = await db.tokenDobleFactor.findUnique({
+		const dobleFactorToken = await prisma.tokenDobleFactor.findUnique({
 			where: {
 				token: token,
 			},
@@ -17,7 +17,7 @@ export const getTwoFactorTokenByToken = async (token: string) => {
 //TODO: INVESTIGAR LA DIFERENCIA DE FINDUNIQUE Y FINDFIRST
 export const getTwoFactorTokenByEmail = async (email: string) => {
 	try {
-		const dobleFactorToken = await db.tokenDobleFactor.findFirst({
+		const dobleFactorToken = await prisma.tokenDobleFactor.findFirst({
 			where: {
 				email: email,
 			},

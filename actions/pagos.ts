@@ -6,7 +6,7 @@ import { PagoResumen, TratamientoCompleto, ResumenIngresos } from '@/types/pagos
 
 export const obtenerPagos = async (): Promise<PagoResumen[]> => {
   try {
-    const pagos = await db.pago.findMany({
+    const pagos = await prisma.pago.findMany({
       where: {
         estado: {
           not: 0
@@ -59,7 +59,7 @@ export const obtenerPagos = async (): Promise<PagoResumen[]> => {
 
 export const obtenerTratamientoCompleto = async (tratamientoId: number): Promise<TratamientoCompleto | null> => {
   try {
-    const tratamiento = await db.tratamiento.findUnique({
+    const tratamiento = await prisma.tratamiento.findUnique({
       where: { id: tratamientoId },
       include: {
         pago: true,

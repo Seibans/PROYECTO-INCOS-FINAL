@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { getVerificationTokenByEmail } from "@/data/verificacion-token";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
 import { getTwoFactorTokenByEmail } from "@/data/doble-factor-token";
@@ -12,13 +12,13 @@ export const generateTwoFactorToken = async (email: string) => {
 	const expires = new Date(new Date().getTime() + 5 * 60 * 1000); //el token tendra un tiempo de vida de 5 minutos
 	const existingToken = await getTwoFactorTokenByEmail(email);
 	if (existingToken) {
-		await db.tokenDobleFactor.delete({
+		await prisma.tokenDobleFactor.delete({
 			where: {
 				id: existingToken.id,
 			},
 		});
 	}
-	const twoFactorToken = await db.tokenDobleFactor.create({
+	const twoFactorToken = await prisma.tokenDobleFactor.create({
 		data: {
 			token,
 			email,
@@ -36,13 +36,13 @@ export const generatePasswordResetToken = async (email: string) => {
 	const tokenExistente = await getPasswordResetTokenByEmail(email);
 	
 	if (tokenExistente) {
-		await db.tokenReestablecimientoPassword.delete({
+		await prisma.tokenReestablecimientoPassword.delete({
 			where: {
 				id: tokenExistente.id,
 			},
 		});
 	}
-	const passwordResetToken = await db.tokenReestablecimientoPassword.create({
+	const passwordResetToken = await prisma.tokenReestablecimientoPassword.create({
 		data: {
 			token,
 			email,
@@ -60,13 +60,13 @@ export const generateVerificationToken = async (email: string) => {
 	const existingToken = await getVerificationTokenByEmail(email);
 	
 	if (existingToken) {
-		await db.tokenVerificacion.delete({
+		await prisma.tokenVerificacion.delete({
 			where: {
 				id: existingToken.id,
 			},
 		});
 	}
-	const verificationToken = await db.tokenVerificacion.create({
+	const verificationToken = await prisma.tokenVerificacion.create({
 		data: {
 			token,
 			email,

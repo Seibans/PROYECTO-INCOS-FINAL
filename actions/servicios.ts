@@ -3,14 +3,14 @@ import Decimal from 'decimal.js';
 
 import * as z from "zod";
 import { ServicioSchema} from "@/schemas";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { ServicioT } from '@/types';
 import { usuarioIdActual } from "@/lib/auth";
 import { formatearNombre } from '@/lib/formatearNombre';
 
 export const obtenerServicios = async (): Promise<ServicioT[]> => {
     try {
-        const servicios = await db.servicio.findMany({
+        const servicios = await prisma.servicio.findMany({
             where: {
                 estado: 1,
             },
@@ -40,7 +40,7 @@ export const registrarServicio = async (values: z.infer<typeof ServicioSchema>) 
     const descripcionF = formatearNombre(descripcion);
     try {
         const idUActual = await usuarioIdActual();
-        const servicio = await db.servicio.create({
+        const servicio = await prisma.servicio.create({
             data: {
                 nombre: nombreF,
                 descripcion: descripcionF,
@@ -71,7 +71,7 @@ export const editarServicio = async (
         const nombreF = formatearNombre(nombre);
         const descripcionF = formatearNombre(descripcion);
 
-        const servicioActualizado = await db.servicio.update({
+        const servicioActualizado = await prisma.servicio.update({
             where: { id: idServicio },
             data: {
                 nombre: nombreF,
@@ -91,7 +91,7 @@ export const editarServicio = async (
 
 export const obtenerServicio = async (id: number) => {
     try {
-        const servicio = await db.servicio.findUnique({
+        const servicio = await prisma.servicio.findUnique({
             where: {
                 id,
             },
@@ -115,7 +115,7 @@ export const obtenerServicio = async (id: number) => {
 
 export const eliminarServicio = async (id: number) => {
     try {
-        const servicio = await db.servicio.delete({
+        const servicio = await prisma.servicio.delete({
             where: { id },
         });
 
@@ -135,7 +135,7 @@ export const deshabilitarServicio = async (id: number) => {
             throw new Error('ID del usuario autenticado no es válido');
         }
 
-        const servicio = await db.servicio.update({
+        const servicio = await prisma.servicio.update({
             where: { id },
             data: {
                 estado: 0,  // Cambiamos el estado a 0 para deshabilitar
@@ -191,7 +191,7 @@ export const deshabilitarServicio = async (id: number) => {
 //             rutaImagen = `${process.env.NEXT_PUBLIC_APP_URL}/uploads/admin/medicamentos/${nombreUnico}`;
 //         }
 //         const idUActual = await usuarioIdActual();
-//         const medicamento = await db.medicamento.create({
+//         const medicamento = await prisma.medicamento.create({
 //             data: {
 //                 nombre,
 //                 descripcion,
@@ -221,7 +221,7 @@ export const deshabilitarServicio = async (id: number) => {
 
 //     try {
 //         const idUActual = await usuarioIdActual();
-//         const medicamentoActualizado = await db.medicamento.update({
+//         const medicamentoActualizado = await prisma.medicamento.update({
 //             where: {
 //                 id: idMedicamento
 //             },

@@ -9,7 +9,7 @@ export function useMedicamentos() {
   useEffect(() => {
     async function fetchMedicamentos() {
       try {
-        const data = await db.medicamento.findMany({
+        const data = await prisma.medicamento.findMany({
           where: { estado: 1 },
           select: { id: true, nombre: true, stock: true, precio: true }
         })

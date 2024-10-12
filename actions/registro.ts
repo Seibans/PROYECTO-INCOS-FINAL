@@ -2,7 +2,7 @@
 import * as z from "zod";
 import { RegistroSchema, RegistroAdminSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { enviarCorreodeVerificacion } from "@/lib/nodemailer";
@@ -45,7 +45,7 @@ export const registro = async (values: z.infer<typeof RegistroSchema>) => {
     const passwordEncriptado = await bcrypt.hash(password, 10);
 
     try {
-        await db.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx) => {
             const user = await tx.user.create({
                 data: {
                     name: formattedName,
@@ -114,7 +114,7 @@ export const registrarUsuarioByAdmin = async (values: z.infer<typeof RegistroAdm
 
         const idUActual = await usuarioIdActual();
 
-        const user = await db.user.create({
+        const user = await prisma.user.create({
             data: {
                 name: formattedName,
                 apellidoPat: formattedApellidoPat,
@@ -181,7 +181,7 @@ export const registrarUsuarioConImagen = async (formData: FormData) => {
 
         const idUActual = await usuarioIdActual();
 
-        const user = await db.user.create({
+        const user = await prisma.user.create({
             data: {
                 name: formattedName,
                 apellidoPat: formattedApellidoPat,

@@ -1,6 +1,6 @@
 "use server"
 
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma"
 import { getUserByEmail } from "@/data/user";
 import { getVerificationTokenByToken } from "@/data/verificacion-token";
 
@@ -31,7 +31,7 @@ export const nuevaVerificacion = async (token: string) =>{
 		}
 	}
 
-	await db.user.update({
+	await prisma.user.update({
 		where: {
 			id: usuarioExistente.id
 		},
@@ -41,7 +41,7 @@ export const nuevaVerificacion = async (token: string) =>{
 		}
 	});
 
-	await db.tokenVerificacion.delete({
+	await prisma.tokenVerificacion.delete({
 		where: {
 			id: tokenExistente.id
 		}

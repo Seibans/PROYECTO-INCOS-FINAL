@@ -41,6 +41,7 @@
 // }
   generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["deno"]
   }
 
   datasource db {
