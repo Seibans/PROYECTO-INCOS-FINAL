@@ -7,7 +7,6 @@ import { BackButton } from "@/components/auth/back-button.component";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import { HomeIcon, MessageCircle, User2 } from "lucide-react";
 import { ToggleModo } from "@/components/toggle.tema";
-import GridHexagonal from "@/components/otros/gridHexagonal";
 // Definir los elementos estáticos
 const staticItems = [
   {
@@ -90,7 +89,6 @@ export default function Home() {
         <div className="flex mt-3 z-10 justify-center">
           <AnimatedTooltip items={staticItems}></AnimatedTooltip>
         </div>
-        {/* <GridHexagonal /> */}
       </div>
       <div className="w-full absolute inset-0 h-screen">
         <SparklesCore
