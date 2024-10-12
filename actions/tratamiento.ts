@@ -5,23 +5,19 @@ import { TratamientoFormT, TratamientoCompleto } from '@/types';
 import { usuarioIdActual } from "@/lib/auth";
 import { addHours } from "date-fns"; 
 
-
 export async function crearTratamiento(historialId: number, data: TratamientoFormT) {
   console.log("DETALLADO COMPLETO", JSON.stringify(data, null, 2), "DETALLADO COMPLETO SE DISPARO?");
   console.log(data)
   try {
-    
     // Verificar el stock de los medicamentos antes de la transacción
     for (const med of data.medicamentos) {
       const medicamento = await db.medicamento.findUnique({
         where: { id: med.medicamentoId },
         select: { stock: true, nombre: true },
       });
-
       if (!medicamento) {
         return { error: `El medicamento con ID ${med.medicamentoId} no existe.` };
       }
-
       if (medicamento.stock < med.cantidad) {
         return { error: `No hay suficiente stock para el medicamento ${medicamento.nombre}. Stock actual: ${medicamento.stock}` };
       }
@@ -29,17 +25,6 @@ export async function crearTratamiento(historialId: number, data: TratamientoFor
     
     const idUActual = await usuarioIdActual();
     const resultado = await db.$transaction(async (prisma) => {
-      // Crear el pago
-      const pago = await prisma.pago.create({
-        data: {
-          total: data.total,
-          detalle: data.detalle,
-          esAyudaVoluntaria: data.esAyudaVoluntaria,
-          estado: 1,
-          idUsuario: idUActual,
-        },
-      });
-
       // Crear el tratamiento
       const tratamiento = await prisma.tratamiento.create({
         data: {
@@ -47,7 +32,17 @@ export async function crearTratamiento(historialId: number, data: TratamientoFor
           estado: data.estado,
           diagnostico: data.diagnostico,
           historialMascotaId: historialId,
-          pagoId: pago.id,
+          idUsuario: idUActual,
+        },
+      });
+
+      const pago = await prisma.pago.create({
+        data: {
+          id: tratamiento.id,
+          total: data.total,
+          detalle: data.detalle,
+          esAyudaVoluntaria: data.esAyudaVoluntaria,
+          estado: 1,
           idUsuario: idUActual,
         },
       });
@@ -147,7 +142,8 @@ export async function actualizarTratamiento(historialId: number, tratamientoId: 
 
       // Actualizar el pago
       await prisma.pago.update({
-        where: { id: tratamiento.pagoId! },
+        // where: { id: tratamiento.id! },
+        where: { id: tratamiento.id },
         data: {
           total: data.total,
           detalle: data.detalle,
@@ -208,72 +204,3 @@ export async function actualizarTratamiento(historialId: number, tratamientoId: 
     return { error: "Ocurrió un Error al Actualizar el Tratamiento!" };
   }
 }
-
-
-
-// export async function actualizarTratamiento(historialId: number, tratamientoId: number, data: TratamientoFormT) {
-
-//   console.log(historialId, tratamientoId, data,"   HISTORIAL Y DATA");
-//   console.log("DETALLADO COMPLETO", JSON.stringify(data, null, 2), "DETALLADO COMPLETO");
-//   try {
-//     const resultado = await db.$transaction(async (prisma) => {
-//       // Actualizar el tratamiento
-//       const tratamiento = await prisma.tratamiento.update({
-//         where: { id: tratamientoId },
-//         data: {
-//           descripcion: data.descripcion,
-//           estado: data.estado,
-//           diagnostico: data.diagnostico,
-//         },
-//       });
-
-//       // Actualizar el pago
-//       await prisma.pago.update({
-//         where: { id: tratamiento.pagoId! },
-//         data: {
-//           total: data.total.toString(),
-//           detalle: data.detalle,
-//           esAyudaVoluntaria: data.esAyudaVoluntaria,
-//         },
-//       });
-
-//       // Eliminar serviciosTratamiento existentes y crear nuevos
-//       await prisma.servicioTratamiento.deleteMany({
-//         where: { tratamientoId: tratamientoId },
-//       });
-//       await Promise.all(data.servicios.map(servicio =>
-//         prisma.servicioTratamiento.create({
-//           data: {
-//             precioServicio: servicio.precioServicio,
-//             servicioId: servicio.servicioId,
-//             tratamientoId: tratamientoId,
-//           },
-//         })
-//       ));
-
-//       // Eliminar tratamientoMedicamento existentes y crear nuevos
-//       await prisma.tratamientoMedicamento.deleteMany({
-//         where: { tratamientoId: tratamientoId },
-//       });
-
-//       await Promise.all(data.medicamentos.map(medicamento =>
-//         prisma.tratamientoMedicamento.create({
-//           data: {
-//             cantidad: medicamento.cantidad,
-//             costoUnitario: medicamento.costoUnitario,
-//             dosificacion: medicamento.dosificacion,
-//             tratamientoId: tratamientoId,
-//             medicamentoId: medicamento.medicamentoId,
-//           },
-//         })
-//       ));
-
-//       return tratamiento;
-//     });
-
-//     return { success: "El Tratamiento se Actualizó Correctamente!", tratamiento: resultado };
-//   } catch (error) {
-//     console.error("Error al actualizar el tratamiento:", error);
-//     return { error: "Ocurrió un Error al Actualizar el Tratamiento!" };
-//   }
-// }

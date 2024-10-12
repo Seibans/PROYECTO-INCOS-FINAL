@@ -216,8 +216,7 @@
     diagnostico        String?                  @db.VarChar(255)
     historialMascotaId Int                      @db.UnsignedInt
     historialMascota   HistorialMedico          @relation(fields: [historialMascotaId], references: [historialMascotaId])
-    pagoId             Int?                     @unique @db.UnsignedInt
-    pago               Pago?                    @relation(fields: [pagoId], references: [id])
+    pago               Pago?
     medicamentos       TratamientoMedicamento[]
     servicios          ServicioTratamiento[]
     creadoEn           DateTime                 @default(now()) @db.Timestamp(3)
@@ -268,14 +267,14 @@
   }
 
   model Pago {
-    id                Int          @id @default(autoincrement()) @db.UnsignedInt
+    id                Int          @id @db.UnsignedInt
+    tratamiento       Tratamiento  @relation(fields: [id], references: [id])
     total             Decimal      @db.Decimal(18, 2)
     fechaPago         DateTime?    @db.DateTime(3)
     metodoPago        String?      @db.VarChar(50)
     detalle           String?      @db.VarChar(100)
     estado            Int          @default(1) @db.TinyInt
     esAyudaVoluntaria Boolean      @default(false)
-    tratamiento       Tratamiento?
     creadoEn          DateTime     @default(now()) @db.Timestamp(3)
     actualizadoEn     DateTime?    @updatedAt @db.Timestamp(3)
     idUsuario         Int          @db.UnsignedInt

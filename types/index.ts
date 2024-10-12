@@ -71,7 +71,6 @@ export interface TratamientoT {
   estado: number;
   diagnostico: string | null;
   historialMascotaId: number;
-  pagoId: number | null;
   pago?: PagoT | null;
   medicamentos?: TratamientoMedicamentoT[] | null;
   servicios?: ServicioTratamientoT[] | null;
@@ -241,15 +240,12 @@ export interface HistorialMedicoCompleto {
   tratamientos: TratamientoT[];
 }
 
-
-
 export interface TratamientoCompleto {
   id: number;
   descripcion: string;
   estado: number;
   diagnostico: string | null;
   historialMascotaId: number;
-  pagoId: number | null;
   pago: PagoT | null;
   medicamentos: TratamientoMedicamentoT[];
   servicios: ServicioTratamientoT[];
@@ -257,11 +253,6 @@ export interface TratamientoCompleto {
   actualizadoEn?: Date | null;
   idUsuario: number;
 }
-
-
-
-
-
 
 //PARA EL FORMULARIO Y EL ESQUEMA DE ZOD
 export interface TratamientoFormT {

@@ -2,62 +2,6 @@
 "use server";
 import { db } from "@/lib/db";
 import { HistorialMedicoCompleto, HistorialMedicoVistaT, TratamientoCompleto } from "@/types";
-// import { HistorialMedicoCompleto, TratamientoCompleto } from "@/types";
-// import { TratamientoCompleto } from "@/types";
-import { RolUsuario } from "@prisma/client";
-
-
-// export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiales: HistorialMedicoVistaT[] } | { error: string }> => {
-//   try {
-//     const historiales = await db.historialMedico.findMany({
-//       include: {
-//         mascota: {
-//           select: {
-//             nombre: true,
-//             sexo: true,
-//             imagen: true,
-//             especie: true,
-//             raza: true,
-//           },
-//         },
-//         tratamientos: {
-//           select: {
-//             id: true,
-//             descripcion: true,
-//             creadoEn: true,
-//             actualizadoEn: true,
-//             idUsuario: true,
-//           },
-//         },
-//       },
-//     });
-
-//     // Ajustar la estructura para que coincida con HistorialMedicoVistaT
-//     const historialesConMascotas: HistorialMedicoVistaT[] = historiales.map(historial => ({
-//       historialMascotaId: historial.historialMascotaId,
-//       estado: historial.estado,
-//       creadoEn: historial.creadoEn,
-//       actualizadoEn: historial.actualizadoEn,
-//       nombreMascota: historial.mascota.nombre,
-//       imagenMascota: historial.mascota.imagen ?? null,
-//       especieMascota: historial.mascota.especie,
-//       razaMascota: historial.mascota.raza ?? null,
-//       sexoMascota: historial.mascota.sexo,
-//       tratamientos: historial.tratamientos.map(tratamiento => ({
-//         id: tratamiento.id,
-//         descripcion: tratamiento.descripcion,
-//         creadoEn: tratamiento.creadoEn,
-//         actualizadoEn: tratamiento.actualizadoEn,
-//         idUsuario: tratamiento.idUsuario,
-//       })),
-//     }));
-
-//     return { historiales: historialesConMascotas };
-//   } catch (error) {
-//     console.error("Error al obtener todos los historiales médicos:", error);
-//     return { error: "Ocurrió un error al obtener los historiales médicos." };
-//   }
-// };
 
 export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiales: HistorialMedicoVistaT[] } | { error: string }> => {
   try {
@@ -126,37 +70,7 @@ export const obtenerTodosHistorialesConMascotas = async (): Promise<{ historiale
   }
 };
 
-
-
-
-
 export async function obtenerHistorialconMascotayUsuario(historialId: number): Promise<HistorialMedicoCompleto | null> {
-
-  // const historial = await db.historialMedico.findUnique({
-    //   where: { historialMascotaId: historialId },
-    //   include: {
-    //     mascota: {
-    //       include: {
-    //         usuario: true
-    //       }
-    //     },
-    //     tratamientos: {
-    //       include: {
-    //         servicios: {
-    //           include: {
-    //             servicio: true
-    //           }
-    //         },
-    //         medicamentos: {
-    //           include: {
-    //             medicamento: true
-    //           }
-    //         },
-    //         pago: true
-    //       }
-    //     }
-    //   }
-    // });
   try {
     const historial = await db.historialMedico.findUnique({
       where: { historialMascotaId: historialId },
@@ -214,7 +128,6 @@ export async function obtenerHistorialconMascotayUsuario(historialId: number): P
             estado: true,
             diagnostico: true,
             historialMascotaId: true,
-            pagoId: true,
             creadoEn: true,
             actualizadoEn: true,
             idUsuario: true,
@@ -310,7 +223,6 @@ export async function obtenerHistorialconMascotayUsuario(historialId: number): P
             precio: med.medicamento.precio.toNumber().toFixed(2)
           }
         })),
-        idPago: tratamiento.pagoId || null,
         pago: tratamiento.pago ? {
           ...tratamiento.pago,
           total: tratamiento.pago.total.toNumber().toFixed(2),
@@ -320,7 +232,6 @@ export async function obtenerHistorialconMascotayUsuario(historialId: number): P
 
     return historialFormateado;
   } catch (error) {
-    // return { error: "Ocurrió un error al obtener el historial médico." };
     return null;
   }
 }
@@ -348,27 +259,6 @@ export async function obtenerTratamientoCompleto(tratamientoId: number): Promise
     if (!tratamiento) {
       return null;
     }
-
-    // Convertir los campos Decimal a string para que coincidan con las interfaces
-    // const tratamientoFormateado: any = {
-    //   ...tratamiento,
-    //   servicios: tratamiento.servicios.map(servicio => ({
-    //     ...servicio,
-    //     precioServicio: servicio.precioServicio.toString(),
-    //     servicio: {
-    //       ...servicio.servicio,
-    //       precio: servicio.servicio.precio.toString()
-    //     }
-    //   })),
-    //   medicamentos: tratamiento.medicamentos.map(med => ({
-    //     ...med,
-    //     costoUnitario: med.costoUnitario.toNumber(),
-    //     medicamento: {
-    //       ...med.medicamento,
-    //       precio: med.medicamento.precio.toString()
-    //     }
-    //   }))
-    // };
     
     console.log("DETALLADO COMPLETO", JSON.stringify(tratamiento, null, 2), "DETALLADO COMPLETO");
 
@@ -392,15 +282,9 @@ export async function obtenerTratamientoCompleto(tratamientoId: number): Promise
           precio: med.medicamento.precio.toNumber().toFixed(2)
         }
       })),
-      // pago: tratamiento.pago ? {
-      //   ...tratamiento.pago,
-      //   total: tratamiento.pago.total.toNumber().toFixed(2)
-      // } : null
       pago: null
     };
     console.log("DETALLADO COMPLETO", JSON.stringify(tratamientoFormateado, null, 2), "DETALLADO COMPLETO2");
-
-
     return tratamientoFormateado;
   } catch (error) {
     console.error("Error al obtener el tratamiento:", error);

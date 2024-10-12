@@ -1,23 +1,3 @@
-// export interface PagoResumen2 {
-//   id: number;
-//   total: string;
-//   fechaPago: string | null;
-//   estado: number;
-//   detalle: string | null;
-//   creadoEn: string;
-//   actualizadoEn: string | null;
-//   descripcionTratamiento: string | null;
-//   estadoTratamiento: number | null;
-//   idMascota: number | null;
-//   nombreMascota: string | null;
-//   idUsuario: number | null;
-//   nombreCompletoUsuario: string | null;
-//   emailUsuario: string | null;
-//   celularUsuario: string | null;
-//   rolUsuario: string | null;
-//   estadoUsuario: number | null;
-// }
-
 export interface PagoResumen2 {
 	id: number;
 	total: string;

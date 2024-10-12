@@ -251,8 +251,12 @@ export const MascotaSchema = z.object({
     nombre: z.string()
         .min(1, "El nombre es obligatorio")
         .max(50, "El nombre no puede tener más de 50 caracteres"),
+    // especie: z.nativeEnum(TipoMascota, {
+    //     errorMap: () => ({ message: "Por favor selecciona la especie" })
+    // }),
     especie: z.nativeEnum(TipoMascota, {
-        errorMap: () => ({ message: "Por favor selecciona la especie" })
+        required_error: "Por favor selecciona la especie",
+        invalid_type_error: "Por favor selecciona una especie válida"
     }),
     raza: z.string()
         .min(1, "La raza es obligatoria")
@@ -264,9 +268,13 @@ export const MascotaSchema = z.object({
     //     message: "Por favor selecciona el género de la mascota",
     //     required_error: "El género es obligatorio",
     // }),
-    sexo: z.nativeEnum(Sexo, {
-        errorMap: () => ({ message: "Por favor selecciona el género de la mascota" })
-      }),
+    // sexo: z.nativeEnum(Sexo, {
+    //     errorMap: () => ({ message: "Por favor selecciona el género de la mascota" })
+    //   }),
+      sexo: z.nativeEnum(Sexo, {
+        required_error: "Por favor selecciona el género de la mascota",
+        invalid_type_error: "Por favor selecciona un género válido"
+    }),
     detalles: z.optional(
         z.string()
             .max(255, { message: "La descripción no debe tener más de 255 caracteres." })

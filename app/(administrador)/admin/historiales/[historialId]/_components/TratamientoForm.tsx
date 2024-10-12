@@ -126,14 +126,15 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
 
 
   const handleConfirmSubmit = async () => {
-    setIsConfirmDialogOpen(false);
     const action = tratamiento ? actualizarTratamiento(historialId, tratamiento.id, formTratamiento) : crearTratamiento(historialId, formTratamiento);
     toast.promise(action, {
       loading: "Cargando...",
       success: (data) => {
         if (data.error) {
+          setIsConfirmDialogOpen(false);
           throw new Error(data.error);
         } else {
+          setIsConfirmDialogOpen(false);
           resetTratamiento(historialId);
           form.reset();
           router.refresh();
@@ -526,9 +527,11 @@ const TratamientoForm: React.FC<TratamientoFormProps> = ({ historialId, tratamie
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmSubmit}>
-              {tratamiento ? 'Actualizar' : 'Crear'} Tratamiento
+            <AlertDialogCancel >Cancelar</AlertDialogCancel>
+            <AlertDialogAction className='sm:w-fit px-0'>
+                <Button variant='expandIcon' className='bg-gradient w-full' Icon={Edit} iconPlacement='right' onClick={handleConfirmSubmit}>
+                {tratamiento ? 'Actualizar' : 'Crear'} Tratamiento
+                </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

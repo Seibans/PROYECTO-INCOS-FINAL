@@ -105,10 +105,10 @@ export const FormMascotaGlobal = ({ mascota, setabrirModal, isDialog = false, us
     imagen: mascota.imagen || '',
   } : {
     nombre: "",
-    especie: undefined,
+    especie: undefined as unknown as TipoMascota,
     raza: "Sin Raza (Especial)",
     fechaNacimiento: undefined,
-    sexo: undefined,
+    sexo: undefined as unknown as Sexo,
     detalles: "",
     peso: "",
     esterilizado: false,
@@ -153,32 +153,32 @@ export const FormMascotaGlobal = ({ mascota, setabrirModal, isDialog = false, us
 
   const onSubmit = async (values: z.infer<typeof MascotaSchema>) => {
     console.log(values)
-    // startTransition(async () => {
-    //   let action;
-    //   if (mascota) {
-    //     action = editarMascota(values, mascota.id);
-    //   } else {
-    //     action = values.archivo
-    //       ? registrarMascotaConImagen(objectToFormData(values))
-    //       : registrarMascota(values);
-    //   }
+    startTransition(async () => {
+      let action;
+      if (mascota) {
+        action = editarMascota(values, mascota.id);
+      } else {
+        action = values.archivo
+          ? registrarMascotaConImagen(objectToFormData(values))
+          : registrarMascota(values);
+      }
 
-    //   toast.promise(action, {
-    //     loading: "Cargando...",
-    //     success: (data) => {
-    //       if (data.error) {
-    //         throw new Error(data.error);
-    //       } else {
-    //         router.refresh();
-    //         if (setabrirModal) {
-    //           setabrirModal(false);
-    //         }
-    //         return `${data.success}`;
-    //       }
-    //     },
-    //     error: (error) => error.message,
-    //   });
-    // });
+      toast.promise(action, {
+        loading: "Cargando...",
+        success: (data) => {
+          if (data.error) {
+            throw new Error(data.error);
+          } else {
+            router.refresh();
+            if (setabrirModal) {
+              setabrirModal(false);
+            }
+            return `${data.success}`;
+          }
+        },
+        error: (error) => error.message,
+      });
+    });
   };
 
   const objectToFormData = (obj: z.infer<typeof MascotaSchema>): FormData => {
@@ -377,7 +377,7 @@ export const FormMascotaGlobal = ({ mascota, setabrirModal, isDialog = false, us
 									<EstadoSelect
 										estados={estados}
 										onSelect={(value) => field.onChange(value)}
-										value={field.value}
+										value={field.value || ''}
 									/>
 								</FormControl>
 								<FormMessage />
