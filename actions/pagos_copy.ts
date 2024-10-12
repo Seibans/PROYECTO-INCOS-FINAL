@@ -160,7 +160,7 @@ export async function obtenerResumenIngresos(): Promise<ResumenIngresos> {
     const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
 
     const [ingresoSemanal, ingresoMensual] = await Promise.all([
-      db.pago.aggregate({
+      prisma.pago.aggregate({
         _sum: {
           total: true
         },
@@ -171,7 +171,7 @@ export async function obtenerResumenIngresos(): Promise<ResumenIngresos> {
           }
         }
       }),
-      db.pago.aggregate({
+      prisma.pago.aggregate({
         _sum: {
           total: true
         },
