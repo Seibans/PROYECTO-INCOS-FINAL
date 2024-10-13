@@ -44,18 +44,11 @@ import {
 	TooltipProvider
 } from "@/components/ui/tooltip"
 
-export const description =
-	"An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages."
-
 export function Playground() {
 	return (
 		<TooltipProvider>
-
-			{/* <div className="grid h-screen w-full bg-red-500"> */}
 			<div className="grid w-full bg-red-500">
-				{/* ACA ESTABA EL SIDEBAR FIJADO */}
 				<div className="flex flex-col">
-					{/* <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-secondary px-4"> */}
 					<header className="z-10 flex h-[57px] items-center gap-1 border-b bg-secondary px-4">
 						<h1 className="text-xl font-semibold">Sofia (ia Veterinaria)</h1>
 						<Drawer>
@@ -69,13 +62,13 @@ export function Playground() {
 								<DrawerHeader>
 									<DrawerTitle>Configuracion</DrawerTitle>
 									<DrawerDescription>
-										Configure the settings for the model and messages.
+										Configura la Voz para Sofia
 									</DrawerDescription>
 								</DrawerHeader>
 								<form className="grid w-full items-start gap-6 overflow-auto p-4 pt-0">
 									<fieldset className="grid gap-6 rounded-lg border p-4">
 										<legend className="-ml-1 px-1 text-sm font-medium">
-											Settings
+											Configuracion
 										</legend>
 										<div className="grid gap-3">
 											<Label htmlFor="model">Modelo</Label>
@@ -139,40 +132,6 @@ export function Playground() {
 												</SelectContent>
 											</Select>
 										</div>
-										<div className="grid gap-3">
-											<Label htmlFor="temperature">Temperature</Label>
-											<Input id="temperature" type="number" placeholder="0.4" />
-										</div>
-										<div className="grid gap-3">
-											<Label htmlFor="top-p">Top P</Label>
-											<Input id="top-p" type="number" placeholder="0.7" />
-										</div>
-										<div className="grid gap-3">
-											<Label htmlFor="top-k">Top K</Label>
-											<Input id="top-k" type="number" placeholder="0.0" />
-										</div>
-									</fieldset>
-									<fieldset className="grid gap-6 rounded-lg border p-4">
-										<legend className="-ml-1 px-1 text-sm font-medium">
-											Messages
-										</legend>
-										<div className="grid gap-3">
-											<Label htmlFor="role">Role</Label>
-											<Select defaultValue="system">
-												<SelectTrigger>
-													<SelectValue placeholder="Select a role" />
-												</SelectTrigger>
-												<SelectContent>
-													<SelectItem value="system">System</SelectItem>
-													<SelectItem value="user">User</SelectItem>
-													<SelectItem value="assistant">Assistant</SelectItem>
-												</SelectContent>
-											</Select>
-										</div>
-										<div className="grid gap-3">
-											<Label htmlFor="content">Content</Label>
-											<Textarea id="content" placeholder="You are a..." />
-										</div>
 									</fieldset>
 								</form>
 							</DrawerContent>
@@ -185,16 +144,16 @@ export function Playground() {
 							<form className="grid w-full items-start gap-6">
 								<fieldset className="grid gap-6 rounded-lg border p-4">
 									<legend className="-ml-1 px-1 text-sm font-medium">
-										Settings
+										Configuracion
 									</legend>
 									<div className="grid gap-3">
-										<Label htmlFor="model">Model</Label>
+										<Label htmlFor="model">Modelo:</Label>
 										<Select>
 											<SelectTrigger
 												id="model"
 												className="items-start [&_[data-description]]:hidden"
 											>
-												<SelectValue placeholder="Select a model" />
+												<SelectValue placeholder="Selecciona Un modelo de Eleven Labs" />
 											</SelectTrigger>
 											<SelectContent>
 												<SelectItem value="genesis">
@@ -248,46 +207,6 @@ export function Playground() {
 											</SelectContent>
 										</Select>
 									</div>
-									<div className="grid gap-3">
-										<Label htmlFor="temperature">Temperature</Label>
-										<Input id="temperature" type="number" placeholder="0.4" />
-									</div>
-									<div className="grid grid-cols-2 gap-4">
-										<div className="grid gap-3">
-											<Label htmlFor="top-p">Top P</Label>
-											<Input id="top-p" type="number" placeholder="0.7" />
-										</div>
-										<div className="grid gap-3">
-											<Label htmlFor="top-k">Top K</Label>
-											<Input id="top-k" type="number" placeholder="0.0" />
-										</div>
-									</div>
-								</fieldset>
-								<fieldset className="grid gap-6 rounded-lg border p-4">
-									<legend className="-ml-1 px-1 text-sm font-medium">
-										Messages
-									</legend>
-									<div className="grid gap-3">
-										<Label htmlFor="role">Role</Label>
-										<Select defaultValue="system">
-											<SelectTrigger>
-												<SelectValue placeholder="Select a role" />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="system">System</SelectItem>
-												<SelectItem value="user">User</SelectItem>
-												<SelectItem value="assistant">Assistant</SelectItem>
-											</SelectContent>
-										</Select>
-									</div>
-									<div className="grid gap-3">
-										<Label htmlFor="content">Content</Label>
-										<Textarea
-											id="content"
-											placeholder="You are a..."
-											className="min-h-[9.5rem]"
-										/>
-									</div>
 								</fieldset>
 							</form>
 						</div>
@@ -330,123 +249,3 @@ export function Playground() {
 		</TooltipProvider>
 	)
 }
-
-
-/*
-<aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
-					<div className="border-b p-2">
-						<Button variant="outline" size="icon" aria-label="Home">
-							<Triangle className="size-5 fill-foreground" />
-						</Button>
-					</div>
-					<nav className="grid gap-1 p-2">
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="rounded-lg bg-muted"
-									aria-label="Playground"
-								>
-									<SquareTerminal className="size-5" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={5}>
-								Playground
-							</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="rounded-lg"
-									aria-label="Models"
-								>
-									<Bot className="size-5" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={5}>
-								Models
-							</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="rounded-lg"
-									aria-label="API"
-								>
-									<Code2 className="size-5" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={5}>
-								API
-							</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="rounded-lg"
-									aria-label="Documentation"
-								>
-									<Book className="size-5" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={5}>
-								Documentation
-							</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="rounded-lg"
-									aria-label="Settings"
-								>
-									<Settings2 className="size-5" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={5}>
-								Settings
-							</TooltipContent>
-						</Tooltip>
-					</nav>
-					<nav className="mt-auto grid gap-1 p-2">
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="mt-auto rounded-lg"
-									aria-label="Help"
-								>
-									<LifeBuoy className="size-5" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={5}>
-								Help
-							</TooltipContent>
-						</Tooltip>
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="mt-auto rounded-lg"
-									aria-label="Account"
-								>
-									<SquareUser className="size-5" />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={5}>
-								Account
-							</TooltipContent>
-						</Tooltip>
-					</nav>
-				</aside>
-*/
